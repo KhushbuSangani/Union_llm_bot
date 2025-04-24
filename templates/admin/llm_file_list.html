@@ -1,0 +1,355 @@
+{% extends "layout/base.html" %}
+{% block content %}
+
+<div class="intent-info w-100">
+    <div class="cards intent-info__model">
+        <div class="d-flex justify-content-between">
+            <h4 class="table-title">LLM RAG File List</h4>
+            <div class="table-btn-wrapper">
+				<button id="embed_file" class="text-uppercase btn-train "> Embed Selected Files <i class="fa fa-arrow-right"></i></button>
+                <button class="text-uppercase btn-delete"   onclick="window.location.href='{{ url_for( 'intent.download_intents') }}';"> download all <i class="fa fa-arrow-right"></i></button>
+                <button id="delete_all" style="margin-left:15px;" class="text-uppercase btn-download"> delete selected <i class="fa fa-arrow-right"></i></button>
+				<button class="text-uppercase btn-delete"  style="margin-left:15px" onclick="window.location.href='{{ url_for( 'intent.download_tickets') }}';"> download tickets <i class="fa fa-arrow-right"></i></button>
+            </div>
+
+        </div>
+		<div id="file-container"></div>
+		<div id="selected-count" style="margin-bottom:10px; font-weight:bold; font-size:12px; margin-left:12px;"></div>
+        <div class="w-100 table-wrapper">
+            
+		  <div class="pagination-wrapper ">
+			<div class="pagination-wrapper__left">	
+			</div>
+			</div>
+        </div>
+    </div>
+</div>
+<div id="selected-files" style="margin-top: 10px; font-weight: bold;"></div>
+<div class="loader" id="loader"></div>
+
+
+
+<div class="delete-popup" id="DeletePopup">
+    <h4 class="delete-popup__title text-capitalize">Confirmation</h4>
+    <p> Do you want to Delete? </p>
+    <div class="btn-wrapper">
+        <button class="btn-cancel text-capitalize"> cancel </button>
+        <button class="btn-delete text-capitalize ms-3"> delete </button>
+    </div>
+</div>
+<script>
+    $(".browse-btn").bind("click",function(){
+        $("#upload").click()
+    });
+</script>
+<link rel="stylesheet" href="static/assets/ajax/libs/jquery/jquery-confirm.min.css">
+<script src="static/assets/ajax/libs/jquery/jquery.min.js"></script>
+<script href="static/assets/bootstrap-toastr/toastr.min.css" rel="stylesheet" type="text/css" />
+<script src="static/assets/bootstrap-toastr/toastr.min.js" type="text/javascript"></script>
+<script src="static/assets/bootstrap-toastr/ui-toastr.min.js" type="text/javascript"></script>
+<script src="static/assets/ajax/libs/jquery/jquery-confirm.min.js"></script>
+<script src="static/assets/js/list_file.js"></script>
+
+<script>
+
+	
+
+
+$(".browse-btn").bind("click", function () {
+	$("#upload").click()
+});
+</script>
+<script type="text/javascript">
+	const data = JSON.parse('{{ data | tojson | safe }}');
+    const file_length = {{ file_length | tojson | safe }};
+	const pagination = {{ pagination | tojson | safe }};
+
+	var displayLLMFilesUrl = "{{ url_for('intent.display_llm_files') }}"
+    new FileSelectionUI(data, file_length,displayLLMFilesUrl,pagination);
+	
+	document.addEventListener('DOMContentLoaded', function() {
+		localStorage.removeItem("selectedFiles");
+		localStorage.removeItem("selectAllChecked");
+		
+		const data = JSON.parse('{{ data | tojson | safe }}');
+		const file_length = {{ file_length | tojson | safe }};
+		const fileUI = new FileSelectionUI(data, file_length);
+	
+		// Attach event listeners for search
+		document.querySelectorAll('#search_file_name, #search_created_by, #file_format').forEach(input => {
+			input.addEventListener('keyup', () => {
+				let searchParams = {
+					search_file_name: document.querySelector('#search_file_name').value.trim(),
+					search_created_by: document.querySelector('#search_created_by').value.trim(),
+					file_format: document.querySelector('#file_format').value.trim()
+				};
+				fileUI.currentSearchParams = searchParams;
+				fileUI.fetchData();
+			});
+		});
+	});
+	
+    $("#embed_file").click(function () {
+		var csrf_token = '{{ csrf_token() }}';
+		var selectedFiles = JSON.parse(localStorage.getItem("selectedFiles") || "[]");
+        if (selectedFiles.length === 0) {
+			alert("Kindly select a file before Embeddings.");
+			return; // Stop further execution
+		}
+		$.ajax({
+            type: "POST",
+            headers: {
+                'X-CSRFToken': csrf_token,
+                "Content-type": "application/json"
+            },
+            url: "{{ url_for('intent.embedding_llm_files') }}",
+            data: JSON.stringify({
+                files: Array.from(selectedFiles),
+                select_all_status: 'false'
+            }),
+            success: function (result) {
+                if (typeof result === 'object') {
+					localStorage.removeItem("selectedFiles");
+                    localStorage.removeItem("selectAllChecked");
+                    let msg = "Files are processing";
+                    // Clear localStorage and the in-memory set upon successful action
+                    localStorage.removeItem("selectedFiles");
+                    localStorage.removeItem("selectAllChecked");
+                    toastr.options = {
+                        "closeButton": true,
+                        "debug": false,
+                        "positionClass": "toast-top-right",
+                        "onclick": null,
+                        "showDuration": "1000",
+                        "hideDuration": "1000",
+                        "timeOut": "50000",
+                        "extendedTimeOut": "1000",
+                        "showEasing": "swing",
+                        "hideEasing": "swing",
+                        "showMethod": "show",
+                        "hideMethod": "hide"
+                    };
+                    Command: toastr.success(msg);
+                    setTimeout(function(){
+                        window.location.href = "{{ url_for('intent.embedded_file_list') }}";
+                    }, 2000);
+                } else {
+                    setTimeout(function(){
+                        window.location.reload();
+                    }, 5000);
+                    toastr.options = {
+                        "closeButton": true,
+                        "debug": false,
+                        "positionClass": "toast-top-right",
+                        "onclick": null,
+                        "showDuration": "1000",
+                        "hideDuration": "1000",
+                        "timeOut": "50000",
+                        "extendedTimeOut": "1000",
+                        "showEasing": "swing",
+                        "hideEasing": "swing",
+                        "showMethod": "show",
+                        "hideMethod": "hide"
+                    };
+                    Command: toastr.error("Another model already in training state");
+                }
+            },
+            error: function () {
+                toastr.error("Error occurred while processing files");
+            }
+		});
+	});
+	
+	function submit_req() {
+		
+		
+		var csrf_token = "{{ csrf_token() }}";
+		var error_count = 0;
+		
+		
+		$.ajax({
+			type: "POST",
+			headers: { 'X-CSRFToken': csrf_token },
+			url: "{{ url_for('intent.embedding_llm_files') }}",
+			data: { model_name: model_name, r_status: r_status, s_date: s_date },
+			success: function (result) {
+				if(typeof result === 'object'){
+					$('#myModal').modal('hide')
+					$('#train_model').hide()
+					toastr.options = {
+						"closeButton": true,
+						"debug": false,
+						"positionClass": "toast-top-right",
+						"onclick": null,
+						"showDuration": "1000",
+						"hideDuration": "1000",
+						"timeOut": "50000",
+						"extendedTimeOut": "1000",
+						"showEasing": "swing",
+						"hideEasing": "swing",
+						"showMethod": "show",
+						"hideMethod": "hide"
+					}
+					Command: toastr.error("Anther model already in training state");
+				}else{
+					
+					msg = "Model is Training";
+					$('#myModal').modal('hide')
+					$('#train_model').hide()
+					setTimeout(function(){
+							window.location.reload();
+						}, 5000);
+					toastr.options = {
+						"closeButton": true,
+						"debug": false,
+						"positionClass": "toast-top-right",
+						"onclick": null,
+						"showDuration": "1000",
+						"hideDuration": "1000",
+						"timeOut": "50000",
+						"extendedTimeOut": "1000",
+						"showEasing": "swing",
+						"hideEasing": "swing",
+						"showMethod": "show",
+						"hideMethod": "hide"
+					}
+					Command: toastr.success(msg);
+					}
+					$("#model_name").val("")
+					$("#description").val("")
+					$("#r_status").val("")
+					$("#f_submit").prop("disabled", false);
+			}
+		});
+		}
+	
+	
+
+
+	
+	function delete_file(id) {
+		$.confirm({
+			title: 'Confirmation',
+			content: 'Do you want to Delete File, It will delete file from Qdrant?',
+			buttons: {
+				confirm: function () {
+					var csrf_token = "{{ csrf_token() }}";
+					$.ajax({
+						type: "POST",
+						headers: { 'X-CSRFToken': csrf_token },
+						url: "{{ url_for('intent.delete_file') }}",
+						data: { id: id,category:'pending'},
+						success: function (result) {
+							if (result.message){
+								msg = (String(result.files).replace(/\s+/g, ' ').trim() || "File") + ' Successfully deleted';
+								toastr.options = {
+								"closeButton": true,
+								"debug": false,
+								"positionClass": "toast-top-right",
+								"onclick": null,
+								"showDuration": "1000",
+								"hideDuration": "1000",
+								"timeOut": "50000",
+								"extendedTimeOut": "1000",
+								"showEasing": "swing",
+								"hideEasing": "swing",
+								"showMethod": "show",
+								"hideMethod": "hide",
+								"style": {
+        						"font-size": "20px"  // Adjust the font size as needed
+    }
+							}
+							toastr.success(msg)
+							setTimeout(function(){
+								window.location.href = "{{ url_for('intent.display_llm_files') }}";
+							 }, 2000);;}
+							else {
+								msg = 'Can not delete this file as ithere is some error while deleting file';    
+								
+							toastr.options = {
+								"closeButton": true,
+								"debug": false,
+								"positionClass": "toast-top-right",
+								"onclick": null,
+								"showDuration": "1000",
+								"hideDuration": "1000",
+								"timeOut": "50000",
+								"extendedTimeOut": "1000",
+								"showEasing": "swing",
+								"hideEasing": "swing",
+								"showMethod": "show",
+								"hideMethod": "hide",
+								"backgroundColor":"red",
+								"style": {
+        "font-size": "20px"  // Adjust the font size as needed
+    }
+							}
+							toastr.error(msg);
+							setTimeout(function(){
+								window.location.href = "{{ url_for('intent.display_llm_files') }}";
+							}, 3000);
+							}
+						}
+					});
+				},
+				cancel: function () {
+				}
+			}
+		});
+	}
+	
+	$("#delete_all").click(function () {
+		var csrf_token = "{{ csrf_token() }}";
+		var selectedFiles = JSON.parse(localStorage.getItem("selectedFiles") || "[]");
+		if (selectedFiles.length === 0) {
+			alert("Kindly select a file before deleting.");
+			return; // Stop further execution
+		}
+		$.confirm({
+			title: 'Confirmation',
+			content: 'Are you sure you want to delete all files? This action will permanently remove all files from the system.',
+			buttons: {
+				confirm: function () {
+					var csrf_token = "{{ csrf_token() }}";
+					$.ajax({
+						type: "POST",
+						headers: {
+							'X-CSRFToken': csrf_token,
+							"Content-type": "application/json"
+						},						
+						url: "{{ url_for('intent.delete_all_files') }}",
+						data: JSON.stringify({
+							files: Array.from(selectedFiles)						}),
+						success: function (result) {
+							localStorage.removeItem("selectedFiles");
+                    		localStorage.removeItem("selectAllChecked");
+							msg = "Files are Deleted";
+							toastr.options = {
+								"closeButton": true,
+								"debug": false,
+								"positionClass": "toast-top-right",
+								"onclick": null,
+								"showDuration": "1000",
+								"hideDuration": "1000",
+								"timeOut": "50000",
+								"extendedTimeOut": "1000",
+								"showEasing": "swing",
+								"hideEasing": "swing",
+								"showMethod": "show",
+								"hideMethod": "hide"
+							}
+							Command: toastr.success(msg);
+							setTimeout(function(){
+								window.location.reload();
+							 }, 2000);
+						}
+					});
+				},
+				cancel: function () {
+				}
+			}
+		});
+	});
+	
+</script>
+{% endblock content %}

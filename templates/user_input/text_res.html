@@ -1,0 +1,45 @@
+{% if data != '1' %}
+<div class="form-field">
+    <label for="res_text_data" class="form-label">Responses Text<span>*</span></label>
+    <input type="text" class="form-control" name="res_text" id="res_text_data" placeholder="Enter Response">
+	<span  class="has-error" id="res_text_error" style="color:red;margin-top:5px;display:none"> Please Enter Response Text </span>
+
+</div>
+{% endif %}
+
+{% if data == '1' %}
+	<div id="res_data"  >
+		<div class="form-field">
+			<label for="res_text_data" class="form-label">Response Text<span>*</span></label>
+			<input type="text" class="form-control" placeholder="Enter Response" name="intentresponses_0" id="intentresponses_0">
+			<span  class="has-error" id="intentresponses_0_error" style="color:red;margin-top:5px;display:none"> Please Enter Response Text </span>
+
+		</div>
+	</div>
+{% elif data == '2'%}
+	<div id = "res_data_buttons" style="margin-top:20px;">
+		<div class="form-field">
+			<label for="intentresponses_payload_button_0" class="form-label">Button Intent<span>*</span></label>
+			<div class="d-flex">
+				<select id="intentresponses_payload_button_0" class="form-select form-control"  name="intentresponses_payload_button_0">
+					<option value=""> Select Response </option>
+					{% for item in data_button %}
+						<option value="{{item[1]}}"> {{item[1]}}</option>
+					{% endfor %}
+				</select>
+
+			</div>
+			<span  class="has-error" id="intentresponses_payload_button_0_error" style="color:red;margin-top:5px;display:none"> Please Enter Response  Button </span>
+
+
+		</div>
+	</div>
+
+{% endif%}
+
+{% if data == '2' %}
+	<input type="hidden" value="0" id="res_count_button">
+	<div class="add-new-wrapper w-100" onclick="res_add_field_button({{data}})">
+		<span class="add-new"> + Add New responses</span>
+	</div>
+{% endif %}

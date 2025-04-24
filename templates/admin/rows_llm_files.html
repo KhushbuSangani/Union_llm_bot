@@ -1,0 +1,29 @@
+{% for item in data %}
+					
+<tr>
+    <td style="display: flex; align-items: center; gap: 10px;">{{item['id']}}</td>
+    <td>{{item['name']}}</td>
+    <td>{{item['format']}}</td>
+    <td>{{item['size']}}</td>
+    <td>{{item["path"]}}</td>
+    <td>
+        {% if 'status' in item and item['status'] == 'embedded' %}
+            <div class="status-badge">{{ item['status'] }}</div>
+        {% else %}
+            <div class="status-badge-untrain">{{ item['status'] }}</div>
+        {% endif %}
+    </td>
+    <td>{{item['upload_date']}}<br>{{item['created_by']}}</td>
+    <td class="action-btn-wrapper">
+
+        <div class="" >
+            <div class="d-flex align-items-baseline action-popup__edit" style="float:left;">
+                <a href="{{ url_for('intent.view_file', id=item['file_id']) }}" target="_blank"><img src="static/assets/img/icons/view-com.svg" alt="View" style="width:20px;"></a>
+            </div>
+            <div class="d-flex align-items-baseline action-popup__delete" onclick="delete_file('{{ item['file_id'] }}')">
+                <img src="static/assets/img/icons/delete_icon.svg" alt="delete" style="width:17px;margin-left:5px">
+            </div>
+        </div>
+    </td>
+</tr>
+{% endfor %}

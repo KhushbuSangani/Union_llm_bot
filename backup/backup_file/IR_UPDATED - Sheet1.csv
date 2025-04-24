@@ -1,0 +1,81 @@
+title ,query,response
+IR,What is the interest rate for deposits of less than Rs. 3 Cr for a period of 7-14 days?,The interest rate for deposits of less than Rs. 3 Cr for a period of 7-14 days is 3.5% per annum.
+IR,What interest rate is applicable for a deposit period of 15-30 days for amounts below Rs. 3 Cr?,The interest rate for deposits below Rs. 3 Cr for a period of 15-30 days is 3.5% per annum.
+IR,"For a deposit amount of less than Rs. 3 Cr, what is the rate of interest for 31-45 days?",The interest rate for deposits under Rs. 3 Cr for a period of 31-45 days is 3.5% per annum.
+IR,What is the interest rate for a deposit amount of less than Rs. 3 Cr for 46-90 days?,The interest rate for deposits of less than Rs. 3 Cr for 46-90 days is 4.5% per annum.
+IR,How much interest will be earned for deposits below Rs. 3 Cr for a period of 91-120 days?,The interest rate for deposits below Rs. 3 Cr for 91-120 days is 4.8% per annum.
+IR,What is the applicable interest rate for a deposit of less than Rs. 3 Cr for 121-180 days?,The interest rate for deposits of less than Rs. 3 Cr for 121-180 days is 5% per annum.
+IR,"For a deposit period of 181 days to less than 332 days, what is the interest rate for amounts below Rs. 3 Cr?",The interest rate for deposits below Rs. 3 Cr for a period of 181 days to less than 332 days is 6.35% per annum.
+IR,What is the interest rate for a deposit of less than Rs. 3 Cr for exactly 333 days?,The interest rate for a deposit of less than Rs. 3 Cr for exactly 333 days is 7.4% per annum.
+IR,What is the interest rate for deposits below Rs. 3 Cr for periods between 334 days to less than 1 year?,The interest rate for deposits below Rs. 3 Cr for 334 days to less than 1 year is 6.35% per annum.
+IR,What is the interest rate for a 1-year deposit for amounts below Rs. 3 Cr?,The interest rate for a 1-year deposit for amounts below Rs. 3 Cr is 6.8% per annum.
+IR,How much interest will be earned for a deposit period greater than 1 year to 398 days for amounts below Rs. 3 Cr?,The interest rate for deposits below Rs. 3 Cr for a period greater than 1 year to 398 days is 6.8% per annum.
+IR,What is the interest rate for a deposit of exactly 399 days for amounts below Rs. 3 Cr?,The interest rate for a deposit of exactly 399 days for amounts below Rs. 3 Cr is 7.25% per annum.
+IR,What is the interest rate for deposits below Rs. 3 Cr for a period of 400 days to 2 years?,The interest rate for deposits below Rs. 3 Cr for a period of 400 days to 2 years is 6.6% per annum.
+IR,"For a deposit amount of less than Rs. 3 Cr, what is the interest rate for a period greater than 2 years to 996 days?",The interest rate for deposits below Rs. 3 Cr for a period greater than 2 years to 996 days is 6.6% per annum.
+IR,What is the interest rate for a deposit of 997 days for amounts below Rs. 3 Cr?,The interest rate for a deposit of 997 days for amounts below Rs. 3 Cr is 6.4% per annum.
+IR,What is the applicable interest rate for deposit periods greater than 998 days to less than 3 years (excluding 999 days) for amounts below Rs. 3 Cr?,The interest rate for deposits below Rs. 3 Cr for periods greater than 998 days to less than 3 years is 6.6% per annum.
+IR,What is the interest rate for a deposit of exactly 3 years for amounts below Rs. 3 Cr?,The interest rate for a deposit of exactly 3 years for amounts below Rs. 3 Cr is 6.7% per annum.
+IR,How much interest will be earned for deposit periods greater than 3 years to 5 years for amounts below Rs. 3 Cr?,The interest rate for deposits below Rs. 3 Cr for periods greater than 3 years to 5 years is 6.5% per annum.
+IR,What is the interest rate for deposits of more than Rs. 3 Cr for periods over 5 years to 10 years?,The interest rate for deposits below Rs. 3 Cr for periods over 5 years to 10 years is 6.5% per annum.
+IR,What is the interest rate for a savings bank account with a balance up to Rs. 50 Lakh?,The interest rate for a savings bank account with a balance up to Rs. 50 Lakh is 2.75% per annum.
+IR,How much interest will be earned for a savings account with a balance between Rs. 50 Lakh and Rs. 100 Crore?,The interest rate for a savings bank account with a balance between Rs. 50 Lakh and Rs. 100 Crore is 2.90% per annum.
+IR,What is the interest rate for savings bank deposits with a balance between Rs. 100 Crore and Rs. 500 Crore?,The interest rate for savings bank deposits with a balance between Rs. 100 Crore and Rs. 500 Crore is 3.10% per annum.
+IR,What is the interest rate for savings bank deposits with a balance between Rs. 500 Crore and Rs. 1000 Crore?,The interest rate for savings bank deposits with a balance between Rs. 500 Crore and Rs. 1000 Crore is 3.40% per annum.
+IR,"For a savings bank account with a balance between Rs. 1000 Crore and Rs. 1500 Crore, what is the interest rate?",The interest rate for a savings bank account with a balance between Rs. 1000 Crore and Rs. 1500 Crore is 4.10% per annum.
+IR,What is the interest rate for savings accounts with balances between Rs. 1500 Crore and Rs. 2000 Crore?,The interest rate for savings accounts with balances between Rs. 1500 Crore and Rs. 2000 Crore is 4.15% per annum.
+IR,What is the interest rate for a savings bank account with a balance above Rs. 2000 Crore?,The interest rate for a savings bank account with a balance above Rs. 2000 Crore is 4.20% per annum.
+title ,query,response
+IR,What is the interest rate for deposits of less than Rs. 3 Cr for a period of 7-14 days?,The interest rate for deposits of less than Rs. 3 Cr for a period of 7-14 days is 3.5% per annum.
+IR,What interest rate is applicable for a deposit period of 15-30 days for amounts below Rs. 3 Cr?,The interest rate for deposits below Rs. 3 Cr for a period of 15-30 days is 3.5% per annum.
+IR,"For a deposit amount of less than Rs. 3 Cr, what is the rate of interest for 31-45 days?",The interest rate for deposits under Rs. 3 Cr for a period of 31-45 days is 3.5% per annum.
+IR,What is the interest rate for a deposit amount of less than Rs. 3 Cr for 46-90 days?,The interest rate for deposits of less than Rs. 3 Cr for 46-90 days is 4.5% per annum.
+IR,How much interest will be earned for deposits below Rs. 3 Cr for a period of 91-120 days?,The interest rate for deposits below Rs. 3 Cr for 91-120 days is 4.8% per annum.
+IR,What is the applicable interest rate for a deposit of less than Rs. 3 Cr for 121-180 days?,The interest rate for deposits of less than Rs. 3 Cr for 121-180 days is 5% per annum.
+IR,"For a deposit period of 181 days to less than 332 days, what is the interest rate for amounts below Rs. 3 Cr?",The interest rate for deposits below Rs. 3 Cr for a period of 181 days to less than 332 days is 6.35% per annum.
+IR,What is the interest rate for a deposit of less than Rs. 3 Cr for exactly 333 days?,The interest rate for a deposit of less than Rs. 3 Cr for exactly 333 days is 7.4% per annum.
+IR,What is the interest rate for deposits below Rs. 3 Cr for periods between 334 days to less than 1 year?,The interest rate for deposits below Rs. 3 Cr for 334 days to less than 1 year is 6.35% per annum.
+IR,What is the interest rate for a 1-year deposit for amounts below Rs. 3 Cr?,The interest rate for a 1-year deposit for amounts below Rs. 3 Cr is 6.8% per annum.
+IR,How much interest will be earned for a deposit period greater than 1 year to 398 days for amounts below Rs. 3 Cr?,The interest rate for deposits below Rs. 3 Cr for a period greater than 1 year to 398 days is 6.8% per annum.
+IR,What is the interest rate for a deposit of exactly 399 days for amounts below Rs. 3 Cr?,The interest rate for a deposit of exactly 399 days for amounts below Rs. 3 Cr is 7.25% per annum.
+IR,What is the interest rate for deposits below Rs. 3 Cr for a period of 400 days to 2 years?,The interest rate for deposits below Rs. 3 Cr for a period of 400 days to 2 years is 6.6% per annum.
+IR,"For a deposit amount of less than Rs. 3 Cr, what is the interest rate for a period greater than 2 years to 996 days?",The interest rate for deposits below Rs. 3 Cr for a period greater than 2 years to 996 days is 6.6% per annum.
+IR,What is the interest rate for a deposit of 997 days for amounts below Rs. 3 Cr?,The interest rate for a deposit of 997 days for amounts below Rs. 3 Cr is 6.4% per annum.
+IR,What is the applicable interest rate for deposit periods greater than 998 days to less than 3 years (excluding 999 days) for amounts below Rs. 3 Cr?,The interest rate for deposits below Rs. 3 Cr for periods greater than 998 days to less than 3 years is 6.6% per annum.
+IR,What is the interest rate for a deposit of exactly 3 years for amounts below Rs. 3 Cr?,The interest rate for a deposit of exactly 3 years for amounts below Rs. 3 Cr is 6.7% per annum.
+IR,How much interest will be earned for deposit periods greater than 3 years to 5 years for amounts below Rs. 3 Cr?,The interest rate for deposits below Rs. 3 Cr for periods greater than 3 years to 5 years is 6.5% per annum.
+IR,What is the interest rate for deposits of more than Rs. 3 Cr for periods over 5 years to 10 years?,The interest rate for deposits below Rs. 3 Cr for periods over 5 years to 10 years is 6.5% per annum.
+IR,What is the interest rate for a savings bank account with a balance up to Rs. 50 Lakh?,The interest rate for a savings bank account with a balance up to Rs. 50 Lakh is 2.75% per annum.
+IR,How much interest will be earned for a savings account with a balance between Rs. 50 Lakh and Rs. 100 Crore?,The interest rate for a savings bank account with a balance between Rs. 50 Lakh and Rs. 100 Crore is 2.90% per annum.
+IR,What is the interest rate for savings bank deposits with a balance between Rs. 100 Crore and Rs. 500 Crore?,The interest rate for savings bank deposits with a balance between Rs. 100 Crore and Rs. 500 Crore is 3.10% per annum.
+IR,What is the interest rate for savings bank deposits with a balance between Rs. 500 Crore and Rs. 1000 Crore?,The interest rate for savings bank deposits with a balance between Rs. 500 Crore and Rs. 1000 Crore is 3.40% per annum.
+IR,"For a savings bank account with a balance between Rs. 1000 Crore and Rs. 1500 Crore, what is the interest rate?",The interest rate for a savings bank account with a balance between Rs. 1000 Crore and Rs. 1500 Crore is 4.10% per annum.
+IR,What is the interest rate for savings accounts with balances between Rs. 1500 Crore and Rs. 2000 Crore?,The interest rate for savings accounts with balances between Rs. 1500 Crore and Rs. 2000 Crore is 4.15% per annum.
+IR,What is the interest rate for a savings bank account with a balance above Rs. 2000 Crore?,The interest rate for a savings bank account with a balance above Rs. 2000 Crore is 4.20% per annum.
+title ,query,response
+IR,What is the interest rate for deposits of less than Rs. 3 Cr for a period of 7-14 days?,The interest rate for deposits of less than Rs. 3 Cr for a period of 7-14 days is 3.5% per annum.
+IR,What interest rate is applicable for a deposit period of 15-30 days for amounts below Rs. 3 Cr?,The interest rate for deposits below Rs. 3 Cr for a period of 15-30 days is 3.5% per annum.
+IR,"For a deposit amount of less than Rs. 3 Cr, what is the rate of interest for 31-45 days?",The interest rate for deposits under Rs. 3 Cr for a period of 31-45 days is 3.5% per annum.
+IR,What is the interest rate for a deposit amount of less than Rs. 3 Cr for 46-90 days?,The interest rate for deposits of less than Rs. 3 Cr for 46-90 days is 4.5% per annum.
+IR,How much interest will be earned for deposits below Rs. 3 Cr for a period of 91-120 days?,The interest rate for deposits below Rs. 3 Cr for 91-120 days is 4.8% per annum.
+IR,What is the applicable interest rate for a deposit of less than Rs. 3 Cr for 121-180 days?,The interest rate for deposits of less than Rs. 3 Cr for 121-180 days is 5% per annum.
+IR,"For a deposit period of 181 days to less than 332 days, what is the interest rate for amounts below Rs. 3 Cr?",The interest rate for deposits below Rs. 3 Cr for a period of 181 days to less than 332 days is 6.35% per annum.
+IR,What is the interest rate for a deposit of less than Rs. 3 Cr for exactly 333 days?,The interest rate for a deposit of less than Rs. 3 Cr for exactly 333 days is 7.4% per annum.
+IR,What is the interest rate for deposits below Rs. 3 Cr for periods between 334 days to less than 1 year?,The interest rate for deposits below Rs. 3 Cr for 334 days to less than 1 year is 6.35% per annum.
+IR,What is the interest rate for a 1-year deposit for amounts below Rs. 3 Cr?,The interest rate for a 1-year deposit for amounts below Rs. 3 Cr is 6.8% per annum.
+IR,How much interest will be earned for a deposit period greater than 1 year to 398 days for amounts below Rs. 3 Cr?,The interest rate for deposits below Rs. 3 Cr for a period greater than 1 year to 398 days is 6.8% per annum.
+IR,What is the interest rate for a deposit of exactly 399 days for amounts below Rs. 3 Cr?,The interest rate for a deposit of exactly 399 days for amounts below Rs. 3 Cr is 7.25% per annum.
+IR,What is the interest rate for deposits below Rs. 3 Cr for a period of 400 days to 2 years?,The interest rate for deposits below Rs. 3 Cr for a period of 400 days to 2 years is 6.6% per annum.
+IR,"For a deposit amount of less than Rs. 3 Cr, what is the interest rate for a period greater than 2 years to 996 days?",The interest rate for deposits below Rs. 3 Cr for a period greater than 2 years to 996 days is 6.6% per annum.
+IR,What is the interest rate for a deposit of 997 days for amounts below Rs. 3 Cr?,The interest rate for a deposit of 997 days for amounts below Rs. 3 Cr is 6.4% per annum.
+IR,What is the applicable interest rate for deposit periods greater than 998 days to less than 3 years (excluding 999 days) for amounts below Rs. 3 Cr?,The interest rate for deposits below Rs. 3 Cr for periods greater than 998 days to less than 3 years is 6.6% per annum.
+IR,What is the interest rate for a deposit of exactly 3 years for amounts below Rs. 3 Cr?,The interest rate for a deposit of exactly 3 years for amounts below Rs. 3 Cr is 6.7% per annum.
+IR,How much interest will be earned for deposit periods greater than 3 years to 5 years for amounts below Rs. 3 Cr?,The interest rate for deposits below Rs. 3 Cr for periods greater than 3 years to 5 years is 6.5% per annum.
+IR,What is the interest rate for deposits of more than Rs. 3 Cr for periods over 5 years to 10 years?,The interest rate for deposits below Rs. 3 Cr for periods over 5 years to 10 years is 6.5% per annum.
+IR,What is the interest rate for a savings bank account with a balance up to Rs. 50 Lakh?,The interest rate for a savings bank account with a balance up to Rs. 50 Lakh is 2.75% per annum.
+IR,How much interest will be earned for a savings account with a balance between Rs. 50 Lakh and Rs. 100 Crore?,The interest rate for a savings bank account with a balance between Rs. 50 Lakh and Rs. 100 Crore is 2.90% per annum.
+IR,What is the interest rate for savings bank deposits with a balance between Rs. 100 Crore and Rs. 500 Crore?,The interest rate for savings bank deposits with a balance between Rs. 100 Crore and Rs. 500 Crore is 3.10% per annum.
+IR,What is the interest rate for savings bank deposits with a balance between Rs. 500 Crore and Rs. 1000 Crore?,The interest rate for savings bank deposits with a balance between Rs. 500 Crore and Rs. 1000 Crore is 3.40% per annum.
+IR,"For a savings bank account with a balance between Rs. 1000 Crore and Rs. 1500 Crore, what is the interest rate?",The interest rate for a savings bank account with a balance between Rs. 1000 Crore and Rs. 1500 Crore is 4.10% per annum.
+IR,What is the interest rate for savings accounts with balances between Rs. 1500 Crore and Rs. 2000 Crore?,The interest rate for savings accounts with balances between Rs. 1500 Crore and Rs. 2000 Crore is 4.15% per annum.
+IR,What is the interest rate for a savings bank account with a balance above Rs. 2000 Crore?,The interest rate for a savings bank account with a balance above Rs. 2000 Crore is 4.20% per annum.

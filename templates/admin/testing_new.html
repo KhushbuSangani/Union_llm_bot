@@ -1,0 +1,420 @@
+{% extends "layout/base.html" %}
+{% block content %}
+
+<div class="row intent-info w-100">
+	<div class="staging-environment col-lg-6 d-flex align-items-end justify-content-center">
+		<div class="chat-board">
+			  <div class="chat-board__top">
+				<img src="static/assets/img/avatar.svg" alt="avatar">
+				<h3 class="top-heading mb-0">Need Help? Ask EKAM</h3>
+				
+			  </div>
+			  <div class="chat_base_chatting" >       
+					<div class="chat-board__chatting-area" id="staging">
+
+					
+						<div class="d-flex class particular-chat-wrapper" >
+							<h4 class="chat user1  " style="width:98%">Hi {{session.username | title}}, I am EKAM. I am here to help you with your queries related to EKAM.</h4>
+						</div>
+						<div class="chat_op_buttons" id="rm_stag">
+							<button class="badges" onclick="button_intent_stag('ekam','EKAM')">EKAM</button>
+							<button class="badges" onclick="button_intent_stag('advith','ADVITH')">ADVITH</button>
+							<button class="badges" onclick="button_intent_stag('lnd','LND')">LND</button>
+
+							<a href="https://samadhan.unionbankofindia.co.in/UnionSamadhan/" target="_blank">
+								<button class="badges"> UNION SAMADHAN</button>
+							</a>
+							<a href="https://dms.unionbankofindia.co.in/webdesktop/CustomJobs/eCircular/Circular.jsp" target="_blank">
+								<button class="badges">  CIRCULARS</button>
+							</a>
+							<a href="https://ubinet.unionbankofindia.co.in/UBINET/eManualLinks.jsp" target="_blank">
+								<button class="badges">  E-MANUAL</button>
+							</a>
+							<a href="https://ubinet.unionbankofindia.co.in/UBINET/UsefulLinks.jsp?Id=1" target="_blank">
+								<button class="badges">  USEFUL LINKS</button>
+							</a>
+							<a href="https://lnd.unionbankofindia.co.in/university/" target="_blank">
+								<button class="badges">  University</button>
+							</a>
+							<a href="https://app2.unionbankofindia.co.in/ekammicrosite/AboutUS.aspx" target="_blank">
+								<button class="badges"> EKAM -Microsite</button>
+							</a>
+							<a href="https://ubinet.unionbankofindia.co.in/UBINET/index.jsp" target="_blank">
+								<button class="badges">  UBINET </button>
+							</a>
+						</div>  
+						
+						
+					</div>
+
+					<div class="chat-board__bottom">
+						<div class="chat-input  ">
+							<div class="input-sec">
+								<div class="input_img">
+									<img src="static/assets/img/avatar.svg" alt="user image">
+								</div>
+								<input type="text" id="txtInput_stag"  placeholder="Type a message..." autofocus />
+								<button type="button" onclick="send_msg_stag()" name="submit" id="press_enter_stag" hidden>SUBMIT</button>
+							</div>
+							<div class="send " onclick="check_data_stag()">
+								<img src="static/assets/img/icons/send-icon.png" alt="send-icon">
+							</div>
+						</div>
+					</div>
+				</div>
+			
+			</div>
+		<div class="close-btn staging-close-btn">
+			<span class="material-symbols-outlined ">close</span>
+		</div>
+	</div>
+	
+	<div class="production-environment col-lg-6 d-flex align-items-end justify-content-center">
+		<div class="chat-board">
+			<div class="chat-board__top">
+				<img src="static/assets/img/avatar.svg" alt="avatar">
+				<h3 class="top-heading mb-0">Need Help? Ask EKAM</h3>
+			</div>
+			<div class="chat_base_chatting" > 
+				<div class="chat-board__chatting-area" id="production">
+						
+						
+
+				</div>
+				<div class="chat-board__bottom">
+					<div class="chat-input d-flex ">
+						<div class="input-sec">
+							<div class="input_img">
+								<img src="static/assets/img/avatar.svg" alt="avatar">
+							</div>
+							<input type="text" id="txtInput" placeholder="Type a message..." autofocus />
+							<button type="button" onclick="send_msg()" name="submit" id="press_enter" hidden>SUBMIT</button>
+						</div>
+						<div class="send" onclick="check_data()">
+							<img src="static/assets/img/icons/send-icon.png" alt="send-icon">
+						</div>
+					</div>
+				</div>
+			
+	  		</div>
+		</div>
+			<div class="close-btn production-close-btn">
+				<span class="material-symbols-outlined">close</span>
+			</div>
+	</div>
+</div>
+
+<script>
+	$(".browse-btn").bind("click",function(){
+		$("#upload").click()
+	});
+	document.addEventListener('DOMContentLoaded', function () {
+        var txtInputStag = document.getElementById('txtInput_stag');
+		txtInputStag.focus()
+		var txtInputProd = document.getElementById('txtInput');
+		txtInputStag.placeholder="Select from provided options.";
+		txtInputProd.placeholder="Select from provided options."
+		txtInputProd.disabled=true;
+        txtInputStag.disabled = true;      
+    });
+	
+	//Staging close button code
+	$(".staging-close-btn").click(function(){
+		$(".staging-environment .chat-board").toggle();
+		if($(".staging-close-btn span").text()=="close"){
+			$(".staging-close-btn span").html('<img src="static/assets/img/avatar.svg" alt="user image">');
+			$(".staging-close-btn").css('background','transparent');
+
+			//animation of icon of close button
+			$(".staging-close-btn span").css('transform','rotate(90deg)');
+
+			$('.staging-close-btn').animate(
+				{ deg: -90},
+				{
+				duration: 300,
+				step: function(now) {
+					$(this).css({ transform: 'rotate(' + now + 'deg)' });
+
+				}
+				}
+			);
+			$(".staging-environment").removeClass("justify-content-center");
+			$(".staging-environment").addClass("justify-content-end");
+		}
+		else{
+			$(".staging-close-btn span").text("close");
+
+			//animation of icon of close button
+			$(".staging-close-btn span").css('transform','rotate(-90deg)');
+			$(".staging-close-btn").css('background','linear-gradient(90deg, rgba(28, 80, 134, 1) 42%, rgba(83, 161, 227, 1) 94%)');
+			$('.staging-close-btn').animate(
+				{ deg: 0},
+				{
+				duration: 300,
+				step: function(now) {
+					$(this).css({ transform: 'rotate(' + now + 'deg)' });
+				}
+				}
+			);
+			$(".staging-environment").removeClass("justify-content-end");
+			$(".staging-environment").addClass("justify-content-center");
+		}
+	});
+
+	//Production close button code
+	$(".production-close-btn").click(function(){
+		$(".production-environment .chat-board").toggle();
+		if($(".production-close-btn span").text()=="close"){
+			$(".production-close-btn span").html('<img src="static/assets/img/avatar.svg" alt="user image">');
+			$(".production-close-btn").css('background','transparent');
+			//animation of icon of close button
+			$(".production-close-btn span").css('transform','rotate(90deg)');
+			$('.production-close-btn').animate(
+				{ deg: -90},
+				{
+				duration: 300,
+				step: function(now) {
+					$(this).css({ transform: 'rotate(' + now + 'deg)' });
+				}
+				}
+			);
+			$(".production-environment").removeClass("justify-content-center");
+			$(".production-environment").addClass("justify-content-end");
+		}
+		else{
+			$(".production-close-btn span").text("close");
+
+			//animation of icon of close button
+			$(".production-close-btn span").css('transform','rotate(-90deg)');
+			$(".production-close-btn").css('background','linear-gradient(90deg, rgba(201, 53, 53, 1) 42%, rgba(240, 101, 110, 1) 94%)');
+
+			$('.production-close-btn').animate(
+				{ deg: 0},
+				{
+				duration: 300,
+				step: function(now) {
+					$(this).css({ transform: 'rotate(' + now + 'deg)' });
+				}
+				}
+			);
+			$(".production-environment").removeClass("justify-content-end");
+			$(".production-environment").addClass("justify-content-center");
+		}
+	});
+
+</script>
+<script>
+	var emp_no="{{ session['user_id'] }}";
+	var emp_name="{{ session['username'] }}";
+	window.onload = function() {
+		
+
+		// First AJAX request (staging)
+		$.ajax({
+			type: "POST",
+			url: "{{ url_for('bot_msg') }}",
+			data: {
+				msg: 'greet', // Replace with actual message
+				type: 'stag',
+				emp_no: emp_no, // Replace with actual emp_no
+				emp_name: emp_name // Replace with actual emp_name
+			},
+			success: function(result) {
+				$("#staging").append(result);
+
+				var txtInputStag = document.getElementById('txtInput_stag');
+				txtInputStag.disabled = false;
+				txtInputStag.placeholder = "Type a message...";
+				txtInputStag.focus();
+				$('#txtInput_stag').val("");
+				$('#staging').scrollTop($('#staging')[0].scrollHeight);
+			}
+		});
+
+		// Second AJAX request (production)
+		$.ajax({
+			type: "POST",
+			url: "{{ url_for('bot_msg') }}",
+			data: {
+				msg: 'greet', // Replace with actual message
+				type: 'prod',
+				emp_no: emp_no, // Replace with actual emp_no
+				emp_name: emp_name // Replace with actual emp_name
+			},
+			success: function(result) {
+				$("#production").append(result);
+
+				var txtInputProd = document.getElementById('txtInput');
+				txtInputProd.disabled = false;
+				txtInputProd.placeholder = "Type a message...";
+				$('#txtInput').val("");
+				$('#production').scrollTop($('#production')[0].scrollHeight);
+			}
+		});
+	};
+	function escapeHTML(str) {
+		return str.replace(/[&<>"'/]/g, function (char) {
+			switch (char) {
+				case '&':
+					return '&amp;';
+				case '<':
+					return '&lt;';
+				case '>':
+					return '&gt;';
+				case '"':
+					return '&quot;';
+				case '\'':
+					return '&#39;';
+				case '/':
+					return '&#x2F;';
+				default:
+					return char;
+			}
+		});
+	}
+    function send_msg(){
+			document.getElementById('txtInput').addEventListener('input', function() {
+				this.value = escapeHTML(this.value);
+			});
+			var msg = document.getElementById('txtInput').value;
+			var msg = escapeHTML(msg);
+		var emp_no = "{{ session['user_id'] }}";
+		var emp_name = "{{ session['username'] }}";
+        len_count = $("#txtInput").val().length
+        if(len_count < 200 ){
+	        $("#txtInput").attr('disabled','disabled');
+    	}else{
+    		if(len_count > 200){
+    			$("#production").append("<div class='d-flex class particular-chat-wrapper'><h4 class='chat user1' >Chat message is too large </h4></div>")
+    		}else if(len_count == 0){
+    		}
+    		$('#production').scrollTop($('#production')[0].scrollHeight);
+    	}
+		if(msg != '' && len_count < 200 ) {
+		 $("#production").append("<div class='d-flex class particular-chat-wrapper'><h4 class='chat user2'>"+msg+"</h4><div class='user2-name-letter name-letter'><img src='static/assets/img/avatar.svg' alt='user'></div></div>")
+         $('#txtInput').val("")
+         $('#txtInput').attr('disabled','disabled');
+            $.ajax({
+                type: "POST",
+                url: "{{ url_for('bot_msg') }}",
+                data: { msg: msg,type:'prod',emp_no:emp_no,emp_name:emp_name},
+                success: function (result) {
+					$('#rm_prod').remove();
+                	$("#txtInput").removeAttr('disabled');
+                    $("#production").append(result)
+					var txtInputStag = document.getElementById('txtInput');
+       				txtInputStag.disabled = false;
+					txtInputStag.placeholder="Type a message...";
+					txtInputStag.focus()
+                    $('#production').scrollTop($('#production')[0].scrollHeight);
+                }
+            });
+        }
+	}
+
+	function send_msg_stag(){
+		document.getElementById('txtInput_stag').addEventListener('input', function() {
+			this.value = escapeHTML(this.value);
+		});
+        var msg =  document.getElementById('txtInput_stag').value
+		var msg = escapeHTML(msg);
+		var emp_no = "{{ session['user_id'] }}";
+		var emp_name = "{{ session['username'] }}";
+        len_count = $("#txtInput_stag").val().length
+        if(len_count < 200 ){
+	        $("#txtInput_stag").attr('disabled','disabled');
+    	}else{
+    		if(len_count > 200){
+    			$("#staging").append("<div class='d-flex class particular-chat-wrapper'><h4 class='chat user1'>Chat message is too large </h4></div>")
+    		}else if(len_count == 0){
+    		}
+    		$('#staging').scrollTop($('#staging')[0].scrollHeight);
+    	}
+		if(msg != '' && len_count < 200 ) {
+		 $("#staging").append("<div class='d-flex class particular-chat-wrapper'><h4 class='chat user2'>"+msg+"</h4><div class='user2-name-letter name-letter'><img src='static/assets/img/avatar.svg' alt='user'></div></div>")
+         $('#txtInput_stag').val("")
+         $('#txtInput_stag').attr('disabled','disabled');
+            $.ajax({
+                type: "POST",
+                url: "{{ url_for('bot_msg') }}",
+                data: { msg: msg,type:'stag',emp_no:emp_no,emp_name:emp_name},
+                success: function (result) {
+                	$("#txtInput_stag").removeAttr('disabled');
+					$('#rm_stag').remove();
+                    $("#staging").append(result)
+					var txtInputStag = document.getElementById('txtInput_stag');
+       				txtInputStag.disabled = false;
+					txtInputStag.focus()
+					txtInputStag.placeholder="Type a message...";
+                    $('#staging').scrollTop($('#staging')[0].scrollHeight);
+                }
+            });
+        }
+	}
+
+	function button_intent_stag(intent,title){
+        var msg = intent
+        var emp_no = "{{ session['user_id'] }}";
+		var emp_name = "{{ session['username'] }}";
+		$('#rm_stag').remove()
+        $("#staging").append("<div class='d-flex class particular-chat-wrapper'><h4 class='chat user2'>"+title+"</h4><div class='user2-name-letter name-letter'><img src='static/assets/img/avatar.svg' alt='user'></div></div>")
+		$('#txtInput_stag').val("")
+		$.ajax({
+			type: "POST",
+			url: "{{ url_for('bot_msg') }}",
+			data: { msg: msg,type:'stag',emp_no:emp_no,emp_name:emp_name},
+			success: function (result) {
+				$("#staging").append(result)
+				var txtInputStag = document.getElementById('txtInput_stag');
+       			txtInputStag.disabled = false;
+				txtInputStag.placeholder="Type a message...";
+				txtInputStag.focus()
+				$('#txtInput_stag').val("") 
+				$('#staging').scrollTop($('#staging')[0].scrollHeight);
+            }
+		});
+	}
+
+    function button_intent(intent,title){
+		var emp_no = "{{ session['user_id'] }}";
+		var emp_name = "{{ session['username'] }}";
+        var msg = intent
+		$('#rm_prod').remove()
+        $("#production").append("<div class='d-flex class particular-chat-wrapper'><h4 class='chat user2'>"+title+"</h4><div class='user2-name-letter name-letter'><img src='static/assets/img/avatar.svg' alt='user'></div></div>")
+		$('#txtInput').val("")
+		$.ajax({
+			type: "POST",
+			url: "{{ url_for('bot_msg') }}",
+			data: { msg: msg,type:'prod',emp_no:emp_no,emp_name:emp_name},
+			success: function (result) {
+				$("#production").append(result)
+				var txtInputStag = document.getElementById('txtInput');
+       			txtInputStag.disabled = false;
+				txtInputStag.placeholder="Type a message...";
+
+				$('#production').scrollTop($('#production')[0].scrollHeight);
+            }
+		});
+	}
+	function check_data(){
+		$('#press_enter').click();
+	}
+	function check_data_stag(){
+		$('#press_enter_stag').click();
+	}
+    $(document).ready(function(){
+    $('#txtInput').keypress(function(e){
+      if(e.keyCode==13)
+      $('#press_enter').click();
+    });
+    $('#txtInput_stag').keypress(function(e){
+      if(e.keyCode==13)
+      $('#press_enter_stag').click();
+    });
+    });
+</script>
+
+{% endblock content %}
+
+
+

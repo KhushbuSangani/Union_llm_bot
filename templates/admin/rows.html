@@ -1,0 +1,38 @@
+{% for item in data %}
+<tr>
+    <td>{{item[0]}}</td>
+    <td>{{item[1]}}</td>
+    <td>{{item[2]}}</td>
+    <td>{{item[3]}}</td>
+    <td>
+        {% if item[7] == "2" %}
+            <div class="status-badge-untrain">Untrained</div>
+        {% elif item[7] == "3" %}
+            <div class="status-badge">Running</div>
+        {% elif item[7] == "4" %}
+            <div class="status-badge">Scheduled</div>
+        {% elif item[7] == "5" %}
+            <div class="status-badge">Training Failed</div>
+        {% elif item[7] == "7" %}
+            <div class="status-badge">Rejected</div>
+        {% elif item[7] == "8" %}
+            <div class="status-badge">Deleted</div>
+        {% else %}
+            <div class="status-badge">Trained</div>
+        {% endif %}
+    </td>
+    <td>{{item[5]}}<br>{{item[6]}}</td>
+    <td class="action-btn-wrapper">
+
+        <div class="" >
+            <div class="d-flex align-items-baseline action-popup__edit" style="float:left;" onclick="window.location.href='{{ url_for('intent.edit_intent', id=item[8]) }}';">
+                <img src="static/assets/img/icons/edit_icon.svg" alt="edit" style="width:20px;">
+
+            </div>
+            <div class="d-flex align-items-baseline action-popup__delete" onclick="delete_intent('{{item[8]}}')">
+                <img src="static/assets/img/icons/delete_icon.svg" alt="delete" style="width:17px;margin-left:5px">
+            </div>
+        </div>
+    </td>
+</tr>
+{% endfor %}

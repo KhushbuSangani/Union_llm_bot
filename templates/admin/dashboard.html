@@ -1,0 +1,230 @@
+{% extends "layout/base.html" %}
+{% block content %}
+
+<div class="intent-info w-100">
+    <div class="intents d-flex gap-4 flex-wrap flex-xl-nowrap">
+        <!-- <a href="{{ url_for('intent.display_intents', _external=True, _scheme= config['SSL_SECURITY']) }}" style="text-decoration: initial; !important">-->
+        <div class="intents__total intents__com cards">
+            <div class="intent_dashboard">
+                <h3 class="text-captalize"> <span>{{total_files}}</span> Total Files</h3>
+            </div>
+            <div class="d-flex flex-nowrap mt-3 p-4">
+                <div class="train-intent pt-3">
+                    <p class="text-capitalize intents__para mb-0"> Embedded Files </p>
+                    <span class="intents-counts"> {{embedded_files}} </span>
+                </div>
+                <div class="untrain-intent pt-3">
+                    <p class="text-capitalize intents__para mb-0"> untrained Files </p>
+                    <span class="intents-counts"> {{pending_files}} </span>
+                </div>
+            </div>
+        </div>
+        </a>
+        <!-- <a href="{{ url_for('training.training_status', _external=True, _scheme= config['SSL_SECURITY']) }}" style="text-decoration: initial; !important"> -->
+        <div class="intents__active intents__com position-relative cards">
+            <div class="intent_dashboard">
+             <h3 class="text-captalize mb-0" > Active Model : {{ active_model }}  </h3>
+            </div> 
+            <div class="p-4">
+                <!--<div class="model_list">
+                    <p class="text-capitalize model-title">
+                        Ollama Model:
+                        <span class="model-name"> {{ active_model }} </span>
+                    </p>
+                </div>-->
+            
+                <!-- Embedding Model Section -->
+                <div class="model_list">
+                    <p class="text-capitalize model-title">
+                        Embedding Model:
+                        <span class="model-name"> Sentence Transformer </span>
+                    </p>
+                </div>
+            
+                <p class="text-capitalize model-title">
+                    Change Model:</p>
+             <select id="model-selector" class="form-control" onchange="changeModel()">
+                <option value="" disabled selected>Select Model</option>
+                {% for model in available_models %}
+                    <option value="{{ model }}">{{ model }}</option>
+                {% endfor %}
+            </select>
+        <!-- <div class="text-capitalize intents-badge position-absolute"> Production </div> -->
+        
+            </div>
+        </div>
+        </a>
+        <!-- <a href="{{ url_for('training.training_status', _external=True, _scheme= config['SSL_SECURITY']) }}" style="text-decoration: initial; !important"> -->
+        <div class="intents__active intents__active-second intents__com position-relative cards">
+            <div class="intent_dashboard">
+                <h3 class="text-captalize mb-0"> Active User </h3>
+            </div>    
+            <div class="p-4">
+                <span class="intents__active-counts"> {{active_user}} </span>
+                {% if stag_name == ""%}
+                <p class="mt-3 intents__para text-capitalize"> No Model On Production Environment </p>
+                {% else %}
+                <p class="mt-3 intents__para text-capitalize"> Admin user : {{total_admin_user}} </p>
+                {% endif %}
+            </div>
+            <!-- <div class="text-capitalize intents-badge position-absolute"> Staging </div> -->
+        </div>
+        </a>
+    </div>
+    <div class="cards intent-info__model">
+        <div class="w-100 table-wrapper">
+            <h1>Chatbot Analytics Dashboard</h1>
+
+            <div class="chart-container">
+                <!-- Daily Queries Chart -->
+                <div class="chart-box">
+                    <canvas id="dailyChart">{{daily_counts}}</canvas>
+                </div>
+                <!-- Collection-wise Queries Chart -->
+                <div class="chart-box">
+                    <canvas id="collectionChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+
+
+<script>
+    // Parse JSON data passed from Flask
+    var dailyCounts = JSON.parse('{{ daily_counts | safe }}');
+    var collectionCounts = JSON.parse('{{ collection_counts | safe }}');
+
+    // Prepare data for the daily queries chart
+    var dailyLabels = dailyCounts.map(function(item) { return item.day; });
+    var dailyData = dailyCounts.map(function(item) { return item.count; });
+
+    var ctxDaily = document.getElementById('dailyChart').getContext('2d');
+    var dailyChart = new Chart(ctxDaily, {
+        type: 'line',
+        data: {
+            labels: dailyLabels,
+            datasets: [{
+                label: 'Queries per Day',
+                data: dailyData,
+                fill: false,
+                borderColor: 'blue',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Day'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Query Count'
+                    },
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    var collectionLabels = collectionCounts.map(function(item) { return item.collection; });
+    var collectionData = collectionCounts.map(function(item) { return item.count; });
+
+        
+    // Prepare data for the collection-wise queries chart
+    var ctxCollection = document.getElementById('collectionChart').getContext('2d');
+    var collectionChart = new Chart(ctxCollection, {
+        type: 'bar',
+        data: {
+            labels: collectionLabels, // Ideally, filtered to show top N collections
+            datasets: [{
+                label: 'Queries per Collection',
+                data: collectionData,     // Corresponding counts for each collection
+                backgroundColor: 'rgba(2, 68, 157, 0.7)'
+            }]
+        },
+    options: {
+        responsive: true,
+        scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: 'Collection',
+                    font: {
+                        size: 12,
+                        weight: 'bold'
+                    }
+                },
+                ticks: {
+                    autoSkip: true,
+                    maxRotation: 100,
+                    minRotation: 100
+                }
+            },
+            y: {
+                title: {
+                    display: true,
+                    text: 'Query Count',
+                    font: {
+                        size: 12,
+                        weight: 'bold'
+                    }
+                },
+                beginAtZero: true
+            }
+        },
+        plugins: {
+            zoom: {
+                // Enable zooming and panning (requires chartjs-plugin-zoom)
+                pan: {
+                    enabled: true,
+                    mode: 'x'
+                },
+                zoom: {
+                    wheel: {
+                        enabled: true,
+                    },
+                    pinch: {
+                        enabled: true
+                    },
+                    mode: 'x',
+                }
+            }
+        }
+    }
+    });
+
+
+    function changeModel() {
+        let selectedModel = $("#model-selector").val(); // Get selected model
+        console.log(selectedModel)
+        if (selectedModel) {
+            $.ajax({
+                url: "{{ url_for('change_model') }}",  // Flask endpoint
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ model_name: selectedModel }),
+                success: function(response) {
+                    if (response.success) {
+                        location.reload();  // Reload page to reflect changes
+                    } else {
+                        alert("Error changing model: " + response.error);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX Error:", error);
+                    alert("Failed to change model.");
+                }
+            });
+        }
+    }
+
+</script>
+
+{% endblock content %}

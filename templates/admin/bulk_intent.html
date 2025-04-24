@@ -1,0 +1,584 @@
+{% extends "layout/base.html" %}
+{% block content %}
+<style>
+    
+    .upload-field-wrapper{
+        margin-top:20px
+    }
+</style>
+<div class="intent-info w-100">
+    <div class="create-intent-main">
+        <ul class="nav  mb-3" id="pills-tab" role="tablist">
+          <!--  <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home"
+                    type="button" role="tab" aria-controls="pills-home" aria-selected="true">Add Single Intent</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile"
+                    type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Add Bulk
+                    Intent</button>
+            </li> -->
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active " id="pills-profile-tab_llm" data-bs-toggle="pill" data-bs-target="#pills-llm"
+                    type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Add Bulk
+                    Files For LLM RAG</button>
+            </li>
+        </ul>
+        <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane fade show" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab"
+                tabindex="0">
+                <div class="add-singleintent">
+                    <h4 class="add-singleintent__title">Add Single Intent</h4>
+                    <form onsubmit="return validateForm()" id="kt_modal_new_target_form_single" class="row g-3" action="{{ url_for('intent.add_single_intent') }}" method="post" enctype=multipart/form-data>
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <div class="col-md-6 add-singleintent__left">
+                            <div class="form-field">
+                                <label for="intent" class="form-label">Intent<span>*</span></label>
+                                <input type="text" class="form-control"  name="intent" id="intent" placeholder="Enter Intent">
+                                <span  class="has-error" id="intent_error" style="color:red;margin-top:5px;display:none"> Please Enter Intent </span>
+								<span  class="has-error" id="intent_check_error" style="color:red;margin-top:5px;display:none"> Intent already Added  </span>
+                            </div>
+                            <div class="form-field">
+                                <label for="responses_type" class="form-label" >Responses Type<span>*</span></label>
+                                <select class="form-select form-control" onchange="fetch_box()" id="responses_type" name="responses_type">
+                                    <option value=""> Select Response Type </option>
+                                    <option value="1"> Text </option>
+                                    <option value="2"> Buttons </option>
+                                    
+                                </select>
+                                <span  class="has-error" id="response_error" style="color:red;margin-top:5px;display:none"> Please Enter Response Type </span>
+                                
+                            </div>
+                            <div id="user_res" style="margin-top:20px;">
+
+                            </div>
+                        </div>
+
+                        <div class="add-singleintent__right col-md-6">
+                            <div class="form-field">
+                                <label for="title" class="form-label">Intent Title<span>*</span></label>
+                                <input type="text" class="form-control"  name="title" id="title" placeholder="Enter Intent Title">
+                                <span  class="has-error" id="title_error" style="color:red;margin-top:5px;display:none"> Please Enter Intent Title </span>
+								<span  class="has-error" id="title_check_error" style="color:red;margin-top:5px;display:none"> Intent Title already exist  </span>
+                            </div>
+                          
+                            <div class="form-field" >
+                                    <input type="hidden" value="0" id="count">
+                                    <label for="intent" class="form-label">Query<span>*</span></label>
+                                    <input type="text" class="form-control"  name="mytext_0" id="mytext_0" placeholder="Enter Query">
+                                    <span  class="has-error" id="mytext_0_error" style="color:red;margin-top:5px;display:none"> Please Enter Query </span>
+
+                            </div>
+                            <div id="data">
+                            </div>
+                            <div class="add-new-wrapper w-100" onclick="add_field()">
+                                <span class="add-new">+ Add New Query</span>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-4 area-text">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea class="form-control description" id="description" name="description" rows="4"
+                                    placeholder="Enter Details"></textarea>
+                            </div>
+                            <div class="btn-wrapper">
+                                <button type="submit" class="btn btn-addintent">ADD INTENT
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20px" height="20px" viewBox="0 -6.5 38 38" version="1.1">
+    
+                                    <title>right-arrow</title>
+                                    <desc>Created with Sketch.</desc>
+                                    <g id="icons" stroke="#fff" stroke-width="1" fill="#fff" fill-rule="evenodd">
+                                        <g id="ui-gambling-website-lined-icnos-casinoshunter" transform="translate(-1511.000000, -158.000000)" fill="#fff" fill-rule="nonzero">
+                                            <g id="1" transform="translate(1350.000000, 120.000000)">
+                                                <path d="M187.812138,38.5802109 L198.325224,49.0042713 L198.41312,49.0858421 C198.764883,49.4346574 198.96954,49.8946897 199,50.4382227 L198.998248,50.6209428 C198.97273,51.0514917 198.80819,51.4628128 198.48394,51.8313977 L198.36126,51.9580208 L187.812138,62.4197891 C187.031988,63.1934036 185.770571,63.1934036 184.990421,62.4197891 C184.205605,61.6415481 184.205605,60.3762573 184.990358,59.5980789 L192.274264,52.3739093 L162.99947,52.3746291 C161.897068,52.3746291 161,51.4850764 161,50.3835318 C161,49.2819872 161.897068,48.3924345 162.999445,48.3924345 L192.039203,48.3917152 L184.990421,41.4019837 C184.205605,40.6237427 184.205605,39.3584519 184.990421,38.5802109 C185.770571,37.8065964 187.031988,37.8065964 187.812138,38.5802109 Z" id="right-arrow">
+                                
+                                    </path>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </svg>
+                            </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab"
+                tabindex="0">
+                <div class="add-bulkintent">
+                    <div class="upload-section">
+                        <h4 class="upload-section__title">Add Bulk Intent</h4>
+                        <form id="kt_modal_new_target_form" class="row g-3" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <div class="col-md-8">
+                                <div class="blukintent_new">
+                                    <label for="upload" class="form-label">Upload Intent<span
+                                        class="star-mark">*</span><img
+                                        src="static/assets/img/icons/i_icon.svg" alt="i icon"
+                                        class="pb-2"></label>  
+                                    <div class="input-group">
+                                        <input type="file" class="form-control" id="intent_file" name="intent_file" aria-describedby="browse">
+                                        <input type="file" id="upload" style="display: none;">
+                                        <button class="browse-btn" type="button" id="browse">BROWSE</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-6 btn-wrapper">
+                                <button type="button" class="btn com-btn d-flex justify-content-between ms-3" id="uploadBtn">UPLOAD
+                                    <i class="fa fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </form>
+                        <p class="supported-file">Supported files: xlsx</p>
+                        <div class="col-md-3">
+                            <div id="sampledowmload" class="btn-wrapper blukintent_new">
+                                <button class="btn com-btn d-flex justify-content-between ms-3" style="display:block" onclick="window.location.href='{{ url_for( 'intent.download_sample_excel') }}';"> Download Sample Excel<i class="fa fa-arrow-right"></i></button>
+                            </div>
+                        </div>
+                        <div id="successMessage" style="display: none;" class="alert alert-success mt-3">
+                            Files uploaded successfully in supported format.
+                            <button type="button" class="close" aria-label="Close" onclick="closeSuccessMessage()">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <span  id="file_check_error" style="color:red;margin-top:5px;display:none;font-size:15px;"> Please Select file. </span>
+                        <span  id="errorfile" style="color:red;margin-top:5px;display:none;font-size:15px;"> There is some error while uploading file .</span>
+
+                        
+                    </div>
+                    <button class="text-uppercase btn-download" id="downloadButton" style="display: none; width: 140px;" onclick="window.location.href='{{ url_for( 'intent.download_error_file') }}';"> Download Error File </button>
+
+                </div>
+           </div>
+
+
+           <div class="tab-pane fade active show" id="pills-llm" role="tabpanel" aria-labelledby="pills-profile-tab_llm"
+           tabindex="0">
+           <div class="add-bulkintent_llm">
+               <div class="upload-section">
+                   <h4 class="upload-section__title">Add Bulk Files For LLM RAG</h4>
+                   <form id="kt_modal_new_target_form_llm" class="row g-3" method="post" enctype="multipart/form-data">
+                       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                       <div class="col-md-8">
+                           <div class="blukintent_new_llm">
+                               <label for="upload_llm" class="form-label">Upload Files<span
+                                   class="star-mark">*</span><img
+                                   src="static/assets/img/icons/i_icon.svg" alt="i icon"
+                                   class="pb-2"></label>  
+                               <div class="input-group">
+                                   <input type="file" class="form-control" id="llm_file" name="llm_file" aria-describedby="browse" multiple accept=".pdf,.docx,.csv,.xlsx">
+                                   <input type="file" id="uploadllm" style="display: none;">
+                                   <button class="browse-btn" type="button" id="browse">BROWSE</button>
+                               </div>
+                           </div>
+                       </div>
+                       <div class="col-md-4 col-6 btn-wrapper">
+                           <button type="button" class="btn com-btn d-flex justify-content-between ms-3" id="uploadBtnllm">UPLOAD
+                               <i class="fa fa-arrow-right"></i>
+                           </button>
+                       </div>
+                   </form>
+                   <p class="supported-file">Supported files: xlsx pdf csv text</p>
+                   <div class="col-md-3">
+                       <div id="sampledowmloadllm" class="btn-wrapper blukintent_new">
+                           <button class="btn com-btn d-flex justify-content-between ms-3" style="display:block" onclick="window.location.href='{{ url_for( 'intent.download_sample_excel') }}';"> Download Sample File<i class="fa fa-arrow-right"></i></button>
+                       </div>
+                   </div>
+                   <div id="successMessageLLM" style="display: none;" class="alert alert-success mt-3">
+                       Files uploaded successfully in supported format.
+                       <button type="button" class="close" aria-label="Close" onclick="closeSuccessMessageLLM()">
+                           <span aria-hidden="true">&times;</span>
+                       </button>
+                   </div>
+                   <span  id="file_check_error_llm" style="color:red;margin-top:5px;display:none;font-size:15px;font:bold;"> Please Select file. </span>
+                   <span  id="errorfilellm" style="color:red;margin-top:5px;display:none;font-size:15px;"> There is some error while uploading file .</span>
+
+                   
+               </div>
+               <button class="text-uppercase btn-download" id="downloadButton" style="display: none; width: 140px;" onclick="window.location.href='{{ url_for( 'intent.download_error_file') }}';"> Download Error File </button>
+
+           </div>
+      </div>
+        </div>
+    </div>
+</div>
+<script src="/static/assets/ajax/libs/js/jquery-3.6.4.min.js"></script>
+
+<script>
+    $("#browse").bind("click",function(){
+        $("#intent_file").click()
+    });
+</script>
+<script src="static/assets/ajax/libs/js/jquery.validate.min.js"> </script>
+
+<script>
+    
+   
+  function closeSuccessMessage() {
+        $("#successMessage").hide();
+    }
+  function closeDownload(){
+    $("#downloadButton").hide()
+    window.location.href = "{{ url_for('intent.display_intents') }}";
+  }
+
+  function hideErrorOnInput() {
+    $('#intent').on('input', function() {
+        $('#intent').removeClass("has-error");
+        $('#intent_error').hide();
+        $('#intent_check_error').hide();
+    });
+
+    $('#title').on('input', function() {
+        $('#title').removeClass("has-error");
+        $('#title_error').hide();
+        $('#title_check_error').hide();
+    });
+
+    
+
+    $('#mytext_0').on('input', function() {
+        $('#mytext_0').removeClass("has-error");
+        $('#mytext_0_error').hide();
+    });
+
+    $('#responses_type').on('change', function() {
+        $('#responses_type').removeClass("has-error");
+        $('#response_error').hide();
+    });
+
+    
+}
+$(document).on('input', '#intentresponses_0', function () {
+    $('#intentresponses_0').removeClass("has-error");
+    $('#intentresponses_0_error').hide();
+});
+
+$(document).on('input', '#res_text_data', function () {
+    $('#res_text_data').removeClass("has-error");
+    $('#res_text_error').hide();
+});
+
+$(document).on('change', '#intentresponses_payload_button_0', function () {
+    $('#intentresponses_payload_button_0').removeClass("has-error");
+    $('#intentresponses_payload_button_0_error').hide();
+});
+$(document).ready(function() {
+    hideErrorOnInput();
+});
+
+ $(document).ready(function () {
+    $("#uploadBtn").on("click", function () {
+        $("#uploadBtn").prop("disabled", true);
+        var formData = new FormData($("#kt_modal_new_target_form")[0]);
+
+        $.ajax({
+            headers: { 'X-CSRFToken': csrf_token },
+            url: "{{ url_for('intent.add_multiple_intents') }}",
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                    if (response.status == "error_occured") {
+                        $("#errorfile").show().delay(3000).fadeOut();
+                        $("#downloadButton").show()
+                        $("#uploadBtn").prop("disabled", false);
+                    }
+                    else if (response.status == "error"){
+                        $("#file_check_error").show().delay(3000).fadeOut();
+                        $("#uploadBtn").prop("disabled", false);
+                    }
+                    else {
+                        $("#successMessageLLM").show().delay(3000).fadeOut();
+                        window.location.href = "{{ url_for('intent.display_intents') }}";
+                    }
+                },
+            error: function (error) {
+                // Handle error
+                console.log(error);
+            },
+            complete: function () {
+                // Enable the upload button after upload process completes (success or failure)
+                $("#uploadBtn").prop("disabled", false);
+            }
+        });
+    });
+
+   
+});
+
+
+$(document).ready(function () {
+    $("#uploadBtnllm").on("click", function () {
+        $("#uploadBtnllm").prop("disabled", true);
+        var formData = new FormData($("#kt_modal_new_target_form_llm")[0]);
+        var csrf_token = $('input[name="csrf_token"]').val();
+        $.ajax({
+            headers: { 'X-CSRFToken': csrf_token },
+            url: "{{ url_for('intent.add_files_for_llm') }}",
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                $("#uploadBtnllm").prop("disabled", false);
+                if (response.status === "failed") {
+                    $("#errorfilellm").html(
+                        `<b>Error:</b> ${response.message || "Some files failed to upload due to incorrect format or missing headers."} <br> 
+                         <b>Failed Files:</b> ${response.failed_files ? response.failed_files.join(", ") : "None"}`
+                    ).show().delay(5000).fadeOut();
+                } 
+                else if (response.status === "error") {
+                    $("#file_check_error_llm").text(response.message || "Please select a valid file before uploading.")
+                        .show().delay(5000).fadeOut();
+                } 
+                else if (response.status === "success") {
+                    $("#successMessageLLM").html(`<b>${response.message || "Files uploaded successfully in supported format."}</b> <br> `
+                    ).show().delay(3000).fadeOut();
+                    setTimeout(function () {
+                        window.location.href = "{{ url_for('intent.display_llm_files') }}";
+                    }, 3000);
+                }
+            },
+            error: function (xhr) {
+                $("#errorfile").text("Error: " + (xhr.responseJSON?.message || "There was an error while uploading the file."))
+                    .show().delay(5000).fadeOut();
+                $("#uploadBtn").prop("disabled", false);
+            },
+            complete: function () {
+                // Enable the upload button after upload process completes (success or failure)
+                $("#uploadBtn").prop("disabled", false);
+            }
+        });
+    });
+
+   
+});
+
+
+
+
+
+
+   
+	function myFunction(){
+		if($("#train_now").is(":checked")){
+			$("#add").show()
+			$("#abc").hide()
+		}else if($("#train_later").is(":checked")){
+			$("#add").hide()
+			$("#abc").show()
+		}
+	}
+
+	function valid_file(){
+		var fname = $("#intent_file").val();
+		var re = /(\.xlsx)$/i;
+		if (!re.exec(fname)) {
+		  	$('#intent_file_error').show();
+			return false
+		}else{
+			return true
+		}
+	}
+	function validateForm() {
+        var answer1 = $('#intent').val();
+        var answer3 = $('#mytext_0').val();
+        var answer2 = $('#intentresponses_0').val();
+        var answer4 = $('#title').val()
+        const responsesType = document.getElementById("responses_type");
+        var payloadButtonValue = $('#intentresponses_payload_button_0').val(); // Get the selected value of the dropdown
+        document.getElementById("response_error").style.display = "none";
+
+        var answer1 = $.trim(answer1);
+        var answer2 = $.trim(answer2);
+        var answer3 = $.trim(answer3);
+        var answer4 = $.trim(answer4)
+        var csrf_token = $('input[name="csrf_token"]').val();
+
+
+		var check_result = null
+		$.ajax({
+			async: false,
+			type: "POST",
+            headers: { 'X-CSRFToken': csrf_token },
+			url: "{{ url_for('intent.check_intent') }}",
+			data: {answer1: answer1,answer4: answer4 },
+				success: function(result){
+				check_result = result.answer1
+                check_result1=result.answer4
+			}
+		});
+        var error_count = 0;
+        if (answer1 == "" || answer1 == null) {
+        	$('#intent').addClass("has-error");
+        	$('#intent_check_error').hide();
+            $('#intent_error').show();
+            error_count = 1;
+        }else if( check_result > 0){
+        	$('#intent').addClass("has-error");
+        	$('#intent_error').hide();
+			$('#intent_check_error').show();
+            error_count = 1;
+        } else {
+	        $('#intent').removeClass("has-error");
+            $('#intent_error').hide();
+            $('#intent_check_error').hide();
+        }
+
+        if (answer4 == "" || answer4 == null) {
+        	$('#title').addClass("has-error");
+        	$('#title_check_error').hide();
+            $('#title_error').show();
+            error_count = 1;
+        }else if( check_result1 > 0){
+            $('#title').addClass("has-error");
+        	$('#title_error').hide();
+			$('#title_check_error').show();
+            error_count = 1;
+        } else {
+	        $('#title').removeClass("has-error");
+            $('#title_error').hide();
+            $('#title_check_error').hide();
+        }
+
+        if ($('#intentresponses_0').length) {  // Check if #intentresponses_0 exists
+            if (answer2 == "" || answer2 == null) {
+                $('#intentresponses_0').addClass("has-error");
+                $('#intentresponses_0_error').show();
+                error_count = 1;
+            } else {
+                $('#intentresponses_0').removeClass("has-error");
+                $('#intentresponses_0_error').hide();
+            }
+        } else if ($('#res_text_data').length) {  // Check if #res_text exists
+            var resTextValue = $('#res_text_data').val();
+            if (resTextValue == "" || resTextValue == null) {
+                $('#res_text_data').addClass("has-error");
+                $('#res_text_error').show();
+                error_count = 1;
+            } else {
+                $('#res_text_data').removeClass("has-error");
+                $('#res_text_error').hide();
+            }
+        }
+        if (answer3 == "" || answer3 == null) {
+        	$('#mytext_0').addClass("has-error");
+            $('#mytext_0_error').show();
+            error_count = 1;
+        } else {
+        	$('#mytext_0').removeClass("has-error");
+            $('#mytext_0_error').hide();
+        }
+
+        // Validate Response Type
+        if (responsesType.value.trim() === "") {
+            $('#responses_type').addClass("has-error");
+            $('#response_error').show();
+            error_count = 1;
+        } else {
+        	$('#responses_type').removeClass("has-error");
+            $('#response_error').hide();
+        }
+
+        // Validation for #intentresponses_payload_button_0
+        if ($('#intentresponses_payload_button_0').length) { 
+            // Check if the dropdown exists
+            if (payloadButtonValue === "") {  // Check if no option is selected
+                $('#intentresponses_payload_button_0').addClass("has-error");
+                $('#intentresponses_payload_button_0_error').show();  // Show an error message
+                error_count = 1;
+            } else {
+                $('#intentresponses_payload_button_0').removeClass("has-error");
+                $('#intentresponses_payload_button_0_error').hide();  // Hide the error message
+            }
+        }
+        var selectedValues = [];
+
+        document.querySelectorAll('.form-select').forEach(function (select) {
+            var selectedOption = select.options[select.selectedIndex];
+            selectedValues.push(selectedOption ? selectedOption.value : null);
+        });
+
+        if (hasDuplicates(selectedValues)) {
+            error_count = 1; 
+            
+        }
+		if (error_count == 1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+
+    function hasDuplicates(array) {
+        var valuesSoFar = Object.create(null);
+
+        for (var i = 0; i < array.length; ++i) {
+            var value = array[i];
+
+            if (value in valuesSoFar) {
+                return true;
+            }
+
+            valuesSoFar[value] = true;
+        }
+
+        return false;
+    }
+
+
+	function add_field() {
+		var max_fields = 9;
+		var cnt = $("#count").val()
+		if (cnt < max_fields) {
+			cnt = parseInt(cnt) + 1;
+			$('#count').val(cnt);
+			$("#data").append('<div class="upload-field-wrapper d-flex align-items-end" id="' + cnt + '"><div class="upload-wrapper-new"><label for="res_text" class="form-label">Query<span></span></label><div class="d-flex"><div class="input-group"><input type="text" name="mytext_' + cnt + '" class="form-control" placeholder="Enter Query" name="intentresponses_' + cnt + '" aria-describedby="browse" ></div></div></div><button onclick=rm(' + cnt + ') class="minus-btn" ><span class="material-symbols-outlined"> remove</span></button></div>')
+		} else {
+			alert('You Reached the limits')
+		}
+	}
+	function rm(id) {
+		$("#" + id).html("")
+	}
+
+	
+	function res_rm(id) {
+		$("#res" + id).html("")
+	}
+	function fetch_box(){
+        var csrf_token = $('input[name="csrf_token"]').val();
+
+		var res_type = $('#responses_type').val()
+		$.ajax({
+			type: "POST",
+            headers: { 'X-CSRFToken': csrf_token },
+			url: "{{ url_for('intent.intent_res') }}",
+			data: { res_type: res_type},
+			success: function (result) {
+				$('#user_res').html(result);
+			}
+		});
+	}
+	function res_add_field_button(){
+        var csrf_token = $('input[name="csrf_token"]').val();
+
+		var cnt = $("#res_count_button").val()
+		var cnt = parseInt(cnt) + 1;
+		$("#res_count_button").val(cnt)
+		$.ajax({
+			type: "POST",
+			data: { cnt: cnt},
+            headers: { 'X-CSRFToken': csrf_token },
+			url: "{{ url_for('response.button_view') }}",
+			success: function (result) {
+				$('#res_data_buttons').append(result);
+			}
+		});
+	}
+</script>
+{% endblock content %}

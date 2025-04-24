@@ -1,0 +1,16 @@
+# Use a lightweight base image
+FROM python:3.9-slim
+
+# Set working directory
+WORKDIR /ai4bharat
+
+# Copy model files into the container
+COPY --chmod=755 ai4bharat/ /ai4bharat/
+
+# Set appropriate permissions
+
+# Define the volume to share with other containers
+VOLUME ["/ai4bharat"]
+
+# Default command (can be overridden)
+CMD ["echo", "Model container is ready."]

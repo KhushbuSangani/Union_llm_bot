@@ -1,0 +1,159 @@
+[09/04/2025 12:05:19] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:210} INFO - Use pytorch device_name: cpu
+[09/04/2025 12:05:19] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:218} INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+[09/04/2025 12:05:23] {/usr/lib/python3.9/warnings.py:109} WARNING - /home/neosoft/workspace/llm/LLM_union/app.py:283: LangChainDeprecationWarning: The class `Ollama` was deprecated in LangChain 0.3.1 and will be removed in 1.0.0. An updated version of the class exists in the :class:`~langchain-ollama package and should be used instead. To use it run `pip install -U :class:`~langchain-ollama` and import as `from :class:`~langchain_ollama import OllamaLLM``.
+  model = Ollama(model=config.MODEL_NAME,temperature=0.1,base_url=os.getenv("OLLAMA_URL"))
+
+[09/04/2025 12:05:23] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:210} INFO - Use pytorch device_name: cpu
+[09/04/2025 12:05:23] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:218} INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+[09/04/2025 12:05:26] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:6001
+ * Running on http://192.168.29.24:6001
+[09/04/2025 12:05:26] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - [33mPress CTRL+C to quit[0m
+[09/04/2025 12:05:26] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Restarting with stat
+[09/04/2025 12:05:32] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:210} INFO - Use pytorch device_name: cpu
+[09/04/2025 12:05:32] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:218} INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+[09/04/2025 12:05:36] {/usr/lib/python3.9/warnings.py:109} WARNING - /home/neosoft/workspace/llm/LLM_union/app.py:283: LangChainDeprecationWarning: The class `Ollama` was deprecated in LangChain 0.3.1 and will be removed in 1.0.0. An updated version of the class exists in the :class:`~langchain-ollama package and should be used instead. To use it run `pip install -U :class:`~langchain-ollama` and import as `from :class:`~langchain_ollama import OllamaLLM``.
+  model = Ollama(model=config.MODEL_NAME,temperature=0.1,base_url=os.getenv("OLLAMA_URL"))
+
+[09/04/2025 12:05:36] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:210} INFO - Use pytorch device_name: cpu
+[09/04/2025 12:05:36] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:218} INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+[09/04/2025 12:05:39] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} WARNING -  * Debugger is active!
+[09/04/2025 12:05:39] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Debugger PIN: 109-529-040
+[09/04/2025 12:05:41] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:210} INFO - Use pytorch device_name: cpu
+[09/04/2025 12:05:41] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:218} INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+[09/04/2025 12:05:45] {/usr/lib/python3.9/warnings.py:109} WARNING - /home/neosoft/workspace/llm/LLM_union/app.py:283: LangChainDeprecationWarning: The class `Ollama` was deprecated in LangChain 0.3.1 and will be removed in 1.0.0. An updated version of the class exists in the :class:`~langchain-ollama package and should be used instead. To use it run `pip install -U :class:`~langchain-ollama` and import as `from :class:`~langchain_ollama import OllamaLLM``.
+  model = Ollama(model=config.MODEL_NAME,temperature=0.1,base_url=os.getenv("OLLAMA_URL"))
+
+[09/04/2025 12:05:45] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:210} INFO - Use pytorch device_name: cpu
+[09/04/2025 12:05:45] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:218} INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+[09/04/2025 12:07:06] {/home/neosoft/workspace/llm/LLM_union/app.py:240} INFO - logged in successfully
+[09/04/2025 12:07:06] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 127.0.0.1 - - [09/Apr/2025 12:07:06] "[35m[1mGET /admin_login?param=RK3fNibDvs1mg0Ldr5lx HTTP/1.1[0m" 500 -
+[09/04/2025 12:07:06] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 127.0.0.1 - - [09/Apr/2025 12:07:06] "GET /admin_login?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+[09/04/2025 12:07:06] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 127.0.0.1 - - [09/Apr/2025 12:07:06] "GET /admin_login?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+[09/04/2025 12:07:06] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 127.0.0.1 - - [09/Apr/2025 12:07:06] "GET /admin_login?__debugger__=yes&cmd=resource&f=console.png&s=BKFZ1FrPeLhgZJwcHLsu HTTP/1.1" 200 -
+[09/04/2025 12:23:35] {/home/neosoft/workspace/llm/LLM_union/app.py:240} INFO - logged in successfully
+[09/04/2025 12:23:35] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 127.0.0.1 - - [09/Apr/2025 12:23:35] "[32mGET /admin_login?param=RK3fNibDvs1mg0Ldr5lx HTTP/1.1[0m" 302 -
+[09/04/2025 12:23:37] {/home/neosoft/workspace/llm/LLM_union/controller/admin.py:40} ERROR - Error fetching Ollama models: HTTPConnectionPool(host='192.168.29.24', port=12345): Max retries exceeded with url: /api/tags (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f9cacbf3e80>: Failed to establish a new connection: [Errno 111] Connection refused'))
+[09/04/2025 12:23:37] {/home/neosoft/workspace/llm/LLM_union/controller/admin.py:96} INFO - []
+[09/04/2025 12:23:37] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 127.0.0.1 - - [09/Apr/2025 12:23:37] "GET /dashboard HTTP/1.1" 200 -
+[09/04/2025 12:23:37] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 127.0.0.1 - - [09/Apr/2025 12:23:37] "[36mGET /static/assets/ajax/dist/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+[09/04/2025 12:23:37] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 127.0.0.1 - - [09/Apr/2025 12:23:37] "[36mGET /static/assets/bootstrap-toastr/toastr.min.css HTTP/1.1[0m" 304 -
+[09/04/2025 12:23:37] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 127.0.0.1 - - [09/Apr/2025 12:23:37] "[36mGET /static/assets/ajax/libs/jquery/jquery-confirm.min.css HTTP/1.1[0m" 304 -
+[09/04/2025 12:23:37] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 127.0.0.1 - - [09/Apr/2025 12:23:37] "[36mGET /static/assets/css/style.css HTTP/1.1[0m" 304 -
+[09/04/2025 12:23:37] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 127.0.0.1 - - [09/Apr/2025 12:23:37] "[36mGET /static/assets/ajax/libs/jquery/jquery.min.js HTTP/1.1[0m" 304 -
+[09/04/2025 12:23:37] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 127.0.0.1 - - [09/Apr/2025 12:23:37] "[36mGET /static/assets/bootstrap-toastr/toastr.js HTTP/1.1[0m" 304 -
+[09/04/2025 12:23:37] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 127.0.0.1 - - [09/Apr/2025 12:23:37] "[36mGET /static/assets/fonts/material_style.css HTTP/1.1[0m" 304 -
+[09/04/2025 12:23:37] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 127.0.0.1 - - [09/Apr/2025 12:23:37] "[36mGET /static/assets/ajax/libs/jquery/jquery-confirm.min.js HTTP/1.1[0m" 304 -
+[09/04/2025 12:23:37] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 127.0.0.1 - - [09/Apr/2025 12:23:37] "[36mGET /static/assets/js/charts.js HTTP/1.1[0m" 304 -
+[09/04/2025 12:23:37] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 127.0.0.1 - - [09/Apr/2025 12:23:37] "[36mGET /static/assets/bootstrap-toastr/ui-toastr.min.js HTTP/1.1[0m" 304 -
+[09/04/2025 12:23:37] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 127.0.0.1 - - [09/Apr/2025 12:23:37] "[36mGET /static/assets/bootstrap-toastr/toastr.min.js HTTP/1.1[0m" 304 -
+[09/04/2025 12:23:37] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 127.0.0.1 - - [09/Apr/2025 12:23:37] "[36mGET /static/assets/fonts/all.min.css HTTP/1.1[0m" 304 -
+[09/04/2025 12:23:37] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 127.0.0.1 - - [09/Apr/2025 12:23:37] "[36mGET /static/assets/js/logout_popup.js HTTP/1.1[0m" 304 -
+[09/04/2025 12:23:37] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 127.0.0.1 - - [09/Apr/2025 12:23:37] "[36mGET /static/assets/ajax/libs/js/jquery.dataTables.min.js HTTP/1.1[0m" 304 -
+[09/04/2025 12:23:37] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 127.0.0.1 - - [09/Apr/2025 12:23:37] "[36mGET /static/assets/ajax/libs/js/purify.min.js HTTP/1.1[0m" 304 -
+[09/04/2025 12:23:37] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 127.0.0.1 - - [09/Apr/2025 12:23:37] "[36mGET /static/assets/js/toggle.js HTTP/1.1[0m" 304 -
+[09/04/2025 12:23:37] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 127.0.0.1 - - [09/Apr/2025 12:23:37] "[36mGET /static/assets/ajax/libs/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+[09/04/2025 12:23:37] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 127.0.0.1 - - [09/Apr/2025 12:23:37] "GET /static/assets/img/icons/intent_list.svg HTTP/1.1" 200 -
+[09/04/2025 12:23:37] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 127.0.0.1 - - [09/Apr/2025 12:23:37] "GET /static/assets/img/icons/trained_models.svg HTTP/1.1" 200 -
+[09/04/2025 12:23:37] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 127.0.0.1 - - [09/Apr/2025 12:23:37] "GET /static/assets/img/icons/chat_audit.svg HTTP/1.1" 200 -
+[09/04/2025 12:23:37] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 127.0.0.1 - - [09/Apr/2025 12:23:37] "GET /static/assets/img/blank.png HTTP/1.1" 200 -
+[09/04/2025 12:23:37] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 127.0.0.1 - - [09/Apr/2025 12:23:37] "[36mGET /static/assets/img/icons/dashboard.svg HTTP/1.1[0m" 304 -
+[09/04/2025 12:23:37] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 127.0.0.1 - - [09/Apr/2025 12:23:37] "[36mGET /static/assets/img/icons/create_intent.svg HTTP/1.1[0m" 304 -
+[09/04/2025 12:23:37] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 127.0.0.1 - - [09/Apr/2025 12:23:37] "[36mGET /static/assets/img/logo.svg HTTP/1.1[0m" 304 -
+[09/04/2025 12:23:37] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 127.0.0.1 - - [09/Apr/2025 12:23:37] "GET /static/assets/img/icons/upward_arrow.svg HTTP/1.1" 200 -
+[09/04/2025 12:23:37] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 127.0.0.1 - - [09/Apr/2025 12:23:37] "GET /static/assets/img/icons/downward_arrow.svg HTTP/1.1" 200 -
+[09/04/2025 12:23:37] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 127.0.0.1 - - [09/Apr/2025 12:23:37] "[36mGET /static/assets/fonts/proxima/ProximaNova-Regular.woff2 HTTP/1.1[0m" 304 -
+[09/04/2025 14:41:47] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Detected change in '/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/huggingface_hub/inference/_generated/types/fill_mask.py', reloading
+[09/04/2025 14:41:48] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Restarting with stat
+[09/04/2025 14:41:58] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:210} INFO - Use pytorch device_name: cpu
+[09/04/2025 14:41:58] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:218} INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+[09/04/2025 14:42:01] {/usr/lib/python3.9/warnings.py:109} WARNING - /home/neosoft/workspace/llm/LLM_union/app.py:283: LangChainDeprecationWarning: The class `Ollama` was deprecated in LangChain 0.3.1 and will be removed in 1.0.0. An updated version of the class exists in the :class:`~langchain-ollama package and should be used instead. To use it run `pip install -U :class:`~langchain-ollama` and import as `from :class:`~langchain_ollama import OllamaLLM``.
+  model = Ollama(model=config.MODEL_NAME,temperature=0.1,base_url=os.getenv("OLLAMA_URL"))
+
+[09/04/2025 14:42:01] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:210} INFO - Use pytorch device_name: cpu
+[09/04/2025 14:42:01] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:218} INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+[09/04/2025 14:42:04] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} WARNING -  * Debugger is active!
+[09/04/2025 14:42:04] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Debugger PIN: 109-529-040
+[09/04/2025 15:03:11] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Detected change in '/home/neosoft/workspace/llm/LLM_union/IndicTrans2/indic_nlp_library/indicnlp/version.py', reloading
+[09/04/2025 15:03:12] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Restarting with stat
+[09/04/2025 15:03:19] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:210} INFO - Use pytorch device_name: cpu
+[09/04/2025 15:03:19] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:218} INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+[09/04/2025 15:03:24] {/usr/lib/python3.9/warnings.py:109} WARNING - /home/neosoft/workspace/llm/LLM_union/app.py:283: LangChainDeprecationWarning: The class `Ollama` was deprecated in LangChain 0.3.1 and will be removed in 1.0.0. An updated version of the class exists in the :class:`~langchain-ollama package and should be used instead. To use it run `pip install -U :class:`~langchain-ollama` and import as `from :class:`~langchain_ollama import OllamaLLM``.
+  model = Ollama(model=config.MODEL_NAME,temperature=0.1,base_url=os.getenv("OLLAMA_URL"))
+
+[09/04/2025 15:03:24] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:210} INFO - Use pytorch device_name: cpu
+[09/04/2025 15:03:24] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:218} INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+[09/04/2025 15:03:26] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} WARNING -  * Debugger is active!
+[09/04/2025 15:03:26] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Debugger PIN: 109-529-040
+[09/04/2025 15:15:33] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Detected change in '/home/neosoft/workspace/llm/LLM_union/IndicTrans2/huggingface_interface/IndicTransToolkit/IndicTransToolkit/version.py', reloading
+[09/04/2025 15:15:34] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Restarting with stat
+[09/04/2025 15:15:41] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:210} INFO - Use pytorch device_name: cpu
+[09/04/2025 15:15:41] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:218} INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+[09/04/2025 15:15:48] {/usr/lib/python3.9/warnings.py:109} WARNING - /home/neosoft/workspace/llm/LLM_union/app.py:283: LangChainDeprecationWarning: The class `Ollama` was deprecated in LangChain 0.3.1 and will be removed in 1.0.0. An updated version of the class exists in the :class:`~langchain-ollama package and should be used instead. To use it run `pip install -U :class:`~langchain-ollama` and import as `from :class:`~langchain_ollama import OllamaLLM``.
+  model = Ollama(model=config.MODEL_NAME,temperature=0.1,base_url=os.getenv("OLLAMA_URL"))
+
+[09/04/2025 15:15:48] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:210} INFO - Use pytorch device_name: cpu
+[09/04/2025 15:15:48] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:218} INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+[09/04/2025 15:15:51] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} WARNING -  * Debugger is active!
+[09/04/2025 15:15:51] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Debugger PIN: 109-529-040
+[09/04/2025 16:55:47] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Detected change in '/home/neosoft/workspace/llm/LLM_union/app.py', reloading
+[09/04/2025 16:55:48] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Restarting with stat
+[09/04/2025 16:55:56] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:210} INFO - Use pytorch device_name: cpu
+[09/04/2025 16:55:56] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:218} INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+[09/04/2025 16:56:00] {/usr/lib/python3.9/warnings.py:109} WARNING - /home/neosoft/workspace/llm/LLM_union/app.py:282: LangChainDeprecationWarning: The class `Ollama` was deprecated in LangChain 0.3.1 and will be removed in 1.0.0. An updated version of the class exists in the :class:`~langchain-ollama package and should be used instead. To use it run `pip install -U :class:`~langchain-ollama` and import as `from :class:`~langchain_ollama import OllamaLLM``.
+  model = Ollama(model=config.MODEL_NAME,temperature=0.1,base_url=os.getenv("OLLAMA_URL"))
+
+[09/04/2025 16:56:00] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:210} INFO - Use pytorch device_name: cpu
+[09/04/2025 16:56:00] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:218} INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+[09/04/2025 16:56:02] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} WARNING -  * Debugger is active!
+[09/04/2025 16:56:02] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Debugger PIN: 109-529-040
+[09/04/2025 19:19:43] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Detected change in '/home/neosoft/workspace/llm/LLM_union/opti_translate_all.py', reloading
+[09/04/2025 19:19:44] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Restarting with stat
+[09/04/2025 19:19:51] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:210} INFO - Use pytorch device_name: cpu
+[09/04/2025 19:19:51] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:218} INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+[09/04/2025 19:19:55] {/usr/lib/python3.9/warnings.py:109} WARNING - /home/neosoft/workspace/llm/LLM_union/app.py:282: LangChainDeprecationWarning: The class `Ollama` was deprecated in LangChain 0.3.1 and will be removed in 1.0.0. An updated version of the class exists in the :class:`~langchain-ollama package and should be used instead. To use it run `pip install -U :class:`~langchain-ollama` and import as `from :class:`~langchain_ollama import OllamaLLM``.
+  model = Ollama(model=config.MODEL_NAME,temperature=0.1,base_url=os.getenv("OLLAMA_URL"))
+
+[09/04/2025 19:19:55] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:210} INFO - Use pytorch device_name: cpu
+[09/04/2025 19:19:55] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:218} INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+[09/04/2025 19:19:58] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} WARNING -  * Debugger is active!
+[09/04/2025 19:19:58] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Debugger PIN: 109-529-040
+[09/04/2025 19:20:27] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Detected change in '/home/neosoft/workspace/llm/LLM_union/translate.py', reloading
+[09/04/2025 19:20:28] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Restarting with stat
+[09/04/2025 19:20:36] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:210} INFO - Use pytorch device_name: cpu
+[09/04/2025 19:20:36] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:218} INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+[09/04/2025 19:20:40] {/usr/lib/python3.9/warnings.py:109} WARNING - /home/neosoft/workspace/llm/LLM_union/app.py:282: LangChainDeprecationWarning: The class `Ollama` was deprecated in LangChain 0.3.1 and will be removed in 1.0.0. An updated version of the class exists in the :class:`~langchain-ollama package and should be used instead. To use it run `pip install -U :class:`~langchain-ollama` and import as `from :class:`~langchain_ollama import OllamaLLM``.
+  model = Ollama(model=config.MODEL_NAME,temperature=0.1,base_url=os.getenv("OLLAMA_URL"))
+
+[09/04/2025 19:20:40] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:210} INFO - Use pytorch device_name: cpu
+[09/04/2025 19:20:40] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:218} INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+[09/04/2025 19:20:43] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} WARNING -  * Debugger is active!
+[09/04/2025 19:20:43] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Debugger PIN: 109-529-040
+[09/04/2025 19:55:16] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Detected change in '/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/transformers/models/clvp/__init__.py', reloading
+[09/04/2025 19:55:17] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Restarting with stat
+[09/04/2025 19:55:24] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:210} INFO - Use pytorch device_name: cpu
+[09/04/2025 19:55:24] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:218} INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+[09/04/2025 19:55:25] {/usr/lib/python3.9/warnings.py:109} WARNING - /home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/huggingface_hub/file_download.py:896: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+
+[09/04/2025 19:55:28] {/usr/lib/python3.9/warnings.py:109} WARNING - /home/neosoft/workspace/llm/LLM_union/app.py:282: LangChainDeprecationWarning: The class `Ollama` was deprecated in LangChain 0.3.1 and will be removed in 1.0.0. An updated version of the class exists in the :class:`~langchain-ollama package and should be used instead. To use it run `pip install -U :class:`~langchain-ollama` and import as `from :class:`~langchain_ollama import OllamaLLM``.
+  model = Ollama(model=config.MODEL_NAME,temperature=0.1,base_url=os.getenv("OLLAMA_URL"))
+
+[09/04/2025 19:55:28] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:210} INFO - Use pytorch device_name: cpu
+[09/04/2025 19:55:28] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:218} INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+[09/04/2025 19:55:29] {/usr/lib/python3.9/warnings.py:109} WARNING - /home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/huggingface_hub/file_download.py:896: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+
+[09/04/2025 19:55:31] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} WARNING -  * Debugger is active!
+[09/04/2025 19:55:31] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Debugger PIN: 109-529-040
+[10/04/2025 11:00:20] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Detected change in '/home/neosoft/workspace/llm/LLM_union/translate.py', reloading
+[10/04/2025 11:00:21] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Restarting with stat
+[10/04/2025 11:01:25] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Restarting with stat
+[10/04/2025 11:09:43] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Restarting with stat
+[10/04/2025 11:10:22] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Restarting with stat
+[10/04/2025 11:11:11] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Restarting with stat
+[10/04/2025 11:12:03] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Restarting with stat
+[10/04/2025 11:15:39] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Restarting with stat
+[10/04/2025 11:16:28] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Restarting with stat
+[10/04/2025 11:26:05] {/home/neosoft/workspace/llm/LLM_union/test_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Restarting with stat

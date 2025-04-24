@@ -1,0 +1,25 @@
+title ,query,response
+ROI-loans and advance,What is the Overnight MCLR rate applicable from 11th October 2024 to 10th November 2024?,The Overnight MCLR rate applicable from 11th October 2024 to 10th November 2024 is 8.20%.
+ROI-loans and advance,What is the MCLR rate for a 1-month loan during the period of 11th October 2024 to 10th November 2024?,The MCLR rate for a 1-month loan during this period is 8.20%.
+ROI-loans and advance,What MCLR rate applies for a 3-month loan from 11th October 2024 to 10th November 2024?,The MCLR rate for a 3-month loan from 11th October 2024 to 10th November 2024 is 8.55%.
+ROI-loans and advance,What is the MCLR for a 6-month loan applicable from 11th October 2024?,The MCLR for a 6-month loan starting 11th October 2024 is 8.85%.
+ROI-loans and advance,What is the 1-year MCLR rate applicable between 11th October 2024 and 10th November 2024?,The 1-year MCLR rate for this period is 8.95%.
+ROI-loans and advance,What is the MCLR rate for a 2-year term loan applicable from 11th October 2024?,The MCLR rate for a 2-year term loan from 11th October 2024 is 9.05%.
+ROI-loans and advance,What MCLR rate is set for a 3-year loan during the period from 11th October 2024 to 10th November 2024?,The MCLR rate for a 3-year loan from 11th October 2024 to 10th November 2024 is 9.10%.
+ROI-loans and advance,What is the base rate effective from 1st October 2024?,The base rate effective from 1st October 2024 is 10.70%.
+ROI-loans and advance,What is the Benchmark Prime Lending Rate (BPLR) effective from 1st April 2020?, The Benchmark Prime Lending Rate (BPLR) effective from 1st April 2020 is 13.25%.
+ROI-loans and advance,What is the EBLR (Repo Rate) effective from 11th October 2024?,The EBLR (Repo Rate) effective from 11th October 2024 is 9.25%.
+ROI-loans and advance,"Between 11th October and 10th November 2024, what MCLR rate applies for overnight, 1 month, 3 months, 6 months, 1 year, 2 years, and 3 years respectively?","The MCLR rates applicable are as follows:
+
+- Overnight: 8.20%
+- 1 month: 8.20%
+- 3 months: 8.55%
+- 6 months: 8.85%
+- 1 year: 8.95%
+- 2 years: 9.05%
+- 3 years: 9.10%."
+ROI-loans and advance,What is the significance of the base rate effective from 1st October 2024 in the lending framework?,"The base rate, effective from 1st October 2024 at 10.70%, is the minimum rate below which banks cannot lend, ensuring transparency in the lending rates."
+ROI-loans and advance,"How is the BPLR, effective since 1st April 2020, relevant for certain lending products?","The BPLR, set at 13.25% from 1st April 2020, applies to loans that are not linked to MCLR, giving certain customers a benchmark for variable interest rates."
+ROI-loans and advance,What impact does the EBLR (Repo Rate) have on interest rates as of 11th October 2024? ,"The EBLR, at 9.25% effective from 11th October 2024, links loan interest rates to the repo rate, allowing for faster transmission of RBI policy rate changes to borrowers."
+ROI-loans and advance,"When comparing MCLR and base rates, which one is lower as of the latest update, and what are their respective rates?","As of the latest update, the MCLR rates (ranging from 8.20% to 9.10% for various terms) are generally lower than the base rate, which is set at 10.70% from 1st October 2024."
+ROI-loans and advance,Why would a borrower choose a loan linked to EBLR (9.25% as of 11th October 2024) rather than MCLR or base rate?,"Borrowers may prefer EBLR-linked loans as EBLR is directly tied to the repo rate, allowing for more immediate benefits from rate cuts in response to changes in the RBI's policy."

@@ -1,0 +1,12 @@
+title ,query,response
+union cash,What is the maximum loan amount available under Union Cash for pensioners up to the age of 70?,The maximum loan amount available for pensioners up to the age of 70 is Rs.10.00 lakh.
+union cash,What is the loan amount limit under Union Cash for pensioners above the age of 70?,Pensioners above the age of 70 can avail of a maximum loan amount of Rs.5.00 lakh under Union Cash.
+union cash,"What is the maximum loan amount available under Union Cash for family pensioners, regardless of their age?","Family pensioners, regardless of age, can avail a maximum loan amount of Rs.3.00 lakh under Union Cash."
+union cash,What is the repayment tenure for Union Cash loans for applicants up to the age of 70?, The maximum repayment tenure for Union Cash loans for applicants up to the age of 70 is 5 years.
+union cash,How long is the repayment period for Union Cash loans if the applicant is above 70 years old?,The maximum repayment tenure for Union Cash loans for applicants above 70 years old is 3 years.
+union cash,Who can avail of a Union Cash loan amounting up to Rs.10.00 lakh?,Pensioners up to the age of 70 can avail of a Union Cash loan amounting up to Rs.10.00 lakh.
+union cash,"Can a family pensioner of any age apply for a Union Cash loan, and if so, what is the maximum amount they can receive?","Yes, a family pensioner of any age can apply for a Union Cash loan, with a maximum amount of Rs.3.00 lakh."
+union cash," If a pensioner is 72 years old, what would be the maximum repayment period for a Union Cash loan?","For a pensioner who is 72 years old, the maximum repayment period for a Union Cash loan is 3 years."
+union cash,"Under Union Cash, what is the loan amount limit for a pensioner who is aged 68?",A pensioner aged 68 can avail a loan amount up to Rs.10.00 lakh under Union Cash.
+union cash,"For Union Cash loans, how does the repayment tenure differ based on the age of the applicant?","For Union Cash loans, the repayment tenure is up to 5 years for applicants up to the age of 70, and 3 years for applicants above 70 years."
+union cash,Who is eligible for a Union Cash loan of Rs.5.00 lakh?,Pensioners above the age of 70 are eligible for a Union Cash loan of Rs.5.00 lakh.

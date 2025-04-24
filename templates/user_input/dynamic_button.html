@@ -1,0 +1,15 @@
+<div class="upload-field-wrapper d-flex align-items-end" id="res{{cnt}}">
+    <div class="upload-wrapper-new"> 
+        <label for="intentresponses_payload_button_{{cnt}}" class="form-label">Button Intent<span>*</span></label>
+        <div class="d-flex">
+            <select id="intentresponses_payload_button_{{cnt}}" class="form-select form-control"  name="intentresponses_payload_button_{{cnt}}">
+                <option value=""> Select Response  </option>
+                {% for item in data_button %}
+                    <option value="{{item[1]}}"> {{item[1]}}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <button class="minus-btn" onclick=res_rm('{{cnt}}')><span class="material-symbols-outlined"> remove</span></button>
+    <span  class="has-error" id="button_error" style="color:red;margin-top:5px;display:none"> selected option is already available  </span>
+</div>

@@ -1,0 +1,58 @@
+{% for one_res in bot_response %}
+    {% if 'text' in one_res %}
+        <div class='d-flex class particular-chat-wrapper'><h4 class='chat user1'>{{one_res.text|replace('\n', '<br>')|safe}}</h4> 
+        </div>
+    {% endif %}
+    {% if 'buttons' in one_res %}
+        {% if type == 'stag' %}
+            <div class="chat_op_buttons" id="rm_stag">
+        {% else %}
+            <div class="chat_op_buttons" id="rm_prod">
+        {% endif %}
+        {% for single in one_res.buttons %}
+            {% if type == 'stag' %}
+                {% if single.payload.startswith('https') %}
+                    <a href="{{ single.payload }}" target="_blank">
+                        <button class="badges"> {{ single.title }}</button>
+                    </a>
+                {% else %}
+                    <button class="badges" onclick="button_intent_stag('{{ single.payload }}','{{ single.title }}')">{{ single.title }}</button>
+                {% endif %}
+            
+            {% else %}
+                {% if single.payload.startswith('https') %}
+                    <a href="{{ single.payload }}" target="_blank">
+                        <button class="badges"> {{ single.title }}</button>
+                    </a>
+                {% else %}
+                    <button class="badges" onclick="button_intent('{{single.payload}}','{{single.title}}')">{{single.title}}</button>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+
+        </div>
+    {% endif %}
+
+    
+    <!-- For custom response -->
+
+    {% if 'custom' in one_res %}
+        {% if 'payload' in one_res.custom %}
+        {% if one_res.custom.payload == 'pdf_attachment' %}
+                <p><a href={{one_res.custom.url}} download>Click here to download the pdf</a></p>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+
+    {% if 'attachment' in one_res %}
+        {% if one_res.attachment.type == 'video' %}
+            {% if 'avi' in one_res.attachment.payload.src %}
+                <video width="320" height="240" controls>
+                    <iframe class="embed-responsive-item behind" src="{{one_res.attachment.payload.src}}" type="video/mp4"></iframe>
+                </video> 
+            {% else %}
+                <iframe src="{{one_res.attachment.payload.src}}"></iframe>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+{% endfor %}

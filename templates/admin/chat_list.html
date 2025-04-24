@@ -1,0 +1,340 @@
+{% extends "layout/base.html" %}
+{% block content %}
+<style>
+    .page-item.active .page-link {
+  z-index: 3;
+  color: #fff;
+  background-color: #F12B20;
+  border-color: #F12B20;
+  border: 1px solid #F12B20;
+}
+.pagination{
+    justify-content: end;
+}
+.pagination-wrapper {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 15px 16px 15px;
+}
+.page-link {
+  position: relative;
+  display: block;
+  color: #F12B20;
+  text-decoration: none;
+  background-color: #fff;
+  border: 1px solid #dee2e6;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.page-link:hover {
+  z-index: 2;
+  color: #F12B20;
+  background-color: #e9ecef;
+  border-color: #dee2e6;
+}
+</style>
+<div class="intent-info w-100">
+    <div class="cards intent-info__model">
+        <div class="d-flex justify-content-between">
+            <h4 class="table-title">Chat Audit</h4>
+            <div class="table-btn-wrapper">    
+                <button  class="text-uppercase btn-train new_model" onclick="window.location.href='{{ url_for( 'intent.download_chats') }}';"> download all <i class="fa fa-arrow-right"></i></button>            
+                <button onclick="delete_all_chats()" style="margin-left:15px;" class="text-uppercase btn-download"> delete all <i class="fa fa-arrow-right"></i></button>
+            </div>
+        </div>
+        <div class="w-100 table-wrapper">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <table class="table table-responsive w-100 intent-data intent-list-table">
+                <thead>
+                    <tr>
+                       <th>Id</th>
+                       <th>Send Date</th>
+                       <th>Sent By</th>
+                       <th>Query</th>
+                       <th>Response</th>
+                       <th>Comment</th>
+                       <th>Feedback</th>
+                       <th>Action</th>
+
+                    </tr>
+                </thead>
+                <tbody id="update_data">
+                    {% for item in data %}
+                    <tr>
+                        <td>
+                            <span class="text-dark fw-bolder  d-block mb-1 fs-6">{{item[0]}}</span>
+                        </td>
+                        <td>
+                            <span class="text-dark fw-bolder  d-block mb-1 fs-6">{{item[7]}}</span>
+                        </td>
+                        <td>
+                            <span class="text-dark fw-bolder  d-block mb-1 fs-6">{{item[6]}}</span>
+                        </td>
+                        <td>
+                            <span class="text-dark fw-bolder  d-block mb-1 fs-6">{{item[1]}}</span>
+                        </td>
+                        <td>
+                            <sapn class="text-dark fw-bolder  d-block mb-1 fs-6">{{item[2]}}</sapn>
+                        </td>
+                        <td>
+                            <sapn class="text-dark fw-bolder  d-block mb-1 fs-6">{{item[4]}}</sapn>
+                        </td>
+                        <td>
+                            <!-- Feedback Section -->
+                            <div id="feedback-{{item[5]}}" class="feedback-section">
+                               
+                               
+                                    <button class="like-btn" onclick="submitFeedback('like', '{{item[5]}}')">
+                                        <span class="material-symbols-outlined like-icon " style="{{'color: rgb(36, 86, 143);' if item[3] == 'like'  }}">thumb_up</span> 
+                                    </button>
+                                    <button class="dislike-btn" onclick="submitFeedback('dislike', '{{item[5]}}')">
+                                        <span class="material-symbols-outlined dislike-icon " style="{{ 'color: rgb(36, 86, 143);' if item[3] == 'dislike'  }}" >thumb_down</span> 
+                                    </button>
+                                    <button class="feedback-btn" onclick="submitFeedback('comment', '{{item[5]}}')">
+                                        💬 
+                                    </button>
+
+                                    
+                            </div>
+                        </td>
+                        <td class="action-btn-wrapper">
+                            <div class="" >
+                                <div class="d-flex align-items-baseline action-popup__delete" onclick="delete_chat('{{ item[5] }}')">
+                                    <img src="static/assets/img/icons/delete_icon.svg" alt="delete" style="width:17px;margin-left:5px">
+                                </div>
+                            </div>
+                        </td>
+                       
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+           </table>
+        </div>
+        <div class="pagination-wrapper">
+			<div class="pagination-wrapper__left"></div>
+				{{pagination.links}}
+			</div>     
+    </div>
+</div>
+<script type="text/javascript">
+    file = "javascript:void(0)"
+    $("a.page-link").attr("href",file);
+
+    $('a.page-link').click(function(event) {
+        var ip=window.location.hostname
+        page_count = $(this).text();
+        if(window.location.hostname == '127.0.0.1'){
+            window.location.href=window.location.protocol+"//127.0.0.1:6001/chat_list?page="+page_count;
+        }else if(window.location.hostname == 'localhost'){
+            window.location.href=window.location.protocol+"//"+window.location.hostname+":6001/chat_list?page="+page_count;
+        }
+        else if(window.location.protocol === 'https:'){
+            window.location.href="https://"+ip+"/runner_app/chat_list?page="+page_count;
+        }else{
+            window.location.href=window.location.protocol+"//"+ip+":6001/chat_list?page="+page_count;
+        }
+    });
+
+
+    function submitFeedback(action, conversationId) {
+        var csrf_token = $('input[name="csrf_token"]').val();
+        // Debug alert to indicate function call
+    
+        // Gather data to send via AJAX
+        const feedbackData = {
+            action: action,
+            conversation_id: conversationId
+        };
+        const feedbackContainer = document.querySelector(`#feedback-${conversationId}`);
+        // Determine the icons based on the container
+        const likeIcon = feedbackContainer.querySelector('.like-icon');
+        const dislikeIcon = feedbackContainer.querySelector('.dislike-icon');
+        if (action === 'comment') {
+            // Check if a feedback textarea already exists
+            likeIcon.classList.add('hidden');
+            dislikeIcon.classList.add('hidden');
+            feedbackContainer.querySelector('.feedback-btn').classList.add('hidden');
+            // Create a textarea for feedback
+            const textarea = document.createElement('textarea');
+            textarea.classList.add('feedback-textarea');
+            textarea.placeholder = 'Add your feedback for the recent question...';
+            textarea.rows = 2;
+            textarea.style.width = '100%';
+    
+            // Create a submit button for feedback
+            const buttonContainer = document.createElement('div');
+            buttonContainer.classList.add('feedback-button-container');
+
+            // Create the submit button
+            const submitButton = document.createElement('button');
+            submitButton.classList.add('feedback-submit-btn');
+            submitButton.textContent = 'Submit';
+
+            // Create the cancel button
+            const cancelButton = document.createElement('button');
+            cancelButton.classList.add('feedback-cancel-btn');
+            cancelButton.textContent = 'Cancel';
+
+            // Append buttons to the button container
+            buttonContainer.appendChild(submitButton);
+            buttonContainer.appendChild(cancelButton);
+
+            // Append the button container below the textarea
+            // Add event listener to submit button
+            submitButton.addEventListener('click', () => {
+                const feedbackText = textarea.value.trim();
+                if (feedbackText) {
+                    // Add feedback text to feedbackData and send via AJAX
+                    feedbackData.text = feedbackText;
+    
+                    // Send feedback to the server
+                    $.ajax({
+                        headers: { 'X-CSRFToken': csrf_token },
+                        url: "{{ url_for('intent.submit_feedback_admin') }}",
+                        method: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(feedbackData),
+                        success: function(response) {
+                            
+                            // Clear the textarea and inform user of success
+                            if (feedbackContainer.querySelector('.feedback-form')) {
+                                feedbackContainer.querySelector('.feedback-form').remove(); // Remove feedback form
+                            }
+    
+                            likeIcon.classList.remove('hidden');
+                            dislikeIcon.classList.remove('hidden');
+                            feedbackContainer.querySelector('.feedback-btn').classList.remove('hidden');
+                            window.location.reload()
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error during feedback submission:', status, error);
+                        }
+                    });
+                } else {
+                    alert('Please enter some feedback before submitting.');
+                }
+            });
+            cancelButton.addEventListener('click', () => {
+                if (feedbackContainer.querySelector('.feedback-form')) {
+                    feedbackContainer.querySelector('.feedback-form').remove();
+                }
+                likeIcon.classList.remove('hidden');
+                dislikeIcon.classList.remove('hidden');
+                feedbackContainer.querySelector('.feedback-btn').classList.remove('hidden')
+            });
+            // Append textarea and button to feedback container
+            const formContainer = document.createElement('div');
+            formContainer.classList.add('feedback-form');
+            formContainer.appendChild(textarea);
+            formContainer.appendChild(buttonContainer);
+
+    
+            feedbackContainer.prepend(formContainer);
+    
+        }
+    
+        $.ajax({
+            headers: { 'X-CSRFToken': csrf_token },
+            url: "{{ url_for('intent.submit_feedback_admin') }}",
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(feedbackData),
+            success: function(response) {
+                if (response.action === 'like') {
+                    likeIcon.style.color = '#24568f';
+                    dislikeIcon.style.color = '#aaa';
+                } else if (response.action === 'dislike') {
+                    dislikeIcon.style.color = '#24568f';
+                    likeIcon.style.color = '#aaa';
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error during feedback submission:", status, error);
+            }
+        });
+    }
+
+    function delete_all_chats() {
+		$.confirm({
+			title: 'Confirmation',
+			content: 'Are you sure you want to delete all Chat? This action will permanently remove all CHat History from the system.',
+			buttons: {
+				confirm: function () {
+					var csrf_token = "{{ csrf_token() }}";
+					$.ajax({
+						type: "POST",
+						headers: { 'X-CSRFToken': csrf_token },
+						url: "{{ url_for('intent.delete_all_chats') }}",
+						success: function (result) {
+							msg = "Chats are Deleted";
+							
+							toastr.options = {
+								"closeButton": true,
+								"debug": false,
+								"positionClass": "toast-top-right",
+								"onclick": null,
+								"showDuration": "1000",
+								"hideDuration": "1000",
+								"timeOut": "50000",
+								"extendedTimeOut": "1000",
+								"showEasing": "swing",
+								"hideEasing": "swing",
+								"showMethod": "show",
+								"hideMethod": "hide"
+							}
+							Command: toastr.success(msg);
+                            setTimeout(function(){
+                                window.location.reload();
+                             }, 1000);
+						}
+					});
+				},
+				cancel: function () {
+				}
+			}
+		});
+	}
+
+    function delete_chat(id) {
+		$.confirm({
+			title: 'Confirmation',
+			content: 'Are you sure you want to delete this Chat? This action will permanently remove Chat from the system.',
+			buttons: {
+				confirm: function () {
+					var csrf_token = "{{ csrf_token() }}";
+					$.ajax({
+						type: "POST",
+						headers: { 'X-CSRFToken': csrf_token },
+						url: "{{ url_for('intent.delete_chat') }}",
+                        data: { id: id},
+						success: function (result) {
+							msg = "Chats are Deleted";
+							
+							toastr.options = {
+								"closeButton": true,
+								"debug": false,
+								"positionClass": "toast-top-right",
+								"onclick": null,
+								"showDuration": "1000",
+								"hideDuration": "1000",
+								"timeOut": "50000",
+								"extendedTimeOut": "1000",
+								"showEasing": "swing",
+								"hideEasing": "swing",
+								"showMethod": "show",
+								"hideMethod": "hide"
+							}
+							Command: toastr.success(msg);
+                            setTimeout(function(){
+                                window.location.reload();
+                             }, 1000);
+						}
+					});
+				},
+				cancel: function () {
+				}
+			}
+		});
+	}
+</script>
+{% endblock content %}

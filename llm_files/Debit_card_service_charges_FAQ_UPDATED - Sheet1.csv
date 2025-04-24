@@ -1,0 +1,34 @@
+title ,query,response
+Debit card service charges,What are the service charges for the first year of using the debit card?,The service charges for the first year of usage are nil.
+Debit card service charges,What is the annual maintenance charge (AMC) for debit cards from the second year onwards?,"The AMC from the second year onwards is as follows:
+
+- Classic: Rs. 200 + GST
+- Platinum: Rs. 300 + GST
+- Signature: Rs. 400 + GST
+- Business: Rs. 400 + GST
+- RuPay Select: Rs. 400 + GST
+- RuPay JCB Platinum: Rs. 400 + GST (URNRO & URNRE)"
+Debit card service charges,"How much does it cost to reissue a debit card that has been surrendered, blocked, hot-listed, or damaged?","The charge for reissuing a surrendered, blocked, hot-listed, or damaged debit card is Rs. 150 + GST."
+Debit card service charges,What is the charge for upgrading a debit card to a higher variant?,"The debit card upgradation charges are:
+
+- Classic to Platinum / Signature / Select: Rs. 100 + GST
+- Platinum to Signature / Select: Rs. 100 + GST"
+Debit card service charges,What is the charge for generating a physical debit card PIN that is dispatched to the branch?,The charge for generating a physical debit card PIN dispatched to the branch is Rs. 50 + GST.
+Debit card service charges,How many free financial transactions are allowed at the bank’s own ATM for Classic and Platinum debit card holders?, Classic and Platinum debit card holders are allowed 8 free financial transactions at the bank’s own ATM.
+Debit card service charges,How many free financial transactions are allowed at the bank’s own ATM for Signature and Business debit card holders?,Signature and Business debit card holders are allowed 20 free financial transactions at the bank’s own ATM.
+Debit card service charges," If a Classic or Platinum debit card is linked to multiple accounts, are the free transactions cumulative?"," Yes, for Classic or Platinum debit cards linked to multiple accounts, the free transactions are cumulative at 8 for Classic/Platinum and 20 for Signature/Business debit card holders."
+Debit card service charges,What are the charges for financial and non-financial transactions beyond the free limit at the bank’s own ATM?,"Beyond the free limit, the charges are:
+
+- Financial Transaction: Rs. 21 + GST
+- Non-Financial Transaction: Rs. 8 + GST"
+Debit card service charges,How many free transactions are allowed at other banks’ ATMs for debit card holders at metro centers?,"Debit card holders at metro centers are allowed 3 free transactions per month, which include both financial and non-financial transactions, at ATMs of other banks."
+Debit card service charges, How many free transactions are allowed at other banks’ ATMs for debit card holders at non-metro centers?,"Debit card holders at non-metro centers are allowed 5 free transactions per month, which include both financial and non-financial transactions, at ATMs of other banks."
+Debit card service charges, What are the charges for financial and non-financial transactions beyond the free limit at other banks’ ATMs?,"Beyond the free limit at other banks’ ATMs, the charges are:
+
+- Financial Transaction: Rs. 21 + GST
+- Non-Financial Transaction: Rs. 8 + GST"
+Debit card service charges,What are the charges for international financial and non-financial transactions?,"The charges for international transactions are:
+
+- International Financial Transaction: Rs. 125 + GST
+- International Non-Financial Transaction: Rs. 35 + GST"
+Debit card service charges,What is the currency conversion charge for international financial transactions?,The currency conversion charge for international financial transactions is 2.50% of the transaction amount.

@@ -1,0 +1,34 @@
+{% if bot_response %}
+    <div class='d-flex class particular-chat-wrapper'>
+        <h4 class='chat user1' id="chatMessage">{{bot_response.text}} </h4> 
+        <span class="chat-time">{{ current_time }}</span>
+        {% if bot_response.conversation_id%}
+        <div id="sendfeedback-{{bot_response.conversation_id}}" class="sendfeedback">
+
+            <button class="like-btn" onclick="submitFeedback('like', '{{bot_response.conversation_id}}')">
+                <span class="material-symbols-outlined like-icon " >thumb_up</span> 
+            </button>
+            <button class="dislike-btn" onclick="submitFeedback('dislike', '{{bot_response.conversation_id}}')">
+                <span class="material-symbols-outlined dislike-icon ">thumb_down</span> 
+            </button>
+           <!-- <button class="feedback-btn" onclick="submitFeedback('comment', '{{conversation_id}}')">
+                💬 
+            </button>-->
+
+            
+         </div>
+        {% endif %}
+        {% if bot_response and bot_response.suggested_questions %}
+            <div class="chat_op_buttons" id="rm_stag">
+                {% for single in bot_response.suggested_questions %}
+                    <button class="badges" onclick="button_intent('{{ single }}')">
+                        {{ single }}
+                    </button>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+    
+{% endif %}
+<!-- Suggested Questions Section -->
+

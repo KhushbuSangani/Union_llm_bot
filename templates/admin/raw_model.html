@@ -1,0 +1,55 @@
+{% for item in approve_data %}
+    <tr>
+        <td class="text-center border-start-0"> {{item[0]}} </td>
+        <td> <span class="text-capitalize"> {{item[1]}} </span> </td>
+        <td class="text-center">
+            {% if item[2] == "1" %}
+            <div class="text-capitalize status-badge"> Trained </div>
+            {% elif item[2] == "3" %}
+            <div class="text-capitalize status-badge"> Trained </div>
+            {% else %}
+            <div class="text-capitalize status-badge"> Trained </div>
+            {% endif %}
+        </td>
+        <td>
+            <span> {{item[3]}}/{{item[4]}} </span>
+        </td>
+        <td> <span>{% if item[6]=="2" %} Staging {% elif item[6] == '3' %} Both {% elif item[6] == '1' %} Production {% else %}No{%endif%}</span> </td>
+        <td class="text-center">
+            <span class="staging-counts" onclick="view_intent('{{item[12]}}','1')"> {{item[8]}} </span>
+        </td>
+        <td class="text-center border-start-0">
+            <span class="staging-counts" onclick="view_intent('{{item[12]}}','2')"> {{item[9]}} </span>
+        </td>
+        <td class="text-center">
+            <span class="staging-counts" onclick="view_intent('{{item[12]}}','3')"> {{item[10]}} </span>
+        </td>
+        <td class="text-center border-start-0">
+            <span class="staging-counts" onclick="view_intent('{{item[12]}}','4')"> {{item[11]}} </span>
+        </td>
+        <td class="action-btn-wrapper">
+            
+            {% if item[13] == "4" %}
+                <div class="action-status rejected-status">Rejected</div>
+            {% elif item[13] == "5" %}
+                <button class="action-btn staging-btn" onclick="submit_stg('{{item[12]}}')">Deploy on Staging</button>
+            {% elif stag_model_count == 0 %}
+                <div class="d-flex action-popup__approve" onclick="submit_stg('{{item[12]}}')">
+                    <img src="static/assets/img/icons/tickmark_icon.svg" alt="tickmark icon">
+                    <p class="text-capitalize"> Staging </p>
+                </div>
+            {% elif (stag_model_count != 0) and item[13] == "0" %}
+                <button class="action-btn staging-btn" onclick="submit_stg('{{item[12]}}')">Deploy on Staging</button>
+            {% elif (stag_model_count != 0) and item[13] == "6" %}
+            {% endif %}
+        
+            {% if item[13] == "5" %}
+                <button class="action-btn production-btn" onclick="submit_prod('{{item[12]}}')">Deploy on Production</button>
+            
+            {% elif item[6] == "2" and item[13] == "0" %}
+                    <div class="action-status staging-status">On Staging</div>
+            
+            {% endif %}
+        </td>
+    </tr>
+{% endfor %}

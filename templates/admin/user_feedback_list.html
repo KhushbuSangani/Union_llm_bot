@@ -1,0 +1,247 @@
+{% extends "layout/base.html" %}
+{% block content %}
+<style>
+    .page-item.active .page-link {
+  z-index: 3;
+  color: #fff;
+  background-color: #F12B20;
+  border-color: #F12B20;
+  border: 1px solid #F12B20;
+}
+.pagination{
+    justify-content: end;
+}
+.pagination-wrapper {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 15px 16px 15px;
+}
+.page-link {
+  position: relative;
+  display: block;
+  color: #F12B20;
+  text-decoration: none;
+  background-color: #fff;
+  border: 1px solid #dee2e6;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.page-link:hover {
+  z-index: 2;
+  color: #F12B20;
+  background-color: #e9ecef;
+  border-color: #dee2e6;
+}
+</style>
+<div class="intent-info w-100">
+    <div class="cards intent-info__model">
+        <div class="d-flex justify-content-between">
+            <h4 class="table-title">User Feedback</h4>
+            <div class="table-btn-wrapper">    
+                <button  class="text-uppercase btn-train new_model" onclick="window.location.href='{{ url_for( 'intent.download_user_feedback') }}';"> download all <i class="fa fa-arrow-right"></i></button>            
+                <button onclick="delete_all_chats()" style="margin-left:15px;" class="text-uppercase btn-download"> delete all <i class="fa fa-arrow-right"></i></button>
+            </div>
+        </div>
+        <div class="w-100 table-wrapper">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <table class="table table-responsive w-100 intent-data intent-list-table">
+                <thead>
+                    <tr>
+                       <th>Id</th>
+                       <th>Send Date</th>
+                       <th>Sent By</th>
+                       <th>Query</th>
+                       <th>Response</th>
+                       <th>Comment</th>
+                       <th>Feedback</th>
+                       <th>Ticket Status</th>
+                       <th>action</th>
+
+                    </tr>
+                </thead>
+                <tbody id="update_data">
+                    {% for item in data %}
+                    <tr>
+                        <td>
+                            <span class="text-dark fw-bolder  d-block mb-1 fs-6">{{item[0]}}</span>
+                        </td>
+                        <td>
+                            <span class="text-dark fw-bolder  d-block mb-1 fs-6">{{item[7]}}</span>
+                        </td>
+                        <td>
+                            <span class="text-dark fw-bolder  d-block mb-1 fs-6">{{item[6]}}</span>
+                        </td>
+                        <td>
+                            <span class="text-dark fw-bolder  d-block mb-1 fs-6">{{item[1]}}</span>
+                        </td>
+                        <td>
+                            <sapn class="text-dark fw-bolder  d-block mb-1 fs-6">{{item[2]}}</sapn>
+                        </td>
+                        <td>
+                            <sapn class="text-dark fw-bolder  d-block mb-1 fs-6">{{item[4]}}</sapn>
+                        </td>
+
+                        <td>
+                            <!-- Feedback Section -->
+                            <div class="feedback-section">
+                               
+                                {% if item[3] == 'like' %}
+
+                                    <button class="like-btn" >
+                                        <span class="material-symbols-outlined like-icon " style="{{'color: rgb(36, 86, 143);' if item[3] == 'like'  }}">thumb_up</span> 
+                                    </button>
+                                    {% elif item[3] == 'dislike' %}
+
+                                    <button class="dislike-btn">
+                                        <span class="material-symbols-outlined dislike-icon " style="{{ 'color: rgb(36, 86, 143);' if item[3] == 'dislike'  }}" >thumb_down</span> 
+                                    </button>
+                                    {% else %}
+                                        NA
+                                    {% endif %} 
+                            </div>
+                        </td>
+                        <td>
+                            {% if item[8] in ['Resolved', 'RESOLVED', 'resolved'] %}
+                                <div class="d-flex action-popup__reject">
+                                    <div class="status-badge">Resolved</div>
+                                </div>
+                            {% elif item[8] == 'Open' %}
+                                <div class="d-flex action-popup__reject">
+                                    <div class="status-badge-untrain">Open</div>
+                                </div>
+                            {% elif item[8] == 'Overdue' %}
+                                <button class="action-btn send-approval-btn">Overdue</button>
+                            {% elif item[8] == 'Re-open' %}
+                                <div class="d-flex action-popup__reject">
+                                    <div class="action-status staging-status">Re-open</div>
+                                </div>
+                            {% else %}
+                                NA
+                            {% endif %}
+                       
+                        </td>
+                        <td class="action-btn-wrapper">
+                            <div class="" >
+                                <div class="d-flex align-items-baseline action-popup__delete" onclick="delete_feedback('{{ item[5] }}','{{item[9]}}')">
+                                    <img src="static/assets/img/icons/delete_icon.svg" alt="delete" style="width:17px;margin-left:5px">
+                                </div>
+                            </div>
+                        </td>
+                        
+                       
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+           </table>
+        </div>
+        <div class="pagination-wrapper">
+			<div class="pagination-wrapper__left"></div>
+				{{pagination.links}}
+			</div>     
+    </div>
+</div>
+<script type="text/javascript">
+    file = "javascript:void(0)"
+    $("a.page-link").attr("href",file);
+
+    $('a.page-link').click(function(event) {
+        var ip=window.location.hostname
+        page_count = $(this).text();
+        if(window.location.hostname == '127.0.0.1'){
+            window.location.href=window.location.protocol+"//127.0.0.1:6001/user_feedback_list?page="+page_count;
+        }else if(window.location.hostname == 'localhost'){
+            window.location.href=window.location.protocol+"//"+window.location.hostname+":6001/user_feedback_list?page="+page_count;
+        }
+        else if(window.location.protocol === 'https:'){
+            window.location.href="https://"+ip+"/runner_app/user_feedback_list?page="+page_count;
+        }else{
+            window.location.href=window.location.protocol+"//"+ip+":6001/user_feedback_list?page="+page_count;
+        }
+    });
+
+    function delete_all_chats() {
+		$.confirm({
+			title: 'Confirmation',
+			content: 'Are you sure you want to delete all Chat? This action will permanently remove all CHat History from the system.',
+			buttons: {
+				confirm: function () {
+					var csrf_token = "{{ csrf_token() }}";
+					$.ajax({
+						type: "POST",
+						headers: { 'X-CSRFToken': csrf_token },
+						url: "{{ url_for('intent.delete_user_feedback') }}",
+						success: function (result) {
+							msg = "Chats are Deleted";
+							
+							toastr.options = {
+								"closeButton": true,
+								"debug": false,
+								"positionClass": "toast-top-right",
+								"onclick": null,
+								"showDuration": "1000",
+								"hideDuration": "1000",
+								"timeOut": "50000",
+								"extendedTimeOut": "1000",
+								"showEasing": "swing",
+								"hideEasing": "swing",
+								"showMethod": "show",
+								"hideMethod": "hide"
+							}
+							Command: toastr.success(msg);
+                            setTimeout(function(){
+                                window.location.reload();
+                             }, 1000);
+						}
+					});
+				},
+				cancel: function () {
+				}
+			}
+		});
+	}
+
+    function delete_feedback(id,ticket_id) {
+		$.confirm({
+			title: 'Confirmation',
+			content: 'Are you sure you want to delete this Chat? This action will permanently remove Chat from the system.',
+			buttons: {
+				confirm: function () {
+					var csrf_token = "{{ csrf_token() }}";
+					$.ajax({
+						type: "POST",
+						headers: { 'X-CSRFToken': csrf_token },
+						url: "{{ url_for('intent.delete_single_user_feedback') }}",
+                        data: { id: id,ticket_id:ticket_id},
+						success: function (result) {
+							msg = "Chats are Deleted";
+							
+							toastr.options = {
+								"closeButton": true,
+								"debug": false,
+								"positionClass": "toast-top-right",
+								"onclick": null,
+								"showDuration": "1000",
+								"hideDuration": "1000",
+								"timeOut": "50000",
+								"extendedTimeOut": "1000",
+								"showEasing": "swing",
+								"hideEasing": "swing",
+								"showMethod": "show",
+								"hideMethod": "hide"
+							}
+							Command: toastr.success(msg);
+                            setTimeout(function(){
+                                window.location.reload();
+                             }, 1000);
+						}
+					});
+				},
+				cancel: function () {
+				}
+			}
+		});
+	}
+
+  
+</script>
+{% endblock content %}

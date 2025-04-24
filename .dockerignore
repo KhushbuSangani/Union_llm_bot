@@ -1,0 +1,14 @@
+.dockerignore
+union_env
+dump.rdb
+logs/
+llm_files/
+.git
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.md
+tests/
+IndicTrans2/huggingface_interface/IndicTransToolkit 
+
