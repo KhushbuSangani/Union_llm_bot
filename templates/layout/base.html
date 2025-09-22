@@ -53,15 +53,10 @@
                         <li class="nav-item {% if session.status == 'add' %} active {% endif %}">
                             <a href="{{ url_for('intent.bulk_intent_page', _external=True, _scheme= config['SSL_SECURITY']) }}" class="nav-link">
                                 <img src="static/assets/img/icons/create_intent.svg" alt="create intent">
-                                <span class="text-capitalize"> Create intent </span>
+                                <span class="text-capitalize"> Upload Documents </span>
                             </a>
                         </li>
-                        <!-- <li class="nav-item {% if session.status == 'intent' %} active {% endif %}">
-                            <a href="{{ url_for('intent.display_intents', _external=True, _scheme= config['SSL_SECURITY']) }}" class="nav-link">
-                                <img src="static/assets/img/icons/intent_list.svg" alt="intent list">
-                                <span class="text-capitalize"> Intent list </span>
-                            </a>
-                        </li> -->
+                        
                         <li class="nav-item {% if session.status == 'llm_file' %} active {% endif %}">
                             <a href="{{ url_for('intent.display_llm_files', _external=True, _scheme= config['SSL_SECURITY']) }}" class="nav-link">
                                 <img src="static/assets/img/icons/intent_list.svg" alt="intent list">
@@ -74,13 +69,7 @@
                                 <span class="text-capitalize"> Embedded File List </span>
                             </a>
                         </li>
-                        <!--
-                        <li class="nav-item {% if session.status == 'training' %} active {% endif %}">
-                            <a href="{{ url_for('training.training_status', _external=True, _scheme= config['SSL_SECURITY']) }}" class="nav-link">
-                                <img src="static/assets/img/icons/trained_models.svg" alt="trained models">
-                                <span class="text-capitalize"> trained models </span>
-                            </a>
-                        </li>-->
+                      
                         <li class="nav-item {% if session.status == 'chat_list' %} active {% endif %}">
                             <a href="{{ url_for('intent.chat_list', _external=True, _scheme= config['SSL_SECURITY']) }}" class="nav-link">
                                 <img src="static/assets/img/icons/chat_audit.svg" alt="chat_audit">
@@ -89,15 +78,21 @@
                         </li>
                         <li class="nav-item {% if session.status == 'user_feedback_list' %} active {% endif %}">
                             <a href="{{ url_for('intent.user_feedback_list', _external=True, _scheme= config['SSL_SECURITY']) }}" class="nav-link">
-                                <img src="static/assets/img/icons/chat_audit.svg" alt="chat_audit">
+                                <img src="static/assets/img/icons/untrained_query.svg" alt="chat_audit">
                                 <span class="text-capitalize"> User Feedback </span>
                             </a>
                         </li>
                         
+                        <li class="nav-item {% if session.status == 'cache_questions' %} active {% endif %}">
+                            <a href="{{ url_for('intent.cache_questions', _external=True, _scheme= config['SSL_SECURITY']) }}" class="nav-link">
+                                <img src="static/assets/img/icons/custom_action.svg" alt="chat_audit">
+                                <span class="text-capitalize"> Cached Questions </span>
+                            </a>
+                        </li>
                         {% endif %}
                         
                         <li class="nav-item {% if session.status == 'testing' %} active {% endif %}">
-                            <a href="{{ url_for('testing', _external=True, _scheme= config['SSL_SECURITY']) }}" class="nav-link">
+                            <a href="{{ url_for('testing', _external=True, _scheme= config['SSL_SECURITY']) }}" class="nav-link" target='_blank'>
                                 <img src="static/assets/img/icons/testing_environment.svg" alt="testing_environment">
                                 <span class="text-capitalize"> testing environment </span>
                             </a>

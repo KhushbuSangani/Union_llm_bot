@@ -1,0 +1,86 @@
+[26/08/2025 16:42:10] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/httpx/_client.py:1025} INFO - HTTP Request: GET http://10.0.120.223:6333 "HTTP/1.1 200 OK"
+[26/08/2025 16:42:10] {/usr/lib/python3.9/warnings.py:109} WARNING - /home/neosoft/workspace/llm/LLM_union/utils/ingest.py:18: UserWarning: Qdrant client version 1.13.3 is incompatible with server version 1.15.3. Major versions should match and minor version difference must not exceed 1. Set check_version=False to skip version check.
+  qdrant_client = QdrantClient(host=os.getenv("QDRANT_HOST"), port=6333)
+
+[26/08/2025 16:42:10] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:219} INFO - Use pytorch device_name: cpu
+[26/08/2025 16:42:10] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:227} INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+[26/08/2025 16:42:18] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/httpx/_client.py:1025} INFO - HTTP Request: GET http://10.0.120.223:6333 "HTTP/1.1 200 OK"
+[26/08/2025 16:42:18] {/usr/lib/python3.9/warnings.py:109} WARNING - /home/neosoft/workspace/llm/LLM_union/app.py:292: UserWarning: Qdrant client version 1.13.3 is incompatible with server version 1.15.3. Major versions should match and minor version difference must not exceed 1. Set check_version=False to skip version check.
+  qdrant_client = QdrantClient(
+
+[26/08/2025 16:42:18] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:219} INFO - Use pytorch device_name: cpu
+[26/08/2025 16:42:18] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:227} INFO - Load pretrained SentenceTransformer: /home/neosoft/workspace/llm/LLM_union/ai4bharat/models--sentence-transformers--all-MiniLM-L6-v2/snapshots/8b3219a92973c328a8e22fadcfa821b5dc75636a
+[26/08/2025 16:42:19] {/usr/lib/python3.9/warnings.py:109} WARNING - /home/neosoft/workspace/llm/LLM_union/app.py:266: LangChainDeprecationWarning: The class `Ollama` was deprecated in LangChain 0.3.1 and will be removed in 1.0.0. An updated version of the class exists in the :class:`~langchain-ollama package and should be used instead. To use it run `pip install -U :class:`~langchain-ollama` and import as `from :class:`~langchain_ollama import OllamaLLM``.
+  model = Ollama(
+
+[26/08/2025 16:42:20] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:6001
+ * Running on http://10.0.120.223:6001
+[26/08/2025 16:42:20] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - [33mPress CTRL+C to quit[0m
+[26/08/2025 16:42:20] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Restarting with stat
+[26/08/2025 16:42:27] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/httpx/_client.py:1025} INFO - HTTP Request: GET http://10.0.120.223:6333 "HTTP/1.1 200 OK"
+[26/08/2025 16:42:27] {/usr/lib/python3.9/warnings.py:109} WARNING - /home/neosoft/workspace/llm/LLM_union/utils/ingest.py:18: UserWarning: Qdrant client version 1.13.3 is incompatible with server version 1.15.3. Major versions should match and minor version difference must not exceed 1. Set check_version=False to skip version check.
+  qdrant_client = QdrantClient(host=os.getenv("QDRANT_HOST"), port=6333)
+
+[26/08/2025 16:42:27] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:219} INFO - Use pytorch device_name: cpu
+[26/08/2025 16:42:27] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:227} INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+[26/08/2025 16:42:36] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/httpx/_client.py:1025} INFO - HTTP Request: GET http://10.0.120.223:6333 "HTTP/1.1 200 OK"
+[26/08/2025 16:42:36] {/usr/lib/python3.9/warnings.py:109} WARNING - /home/neosoft/workspace/llm/LLM_union/app.py:292: UserWarning: Qdrant client version 1.13.3 is incompatible with server version 1.15.3. Major versions should match and minor version difference must not exceed 1. Set check_version=False to skip version check.
+  qdrant_client = QdrantClient(
+
+[26/08/2025 16:42:36] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:219} INFO - Use pytorch device_name: cpu
+[26/08/2025 16:42:36] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:227} INFO - Load pretrained SentenceTransformer: /home/neosoft/workspace/llm/LLM_union/ai4bharat/models--sentence-transformers--all-MiniLM-L6-v2/snapshots/8b3219a92973c328a8e22fadcfa821b5dc75636a
+[26/08/2025 16:42:37] {/usr/lib/python3.9/warnings.py:109} WARNING - /home/neosoft/workspace/llm/LLM_union/app.py:266: LangChainDeprecationWarning: The class `Ollama` was deprecated in LangChain 0.3.1 and will be removed in 1.0.0. An updated version of the class exists in the :class:`~langchain-ollama package and should be used instead. To use it run `pip install -U :class:`~langchain-ollama` and import as `from :class:`~langchain_ollama import OllamaLLM``.
+  model = Ollama(
+
+[26/08/2025 16:42:37] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} WARNING -  * Debugger is active!
+[26/08/2025 16:42:37] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Debugger PIN: 116-034-066
+[26/08/2025 16:43:11] {/home/neosoft/workspace/llm/LLM_union/app.py:234} INFO - logged in successfully
+[26/08/2025 16:43:11] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:11] "[32mGET /admin_login?param=T7fm98GRCOspv5tBI2kP HTTP/1.1[0m" 302 -
+[26/08/2025 16:43:13] {/home/neosoft/workspace/llm/LLM_union/controller/admin.py:106} INFO - ['llama3.1:latest', 'gemma2:2b']
+[26/08/2025 16:43:13] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:13] "GET /dashboard HTTP/1.1" 200 -
+[26/08/2025 16:43:13] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:13] "GET /static/assets/ajax/dist/css/bootstrap.min.css HTTP/1.1" 200 -
+[26/08/2025 16:43:13] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:13] "GET /static/assets/css/style.css HTTP/1.1" 200 -
+[26/08/2025 16:43:13] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:13] "GET /static/assets/ajax/libs/jquery/jquery-confirm.min.css HTTP/1.1" 200 -
+[26/08/2025 16:43:13] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:13] "GET /static/assets/bootstrap-toastr/toastr.min.css HTTP/1.1" 200 -
+[26/08/2025 16:43:13] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:13] "GET /static/assets/bootstrap-toastr/toastr.js HTTP/1.1" 200 -
+[26/08/2025 16:43:13] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:13] "GET /static/assets/ajax/libs/jquery/jquery.min.js HTTP/1.1" 200 -
+[26/08/2025 16:43:13] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:13] "GET /static/assets/js/charts.js HTTP/1.1" 200 -
+[26/08/2025 16:43:13] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:13] "GET /static/assets/fonts/material_style.css HTTP/1.1" 200 -
+[26/08/2025 16:43:13] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:13] "GET /static/assets/fonts/all.min.css HTTP/1.1" 200 -
+[26/08/2025 16:43:13] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:13] "GET /static/assets/ajax/libs/jquery/jquery-confirm.min.js HTTP/1.1" 200 -
+[26/08/2025 16:43:14] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:14] "GET /static/assets/bootstrap-toastr/ui-toastr.min.js HTTP/1.1" 200 -
+[26/08/2025 16:43:14] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:14] "GET /static/assets/bootstrap-toastr/toastr.min.js HTTP/1.1" 200 -
+[26/08/2025 16:43:14] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:14] "GET /static/assets/ajax/libs/js/jquery.dataTables.min.js HTTP/1.1" 200 -
+[26/08/2025 16:43:14] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:14] "GET /static/assets/ajax/libs/js/purify.min.js HTTP/1.1" 200 -
+[26/08/2025 16:43:14] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:14] "GET /static/assets/js/toggle.js HTTP/1.1" 200 -
+[26/08/2025 16:43:14] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:14] "GET /static/assets/js/logout_popup.js HTTP/1.1" 200 -
+[26/08/2025 16:43:14] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:14] "GET /static/assets/ajax/libs/js/bootstrap.bundle.min.js HTTP/1.1" 200 -
+[26/08/2025 16:43:14] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:14] "GET /static/assets/img/icons/intent_list.svg HTTP/1.1" 200 -
+[26/08/2025 16:43:14] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:14] "GET /static/assets/img/icons/trained_models.svg HTTP/1.1" 200 -
+[26/08/2025 16:43:14] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:14] "GET /static/assets/img/icons/create_intent.svg HTTP/1.1" 200 -
+[26/08/2025 16:43:14] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:14] "GET /static/assets/img/logo.svg HTTP/1.1" 200 -
+[26/08/2025 16:43:14] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:14] "GET /static/assets/img/icons/untrained_query.svg HTTP/1.1" 200 -
+[26/08/2025 16:43:14] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:14] "GET /static/assets/img/icons/dashboard.svg HTTP/1.1" 200 -
+[26/08/2025 16:43:14] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:14] "GET /static/assets/img/icons/chat_audit.svg HTTP/1.1" 200 -
+[26/08/2025 16:43:14] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:14] "GET /static/assets/img/icons/testing_environment.svg HTTP/1.1" 200 -
+[26/08/2025 16:43:14] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:14] "GET /static/assets/img/blank.png HTTP/1.1" 200 -
+[26/08/2025 16:43:14] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:14] "GET /static/assets/img/icons/custom_action.svg HTTP/1.1" 200 -
+[26/08/2025 16:43:14] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:14] "GET /static/assets/fonts/proxima/ProximaNova-Regular.woff2 HTTP/1.1" 200 -
+[26/08/2025 16:43:20] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:20] "GET /dashboard_test HTTP/1.1" 200 -
+[26/08/2025 16:43:20] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:20] "[36mGET /static/assets/ajax/libs/jquery/jquery.min.js HTTP/1.1[0m" 304 -
+[26/08/2025 16:43:20] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:20] "GET /static/assets/js/bot.js HTTP/1.1" 200 -
+[26/08/2025 16:43:20] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:20] "GET /static/assets/bot/img/icons/send-icon.png HTTP/1.1" 200 -
+[26/08/2025 16:43:20] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:20] "GET /static/assets/bot/img/avatar.svg HTTP/1.1" 200 -
+[26/08/2025 16:43:20] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:20] "GET /static/assets/bot/img/icons/stop.png HTTP/1.1" 200 -
+[26/08/2025 16:43:20] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:20] "GET /static/assets/img/avatar.svg HTTP/1.1" 200 -
+[26/08/2025 16:43:20] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:20] "GET /static/assets/bot/fonts/material_style.css HTTP/1.1" 200 -
+[26/08/2025 16:43:20] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:20] "GET /static/assets/bot/css/bot.css HTTP/1.1" 200 -
+[26/08/2025 16:43:21] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 127.0.0.1 - - [26/Aug/2025 16:43:21] "GET /get-history?user_id=643121 HTTP/1.1" 200 -
+[26/08/2025 16:43:21] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 127.0.0.1 - - [26/Aug/2025 16:43:21] "GET /static/assets/bot/img/avatar.svg HTTP/1.1" 200 -
+[26/08/2025 16:43:22] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO - 10.0.120.223 - - [26/Aug/2025 16:43:22] "GET /static/assets/bot/fonts/iconfont/MaterialIcons-Regular.woff2 HTTP/1.1" 200 -
+[28/08/2025 10:52:46] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Detected change in '/home/neosoft/workspace/llm/LLM_union/load_json.py', reloading
+[28/08/2025 10:52:47] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Restarting with stat
+[28/08/2025 10:53:34] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Restarting with stat
+[28/08/2025 10:54:47] {/home/neosoft/workspace/llm/LLM_union/union_env/lib/python3.9/site-packages/werkzeug/_internal.py:97} INFO -  * Restarting with stat

@@ -1,6 +1,6 @@
 {% if bot_response %}
     <div class='d-flex class particular-chat-wrapper'>
-        <h4 class='chat user1' id="chatMessage">{{bot_response.text}} </h4> 
+        <h4 class='chat user1' id="chatMessage-{{ bot_response.conversation_id }}">{{bot_response.text}} </h4> 
         <span class="chat-time">{{ current_time }}</span>
         {% if bot_response.conversation_id%}
         <div id="sendfeedback-{{bot_response.conversation_id}}" class="sendfeedback">
@@ -11,9 +11,12 @@
             <button class="dislike-btn" onclick="submitFeedback('dislike', '{{bot_response.conversation_id}}')">
                 <span class="material-symbols-outlined dislike-icon ">thumb_down</span> 
             </button>
-           <!-- <button class="feedback-btn" onclick="submitFeedback('comment', '{{conversation_id}}')">
-                💬 
-            </button>-->
+            
+           <button class="copy-btn" onclick="copy(this, 'chatMessage-{{ bot_response.conversation_id }}')">
+                <span class="material-symbols-outlined"  title="Copy">
+                    content_copy
+                </span> 
+            </button>
 
             
          </div>

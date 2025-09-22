@@ -10,5 +10,5 @@ __pycache__/
 *.pyd
 *.md
 tests/
-IndicTrans2/huggingface_interface/IndicTransToolkit 
-
+current_model.txt
+union_env/

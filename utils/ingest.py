@@ -218,11 +218,18 @@ def query_qdrant_cache(qdrant_client, query_text, embed_model, top_k=2):
     # List all collections
     all_search_results = []
     max_score_result = None
-    search_result = qdrant_client.search(
-        collection_name=collection_name,
-        query_vector=query_embedding,
-        limit=top_k
-    )
+    try:
+        search_result = qdrant_client.search(
+            collection_name=collection_name,
+            query_vector=query_embedding,  # newer versions
+            limit=top_k
+        )
+    except TypeError:
+        search_result = qdrant_client.search(
+            collection_name=collection_name,
+            query=query_embedding,  # older versions
+            limit=top_k
+        )
     if search_result:
         for result in search_result:
             if result.score > 0.85:  # Filter by minimum score

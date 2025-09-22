@@ -8,7 +8,10 @@ class FileSelectionUI {
         this.currentSearchParams = {
             search_file_name: '',
             search_created_by: '',
-            file_format: ''
+            search_query: '',
+            search_response: ''
+
+
         };
         console.log("Files at initialization:", this.files.length);
 
@@ -35,7 +38,7 @@ class FileSelectionUI {
                 <div class="card-header">
                     <div class="card-content">
                         <div class="controls" style="margin-bottom:10px; font-weight:bold; font-size:12px; margin-left:12px;">
-                            <span class="selected-count">${this.selectedFiles.size} files selected</span>
+                            <span class="selected-count hidden">${this.selectedFiles.size} files selected</span>
                         </div>
                     </div>
                     <div class="select-wrapper">
@@ -51,38 +54,21 @@ class FileSelectionUI {
                 </div>
                
                 <div class="w-100 table-wrapper">
-                    <table class="table  w-100 intent-data intent-list-table">
+                    <table class="table table-responsive w-100 intent-data intent-list-table">
                         <thead>
                             <tr>
                                 <th>Id</th>
+                                <th>Query</th>
+                                <th>Response</th>
                                 <th>File Name</th>
-                                <th>Format</th>
-                                <th>Size</th>
-                                <th>Local path</th>
-                                <th>Status</th>
-                                <th>Created Date/By</th>
-                                <th>Action</th>
+                                <th>Sent By</th>
+                                <th>Send Date</th>
                             </tr>
                             <tr>
-                        <th style="font:bold;font-size:14px"> All <input type="checkbox" id="select-all" value="all"></th>
-                        <th><input type="text" id="search_file_name" placeholder="Search File Name"></th>
-                        <th><select id="file_format" class="form-control">
-							<option value="">All</option>
-							<option value="csv">csv</option>
-							<option value="excel">excel</option>
-							<option value="pdf">pdf</option>
-							<option value="text">text</option>
-							<option value="text">other</option>
-						</select></th>
-                        <th><div style="display: flex; align-items: center;">
-								<div class="sort-icons" id="search_size" style="margin-left: 5px; display: flex;">
-									<span id="sort-asc" class="material-symbols-outlined" style="cursor: pointer;color:#aaa;">arrow_upward</span>
-      								<span id="sort-desc" class="material-symbols-outlined" style="cursor: pointer;color:#aaa;">arrow_downward</span>
-								</div>
-							</div>
-						</th>
-                        <th></th>
-						<th></th>
+                        <th style="font:bold;font-size:14px">  <input type="checkbox" id="select-all" value="all" class="hidden"></th>
+                        <th><input type="text" id="search_query" placeholder="Search Query"></th>
+                        <th><input type="text" id="search_response" placeholder="Search Response"></th>
+                        <th><input type="text" id="search_file_name" placeholder="Search FileName"></th>
                         <th><input type="text" id="search_created_by" placeholder="Search Created By"></th>
                         <th></th>
                     </tr>
@@ -137,7 +123,6 @@ class FileSelectionUI {
 
     fetchData(page = 1) {
         const selectedLimit = document.getElementById("fileLimitDropdown").value; // Get selected value
-
         console.log(displayLLMFilesUrl)
         $.ajax({
             url: this.displayLLMFilesUrl,
@@ -147,11 +132,11 @@ class FileSelectionUI {
                 limit:selectedLimit,
                 search_file_name: this.currentSearchParams.search_file_name,
                 search_created_by: this.currentSearchParams.search_created_by,
-                file_format: this.currentSearchParams.file_format,
-                sort_order: this.currentSortOrder
+                search_query: this.currentSearchParams.search_query,
+                search_response: this.currentSearchParams.search_response
             },
-            success: (data) => {                
-                this.files = data.files;
+            success: (data) => {    
+                this.files = data.data
                 const rowsHtml = this.files.slice(0, this.selectedCount)
                 .map(file => this.createTableRow(file)) // Assuming createTableRow is a method that creates HTML for each file
                 .join('');
@@ -180,14 +165,15 @@ class FileSelectionUI {
                 page: 1,
                 search_file_name: this.currentSearchParams.search_file_name,
                 search_created_by: this.currentSearchParams.search_created_by,
-                file_format: this.currentSearchParams.file_format,
-                sort_order: this.currentSortOrder
+                search_query: this.currentSearchParams.search_query,
+                search_response: this.currentSortOrder.search_response
             },
             success: (data) => {
                 localStorage.removeItem("selectedFiles");
                 localStorage.removeItem("selectAllChecked");
                 this.selectedFiles.clear();
-                this.files = data.files;
+                this.files = data.data;
+            
                 this.updateCheckboxes()
                 const rowsHtml = this.files.slice(0, this.selectedCount)
                 .map(file => this.createTableRow(file)) // Assuming createTableRow is a method that creates HTML for each file
@@ -213,20 +199,20 @@ class FileSelectionUI {
             localStorage.setItem("selectAllChecked", "true");
 
             this.files.slice(0, this.selectedCount).forEach(file => {
-                // Add file_id only if it doesn't already exist in selectedFiles
-                this.selectedFiles.add(file.file_id);
-                if (!this.selectedFiles.has(file.file_id)) {
-                    alert(file.file_id)
-                    this.selectedFiles.add(file.file_id);
+                // Add cache_id only if it doesn't already exist in selectedFiles
+                this.selectedFiles.add(file.cache_id);
+                if (!this.selectedFiles.has(file.cache_id)) {
+                    alert(file.cache_id)
+                    this.selectedFiles.add(file.cache_id);
                 }
             });
         } else {
             localStorage.setItem("selectAllChecked", "false");
     
             this.files.slice(0, this.selectedCount).forEach(file => {
-                // If file_id exists in selectedFiles, remove it; otherwise, add it
+                // If cache_id exists in selectedFiles, remove it; otherwise, add it
                 
-                    this.selectedFiles.delete(file.file_id); // Add if not present
+                    this.selectedFiles.delete(file.cache_id); // Add if not present
                
             });
         }
@@ -308,41 +294,22 @@ class FileSelectionUI {
     }
 
     createTableRow(file) {
-        let statusClass = file.status.toLowerCase() === "pending" ? "status-badge-untrain" : "status-badge";
-
-        let deleteAction = file.status.toLowerCase() === "embedded" 
-        ? `<div class="d-flex align-items-baseline action-popup__delete" onclick="delete_embedded_file('${file.file_id}')">
-                <img src="static/assets/img/icons/delete_icon.svg" alt="delete" style="width:17px;margin-left:5px">
-           </div>`
-        : `<div class="d-flex align-items-baseline action-popup__delete" onclick="delete_file('${file.file_id}')">
-                <img src="static/assets/img/icons/delete_icon.svg" alt="delete" style="width:17px;margin-left:5px">
-           </div>`;
-
+        const checkboxChecked = this.selectedFiles.has(file.cache_id) ? 'checked' : '';
         return `
             <tr>
-                <td style="font:bold;font-size:14px;display:flex;gap:5px;width:70px;">
-                    ${file.id} 
-                    <input type="checkbox" class="select-item" value="${file.file_id}" ${this.selectedFiles.has(file.file_id) ? 'checked' : ''}>
+                <td style="font-weight:bold; font-size:14px;">
+                    ${file.id}
+                    <input type="checkbox" class="select-item hidden" value="${file.cache_id}" ${checkboxChecked}>
                 </td>
-                <td>${file.name}</td>
-                <td>${file.format}</td>
-                <td>${file.size}</td>
-                <td>${file.path}</td>
-                <td><div class="${statusClass}" style="width:100px">${file.status}</div></td>
-                <td>${file.upload_date} <br> ${file.created_by}</td>
-                <td>
-                    <div>
-                        <div class="d-flex align-items-baseline action-popup__edit" style="float:left;">
-                            <a href="/view_file/${file.file_id}" target="_blank">
-                                <img src="static/assets/img/icons/view-com.svg" alt="View" style="width:20px;">
-                            </a>
-                        </div>
-                        ${deleteAction}
-                    </div>
-                </td>
+                <td>${file.query}</td>
+                <td>${file.response}</td>
+                <td>${file.file_name}</td>
+                <td>${file.created_by}</td>
+                <td>${file.send_date}</td>
             </tr>
         `;
     }
+    
 
 
     updatePagination(pagination,limit) {

@@ -166,7 +166,7 @@
     }
   function closeDownload(){
     $("#downloadButton").hide()
-    window.location.href = "{{ url_for('intent.display_intents') }}";
+    window.location.href = "{{ url_for('intent.display_llm_files') }}";
   }
 
   function hideErrorOnInput() {
@@ -214,46 +214,7 @@ $(document).ready(function() {
     hideErrorOnInput();
 });
 
- $(document).ready(function () {
-    $("#uploadBtn").on("click", function () {
-        $("#uploadBtn").prop("disabled", true);
-        var formData = new FormData($("#kt_modal_new_target_form")[0]);
-
-        $.ajax({
-            headers: { 'X-CSRFToken': csrf_token },
-            url: "{{ url_for('intent.add_multiple_intents') }}",
-            type: "POST",
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function (response) {
-                    if (response.status == "error_occured") {
-                        $("#errorfile").show().delay(3000).fadeOut();
-                        $("#downloadButton").show()
-                        $("#uploadBtn").prop("disabled", false);
-                    }
-                    else if (response.status == "error"){
-                        $("#file_check_error").show().delay(3000).fadeOut();
-                        $("#uploadBtn").prop("disabled", false);
-                    }
-                    else {
-                        $("#successMessage").show().delay(3000).fadeOut();
-                        window.location.href = "{{ url_for('intent.display_intents') }}";
-                    }
-                },
-            error: function (error) {
-                // Handle error
-                console.log(error);
-            },
-            complete: function () {
-                // Enable the upload button after upload process completes (success or failure)
-                $("#uploadBtn").prop("disabled", false);
-            }
-        });
-    });
-
-   
-});
+ 
 
 
 
@@ -300,7 +261,7 @@ $(document).ready(function() {
 			async: false,
 			type: "POST",
             headers: { 'X-CSRFToken': csrf_token },
-			url: "{{ url_for('intent.check_intent') }}",
+			url: "{{ url_for('intent.display_llm_files') }}",
 			data: {answer1: answer1,answer4: answer4 },
 				success: function(result){
 				check_result = result.answer1
@@ -453,7 +414,7 @@ $(document).ready(function() {
 		$.ajax({
 			type: "POST",
             headers: { 'X-CSRFToken': csrf_token },
-			url: "{{ url_for('intent.intent_res') }}",
+			url: "{{ url_for('intent.display_llm_files') }}",
 			data: { res_type: res_type},
 			success: function (result) {
 				$('#user_res').html(result);

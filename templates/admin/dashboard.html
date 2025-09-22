@@ -2,74 +2,97 @@
 {% block content %}
 
 <div class="intent-info w-100">
-    <div class="intents d-flex gap-4 flex-wrap flex-xl-nowrap">
-        <!-- <a href="{{ url_for('intent.display_intents', _external=True, _scheme= config['SSL_SECURITY']) }}" style="text-decoration: initial; !important">-->
-        <div class="intents__total intents__com cards">
-            <div class="intent_dashboard">
-                <h3 class="text-captalize"> <span>{{total_files}}</span> Total Files</h3>
-            </div>
-            <div class="d-flex flex-nowrap mt-3 p-4">
-                <div class="train-intent pt-3">
-                    <p class="text-capitalize intents__para mb-0"> Embedded Files </p>
-                    <span class="intents-counts"> {{embedded_files}} </span>
+    <div class="intents flex-wrap flex-xl-nowrap">
+        <div class="stats-row">
+        <!-- <a href="{{ url_for('intent.display_llm_files', _external=True, _scheme= config['SSL_SECURITY']) }}" style="text-decoration: initial; !important">-->
+            <div class="intents__active intents__com">
+                <div class="intent_dashboard">
+                    <h3 class="text-captalize stat-title">  Total Files</h3>
                 </div>
-                <div class="untrain-intent pt-3">
-                    <p class="text-capitalize intents__para mb-0"> untrained Files </p>
-                    <span class="intents-counts"> {{pending_files}} </span>
+                <p class="stat-value">{{total_files}}</p>
+                <div class="stat-details">
+                    <div class="train-intent ">
+                        <span  class="text-capitalize intents__para train"> Embedded Files </span>
+                        <span class="intents-counts" style="font-size:28px;"> {{embedded_files}} </span>
+                    </div>
+                    <div class="dotted-divider" style="margin: 0px 40px 0px 40px;"></div>
+                    <div class="train-intent ">
+                        <span class="text-capitalize intents__para untrain" style="color: #c42727;"> Pending Files </span>
+                        <span class="intents-counts"style="font-size:28px;"> {{pending_files}} </span>
+                    </div>
                 </div>
             </div>
-        </div>
-        </a>
-        <!-- <a href="{{ url_for('training.training_status', _external=True, _scheme= config['SSL_SECURITY']) }}" style="text-decoration: initial; !important"> -->
-        <div class="intents__active intents__com position-relative cards">
-            <div class="intent_dashboard">
-             <h3 class="text-captalize mb-0" > Active Model : {{ active_model }}  </h3>
-            </div> 
-            <div class="p-4">
-                <!--<div class="model_list">
-                    <p class="text-capitalize model-title">
-                        Ollama Model:
-                        <span class="model-name"> {{ active_model }} </span>
-                    </p>
-                </div>-->
+            <!--</a>
+            <a href="{{ url_for('intent.display_llm_files', _external=True, _scheme= config['SSL_SECURITY']) }}" style="text-decoration: initial; !important"> -->
+            <div class="intents__active intents__com">
+                <div class="intent_dashboard">
+                <h3 class="text-captalize stat-title" > Active Model</h3>
+                </div> 
+                <span class="stat-value" style="max-width:fit-content; display:block;width:500px;">{{ active_model }}</span>
+                <div class="stat-details">
+                    <div class="train-intent" style="width:80%;">
+                        <p class="text-capitalize intents__para"> Change LLM Model </p>
+                        <select id="model-selector" onchange="changeModel()">
+                            <option value="" disabled selected>Select LLM Model</option>
+                            {% for model in available_models %}
+                                <option value="{{ model }}">{{ model }}</option>
+                            {% endfor %}
+                        </select>
+                   </div>
+                       
+                
+                  <!-- <p class="text-capitalize model-title">
+                        Change Model:</p>
+                <select id="model-selector" class="form-control" onchange="changeModel()">
+                    <option value="" disabled selected>Select Model</option>
+                    {% for model in available_models %}
+                        <option value="{{ model }}">{{ model }}</option>
+                    {% endfor %}
+                </select>--> 
+            <!-- <div class="text-capitalize intents-badge position-absolute"> Production </div> -->
             
-                <!-- Embedding Model Section -->
-                <div class="model_list">
-                    <p class="text-capitalize model-title">
-                        Embedding Model:
-                        <span class="model-name"> Sentence Transformer </span>
-                    </p>
                 </div>
-            
-                <p class="text-capitalize model-title">
-                    Change Model:</p>
-             <select id="model-selector" class="form-control" onchange="changeModel()">
-                <option value="" disabled selected>Select Model</option>
-                {% for model in available_models %}
-                    <option value="{{ model }}">{{ model }}</option>
-                {% endfor %}
-            </select>
-        <!-- <div class="text-capitalize intents-badge position-absolute"> Production </div> -->
-        
             </div>
         </div>
-        </a>
-        <!-- <a href="{{ url_for('training.training_status', _external=True, _scheme= config['SSL_SECURITY']) }}" style="text-decoration: initial; !important"> -->
-        <div class="intents__active intents__active-second intents__com position-relative cards">
-            <div class="intent_dashboard">
-                <h3 class="text-captalize mb-0"> Active User </h3>
-            </div>    
-            <div class="p-4">
-                <span class="intents__active-counts"> {{active_user}} </span>
-                {% if stag_name == ""%}
-                <p class="mt-3 intents__para text-capitalize"> No Model On Production Environment </p>
-                {% else %}
-                <p class="mt-3 intents__para text-capitalize"> Admin user : {{total_admin_user}} </p>
-                {% endif %}
+        <div class="stats-row">
+            <div class="intents__active intents__com position-relative cards">
+                <div class="intent_dashboard">
+                    <h3 class="text-captalize mb-0"> Active User </h3>
+                </div>    
+                <div class="p-4">
+                    <span class="intents__active-counts"> {{active_user}} </span>
+                    
+                    <p class="mt-3 intents__para text-capitalize"> Admin user : {{total_admin_user}} </p>
+                </div>
+                <!-- <div class="text-capitalize intents-badge position-absolute"> Staging </div> -->
             </div>
-            <!-- <div class="text-capitalize intents-badge position-absolute"> Staging </div> -->
+            <!-- </a>
+            <a href="{{ url_for('intent.display_llm_files', _external=True, _scheme= config['SSL_SECURITY']) }}" style="text-decoration: initial; !important"> -->
+            <div class="intents__active intents__com cards" >
+                <div class="intent_dashboard">
+                    <h3 class="text-captalize mb-0"> Models </h3>
+                </div>    
+                <div class="stat-details" style="gap:5px">
+                    <div class="train-intent">
+                        <span class="text-capitalize intents__para">Ollama model  </span>
+                        <span class="intents-counts"> {{ollama_status}}</span>
+                    </div>
+                    <div class="dotted-divider"></div>
+                    <div class="train-intent">
+                        <span class="text-capitalize intents__para"> Language Model </span>
+                        <span class="intents-counts" style="font-size:22px;"> facebook--nllb-200-distilled-600M </span>
+                    </div>
+                    <div class="dotted-divider"></div>
+
+                    <div class="train-intent">
+                        <span class="text-capitalize intents__para"> Embedding Model </span>
+                        <span class="intents-counts"> Sentence Transformer </span>
+                    </div>
+                </div>
+
+            </div>
         </div>
-        </a>
+       <!--</a>--> 
     </div>
     <div class="cards intent-info__model">
         <div class="w-100 table-wrapper">

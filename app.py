@@ -1,5 +1,5 @@
 from datetime import datetime
-import os
+import os,pytz
 from random import random
 from flask_wtf import CSRFProtect
 from flask import (
@@ -14,7 +14,6 @@ from flask import (
     jsonify,
 )
 from flask_session import Session
-from functools import wraps
 import base64,schedule
 from utils.db_connector import execute_query, create_connection, handle_lob_fields
 from utils import config,backup_chats
@@ -27,14 +26,25 @@ from utils.db_response import (
 )
 from controller.intent import intent_details
 from controller.auth import admin_auth
-from controller.training import training_details
+#from controller.training import training_details
 from controller.admin import admin_details
 from controller.chatbot import chatbot_details
 from controller.response import response_details
 from controller.sso_login import sso_auth, get_token, get_latest_token
 from utils.db_connector import check_oracle_database
 from utils import ingest
-
+from flask import Flask, render_template, request, jsonify
+from qdrant_client import QdrantClient
+from sentence_transformers import SentenceTransformer
+from dotenv import load_dotenv
+from langchain.chains.question_answering import load_qa_chain
+from langchain_core.prompts import PromptTemplate
+from langchain_community.llms.ollama import Ollama
+from langchain.schema import Document
+from utils import opti_translate_all,ingest
+from threading import Event,Thread
+import hashlib,time
+import whisper,tempfile
 import re
 from utils.logger import logger
 import requests
@@ -64,38 +74,32 @@ CORS(
     },
 )
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
-
-
-# os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
-# import tensorflow as tf
 UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "/static/")
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.secret_key = config.SECRET_KEY
 app.config["SESSION_TYPE"] =config.SESSION_TYPE
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_USE_SIGNER"] = True
-app.config["CAPTCHA_ENABLE"] = True
-app.config["CAPTCHA_LENGTH"] = 6
-app.config["CAPTCHA_WIDTH"] = 1500
-app.config["CAPTCHA_HEIGHT"] = 120
 app.config["SSL_SECURITY"] = config.SSL_SECURITY
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(seconds=1000000)
 app.config["SESSION_COOKIE_NAME"] = "session_data"
 app.config['SESSION_REDIS'] = redis.from_url(config.REDIS_URL)
+redis_client= redis.from_url(config.REDIS_URL)
+SESSION_TTL_SECONDS = 86400  # 1 day
 csrf = CSRFProtect(app)
 event_logger = logger()
 
 app.register_blueprint(intent_details)
 app.register_blueprint(admin_auth)
-app.register_blueprint(training_details)
 app.register_blueprint(admin_details)
 app.register_blueprint(chatbot_details)
 app.register_blueprint(response_details)
 app.register_blueprint(sso_auth) 
+current_dir = os.path.dirname(os.path.abspath(__file__))  # directory where this script resides
 
 server_session = Session(app)
 
-prompt_file = f"prompts/prompt0.1.txt"
+prompt_file =   "prompts/prompt0.1.txt"
 with open(prompt_file, "r") as file:
     system_prompt = file.read()
 class RemoveServerHeaderMiddleware:
@@ -109,18 +113,7 @@ class RemoveServerHeaderMiddleware:
         return self.app(environ, custom_start_response)
 
 app.wsgi_app = RemoveServerHeaderMiddleware(app.wsgi_app)
-def get_user(username):
-    
-    row = execute_query(
-        "SELECT username, password FROM admin_login WHERE username = :username",
-        "select",
-        params={"username": username},
-    )[0]
-    if row:
-        return row
-    else:
-        return None
-    
+
 @app.route("/")
 def dashboard():
     """
@@ -142,7 +135,6 @@ def dashboard():
 def check_db_connection():
     try:
         # Example: Test a simple query to Redis
-        redis_client= redis.from_url(config.REDIS_URL)
         redis_client.ping()
         return True
     except redis.ConnectionError:
@@ -251,54 +243,51 @@ def admin_login():
         event_logger.error(e)
         return f"An error occurred: {str(e)}"
 
-###########################################
-from flask import Flask, render_template, request, jsonify
-from qdrant_client import QdrantClient
-from sentence_transformers import SentenceTransformer
-from dotenv import load_dotenv
-from langchain.chains.question_answering import load_qa_chain
-from langchain_core.prompts import PromptTemplate
-from langchain_community.llms.ollama import Ollama
-from langchain.schema import Document
-from utils import opti_translate_all
-from threading import Event,Thread
-import hashlib,time
-import whisper,tempfile
 
-@csrf.exempt
-@app.route("/change_model", methods=["POST"])
-def change_model():
-    data = request.get_json()
-    new_model = data.get("model_name")
+model = None
 
-    if not new_model:
-        return jsonify({"success": False, "error": "No model selected"})
+def save_model_name(name):
+    with open("current_model.txt", "w") as f:
+        f.write(name)
 
+def load_model_name():
     try:
-        # Update active model in config or database
-        config.MODEL_NAME = new_model  # Update globally
-        # If stored in DB, update it using a query
+        with open("current_model.txt", "r") as f:
+            return f.read().strip()
+    except FileNotFoundError:
+        return config.MODEL_NAME  # fallback to default if file not found
 
-        return jsonify({"success": True})
-    except Exception as e:
-        return jsonify({"success": False, "error": str(e)})
+def load_model(model_name=None):
+    global model
+    if model_name is None:
+        model_name = load_model_name()
 
+    config.MODEL_NAME = model_name
+    model = Ollama(
+        model=config.MODEL_NAME,
+        temperature=0.1,
+        base_url=config.OLLAMA_URL
+    )
+    print(f"Model loaded at startup: {config.MODEL_NAME}")
+
+def get_model():
+    global model
+    if model is None:
+        load_model()
+    return model
+    
 embed_model = None
 transcribe_model = None
 qdrant_client = None
-model = None
 stop_signals = {}
 
 try:
-    model = Ollama(model=os.getenv("MODEL_NAME"), temperature=0.1, base_url=os.getenv("OLLAMA_URL"))
     stop_signals = {}
 
-    if os.getenv("QDRANT_HOST") == "10.0.120.223":
-        embed_model_path = "/home/neosoft/workspace/llm/LLM_union/models--sentence-transformers--all-MiniLM-L6-v2/snapshots/8b3219a92973c328a8e22fadcfa821b5dc75636a"
-        transcribe_model_path = "/home/neosoft/workspace/llm/LLM_union/ai4bharat/base.pt"
-    else:
-        embed_model_path = "/root/.cache/huggingface/hub/models--sentence-transformers--all-MiniLM-L6-v2/snapshots/8b3219a92973c328a8e22fadcfa821b5dc75636a"
-        transcribe_model_path = "/hrbot/ai4bharat/base.pt"
+   
+    embed_model_path = os.path.join(current_dir, "ai4bharat/models--sentence-transformers--all-MiniLM-L6-v2/snapshots/8b3219a92973c328a8e22fadcfa821b5dc75636a")
+    transcribe_model_path = os.path.join(current_dir,"ai4bharat/base.pt")
+    
 
     qdrant_client = QdrantClient(
         host=os.getenv("QDRANT_HOST"), 
@@ -312,6 +301,23 @@ try:
     print("All models loaded successfully.")
 except Exception as e:
     print(f"Failed to load models: {e}")
+load_model()
+
+@app.route("/change_model", methods=["POST"])
+@csrf.exempt
+def change_model():
+    data = request.get_json()
+    new_model = data.get("model_name")
+
+    if not new_model:
+        return jsonify({"success": False, "error": "No model selected"})
+
+    try:
+        save_model_name(new_model)
+        load_model(new_model)
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)})
 
 @csrf.exempt
 @app.route('/transcribe', methods=['POST'])
@@ -335,10 +341,10 @@ def transcribe_audio():
         result = transcribe_model.transcribe(wav_path,language=language_code)
         os.remove(temp.name)
         os.remove(wav_path)
-        print(result,999999999999999999999999999999444444444444444444444)
         return jsonify({'text': result['text']})
 
 def query_qdrant(qdrant_client, query_text, embed_model, top_k=2):
+    print(query_text,888888888888888888888888888888888888)
     query_embedding = embed_model.encode([query_text])[0].tolist()
 
     # List all collections
@@ -389,7 +395,170 @@ def get_conversational_chain():
 
 
 
+def get_user_session(user_id):
+    """Retrieve session history in Q&A format"""
+    key = f"session:{user_id}"
+    session_data = redis_client.get(key)
+    if not session_data:
+        return []
 
+    try:
+        history = json.loads(session_data)
+    except json.JSONDecodeError:
+        return []
+
+    # Optional: filter only well-formed entries
+    return [
+        {
+            "msg": item.get("msg", ""),
+            "response": item.get("response", {}),
+            "timestamp": item.get("timestamp", 0)
+        }
+        for item in history
+        if item.get("msg") or item.get("response")
+    ]
+
+def update_user_session(user_id, msg, response):
+    """Update session history and refresh TTL"""
+    key = f"session:{user_id}"
+    history = get_user_session(user_id)
+
+    history.append({
+        "msg": msg,
+        "response": response,
+        "timestamp": int(time.time())  # Add current epoch timestamp
+    })
+
+    # Save updated history back to Redis and refresh TTL
+    redis_client.setex(key, SESSION_TTL_SECONDS, json.dumps(history))
+    
+
+def delete_user_session(user_id):
+    """Delete session history for a user"""
+    key = f"session:{user_id}"
+    redis_client.delete(key)
+    
+    
+@csrf.exempt
+@app.route('/upload_doc', methods=['POST'])
+def upload_doc():
+    if 'file' not in request.files:
+        return render_template("chatbot/chats_llm.html", 
+                               bot_response={"text": "No file uploaded"}, 
+                               type='upload', 
+                               current_time=datetime.now().strftime('%I:%M %p'))
+
+    uploaded_file = request.files['file']
+
+    if uploaded_file.filename == '':
+        return render_template("chatbot/chats_llm.html", 
+                               bot_response={"text": "No file selected"}, 
+                               type='upload', 
+                               current_time=datetime.now().strftime('%I:%M %p'))
+
+    # Allow txt, pdf, docx, csv, xlsx
+    allowed_types = [
+        'text/plain',
+        'application/pdf',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'text/csv',
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    ]
+    if uploaded_file.content_type not in allowed_types:
+        return render_template("chatbot/chats_llm.html", 
+                               bot_response={"text": "Unsupported file type"}, 
+                               type='upload', 
+                               current_time=datetime.now().strftime('%I:%M %p'))
+
+    # Check file size
+    content = uploaded_file.read()
+    if len(content) > 1000 * 1024:   # ~1MB
+        return render_template("chatbot/chats_llm.html", 
+                               bot_response={"text": "File size exceeds 50 KB"}, 
+                               type='upload', 
+                               current_time=datetime.now().strftime('%I:%M %p'))
+
+    # Reset file pointer
+    uploaded_file.stream.seek(0)
+
+    # Extract text depending on file type
+    text = ""
+    extracted_data = None
+    try:
+        if uploaded_file.content_type == 'application/pdf':
+            text = ingest.extract_text_from_pdf([uploaded_file])
+        elif uploaded_file.content_type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+            text = ingest.extract_text_from_docx(uploaded_file)
+        elif uploaded_file.content_type in ['text/csv', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']:
+            if uploaded_file.content_type == 'text/csv':
+                extracted_data = ingest.extract_text_from_csv(uploaded_file)
+            else:
+                extracted_data = ingest.extract_data_from_excel(uploaded_file)
+            text = json.dumps(extracted_data, ensure_ascii=False, indent=2)  # for LLM summarization
+        else:  # plain text
+            try:
+                text = content.decode('utf-8')
+            except UnicodeDecodeError:
+                text = content.decode('latin1')
+    except Exception as e:
+        return render_template("chatbot/chats_llm.html", 
+                               bot_response={"text": f"Error extracting text: {str(e)}"}, 
+                               type='upload', 
+                               current_time=datetime.now().strftime('%I:%M %p'))
+
+    # Send to Ollama
+    try:
+        ollama_response = requests.post(
+            config.OLLAMA_URL + '/api/generate',
+            json={
+                "model": config.MODEL_NAME,
+                "prompt": f"Summarize the following text in 4 lines:\n\n{text}"
+            },
+            timeout=900
+        )
+
+        if ollama_response.status_code == 200:
+            lines = ollama_response.text.strip().splitlines()
+            final_text = ""
+            for line in lines:
+                try:
+                    data = json.loads(line)
+                    final_text += data.get("response", "")
+                except json.JSONDecodeError:
+                    continue
+
+            user_id = request.form.get("emp_no", "system")
+            words = final_text.split()
+            if len(words) > 900:
+                final_text = " ".join(words[:900]) + "..."
+            conversation_id = save_conversation(
+                uploaded_file.filename, final_text, user_id,
+                model_name=config.MODEL_NAME,
+                metadata={"source": "upload"}
+            )
+
+            bot_response = {
+                "text": final_text,
+                "conversation_id": conversation_id
+            }
+            update_user_session(user_id, uploaded_file.filename, bot_response)
+
+            return render_template("chatbot/chats_llm.html", 
+                                   bot_response=bot_response, 
+                                   type='upload', 
+                                   current_time=datetime.now().strftime('%I:%M %p'))
+        else:
+            return render_template("chatbot/chats_llm.html", 
+                                   bot_response={"text": "Ollama returned an error"}, 
+                                   type='upload', 
+                                   current_time=datetime.now().strftime('%I:%M %p'))
+
+    except requests.exceptions.RequestException as e:
+        return render_template("chatbot/chats_llm.html", 
+                               bot_response={"text": f"Ollama server error: {str(e)}"}, 
+                               type='upload', 
+                               current_time=datetime.now().strftime('%I:%M %p'))
 
 @csrf.exempt
 @app.route('/bot_msg_llmbot', methods=['POST'])
@@ -404,8 +573,14 @@ def bot_msg_llmbot():
     bot_response = {}
     history = []
     primary_language = "eng_Latn"
+    actual_msg=msg
 
-    print(user_id)
+    auth=execute_query(f"SELECT COUNT(*) as isactive FROM USER_MASTER WHERE emp_number ='{user_id}' ",'select')
+    if not auth or auth[0].get("isactive", 0) == 0:
+        return jsonify({
+            "text": "Your session has expired or you have been logged out.",
+            "expired": True
+        }), 401
     # Generate a hash for the message to check caching
     msg_hash = hashlib.sha256(msg.encode()).hexdigest()
     if user_id not in stop_signals:
@@ -422,9 +597,9 @@ def bot_msg_llmbot():
         try:
             # translator = GoogleTranslator(source=preferred_language, target=primary_language)
             msg = opti_translate_all.translate_batch(msg, preferred_language, primary_language)
-            print(msg,1111111111111111111111)
             #msg = translator.translate(msg)
             # msg=translator
+            print(msg,222222222222222222222222)
         except Exception as e:
             bot_response['text'] = f"An error occurred while translating input: {str(e)}"
             return jsonify(bot_response)
@@ -432,6 +607,7 @@ def bot_msg_llmbot():
     # Define a function for processing
     def process_chain():
         try:
+            collection_name=''
             cache_docs = ingest.query_qdrant_cache(qdrant_client, msg, embed_model)
             if cache_docs:                                
                 bot_response['text'] = cache_docs
@@ -439,21 +615,25 @@ def bot_msg_llmbot():
                 conversation_id = save_conversation(msg, cache_docs, user_id,model_name=config.MODEL_NAME,metadata={})
                 bot_response['conversation_id'] = conversation_id
                 bot_response['suggested_questions'] = ingest.generate_suggestions_qdrant(qdrant_client, msg, embed_model)
-                return 
-            # Query Qdrant for relevant documents
-            relevant_docs = query_qdrant(qdrant_client, msg, embed_model)
-            formatted_docs = format_qdrant_results(relevant_docs) if relevant_docs else []
-
-
-            # Directly use relevant_docs if score > 0.9
-            if relevant_docs and relevant_docs['score'] > 0.9:
-                bot_response['text'] = relevant_docs['payload']['text_chunk']
-                bot_response['suggested_questions'] = ingest.generate_suggestions_qdrant(qdrant_client, msg, embed_model)
+                update_user_session(user_id, actual_msg, bot_response)
             else:
-                chain = get_conversational_chain()
-                response = chain({"input_documents": formatted_docs, "question": msg}, return_only_outputs=True)
-                bot_response['text'] = response.get('output_text', "I couldn't generate a relevant response.")
-                bot_response['suggested_questions'] = ingest.generate_suggestions_qdrant(qdrant_client, msg, embed_model)
+
+            # Query Qdrant for relevant documents
+                relevant_docs = query_qdrant(qdrant_client, msg, embed_model)
+                formatted_docs = format_qdrant_results(relevant_docs) if relevant_docs else []
+
+
+                # Directly use relevant_docs if score > 0.9
+                if relevant_docs and relevant_docs['score'] > 0.9:
+                    bot_response['text'] = relevant_docs['payload']['text_chunk']
+                    bot_response['suggested_questions'] = ingest.generate_suggestions_qdrant(qdrant_client, msg, embed_model)
+                else:
+                    chain = get_conversational_chain()
+                    response = chain({"input_documents": formatted_docs, "question": msg}, return_only_outputs=True)
+                    bot_response['text'] = response.get('output_text', "I couldn't generate a relevant response.")
+                    bot_response['suggested_questions'] = ingest.generate_suggestions_qdrant(qdrant_client, msg, embed_model)
+                collection_name=relevant_docs['collection'] if relevant_docs else None
+
             if preferred_language != primary_language:
                 try:
                     print(bot_response['text'],7777777777777777777777777777777777777777)
@@ -463,9 +643,9 @@ def bot_msg_llmbot():
                     bot_response['suggested_questions'] = translated_questions 
                 except Exception as e:
                     bot_response['text'] = f"An error occurred while translating response: {str(e)}"
-            conversation_id = save_conversation(msg, bot_response['text'], user_id,model_name=config.MODEL_NAME,metadata={"collection_name":relevant_docs['collection'] if relevant_docs else None})
+            conversation_id = save_conversation(msg, bot_response['text'], user_id,model_name=config.MODEL_NAME,metadata={"collection_name":collection_name})
             bot_response['conversation_id'] = conversation_id
-
+            update_user_session(user_id, actual_msg, bot_response)
         except Exception as e:
             bot_response['text'] = f"An error occurred: {str(e)}"
             print(f"Error in chain processing: {e}")
@@ -483,10 +663,40 @@ def bot_msg_llmbot():
             bot_response['conversation_id'] = conversation_id
             return render_template("chatbot/chats_llm.html", bot_response=bot_response, type=type, current_time=datetime.now().strftime('%I:%M %p'))
 
-    # Ensure the thread is complete before rendering the response
-    processing_thread.join()
     return render_template("chatbot/chats_llm.html", bot_response=bot_response, type=type, current_time=datetime.now().strftime('%I:%M %p'))
 
+@csrf.exempt
+@app.route('/get-history', methods=['GET'])
+def get_history():
+    user_id = request.args.get('user_id')
+    print(user_id,999999999999999999999999999)
+    if not user_id:
+        return jsonify({"error": "Missing user_id"}), 400
+
+    # Optional: check user is still active
+    auth = execute_query(f"SELECT COUNT(*) as isactive FROM USER_MASTER WHERE emp_number ='{user_id}' ", 'select')
+    if not auth or auth[0].get("isactive", 0) == 0:
+        return jsonify({"error": "User inactive or session expired"}), 401
+
+    # Get session from Redis
+    history = get_user_session(user_id)
+    return jsonify(history[-10:])
+
+@csrf.exempt
+@app.route('/delete_session', methods=['POST'])
+def delete_session():
+    data = request.get_json()
+    user_id = data.get("user_id")
+    key = f"session:{user_id}"
+
+    if not user_id:
+        return jsonify({"error": "Missing user_id"}), 400
+
+    try:
+        redis_client.delete(key)
+        return jsonify({"message": "Session deleted"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 @csrf.exempt
 @app.route('/submit_feedback', methods=['POST'])
 def submit_feedback():
@@ -632,30 +842,6 @@ def testing():
     )
 
 
-@app.route("/bot")
-def bot():
-    """
-    Admin Dashboard
-    :return: Admin DashBoard View
-    """
-    if session.get("islogin") != 1:
-        return redirect(
-            url_for("auth.login", _external=True, _scheme=config.SSL_SECURITY)
-        )
-    session["status"] = "bot"
-    return render_template("chatbot/custom_bot.html")
-
-
-def capitalize_first_letter(text):
-    # Capitalize the first letter of each line
-    result = "\n\t".join(line.capitalize() for line in text.split("\n"))
-    return result
-
-
-def replace_bullets_and_numbers(text):
-    # Replace bullets and numbers with \n
-    replaced_string = re.sub(r"([ivxlc]+\.)|(\d+\.|\d+\)|[*]+)|(•)", r"\n\1\2\3", text)
-    return replaced_string
 
 @csrf.exempt
 @app.route("/bot_msg", methods=["POST"])
@@ -853,8 +1039,6 @@ def bot_msg():
         )
 
     original_text = response[0]["text"]
-    modified_text = replace_bullets_and_numbers(original_text)
-    response[0]["text"] = modified_text.capitalize()
     if msg == "greet":
         response[0][
             "text"
@@ -862,6 +1046,63 @@ def bot_msg():
     return render_template("chatbot/chats.html", bot_response=response, type=type)
 
 
+@csrf.exempt
+@app.route('/check-recent-feedback', methods=['POST'])
+def check_recent_feedback():
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({'error': 'No data provided'}), 400
+            
+        user_id = data.get('user_id')
+        if not user_id:
+                return jsonify({'error': 'User ID is required'}), 400
+            
+        
+        # Check if user has submitted feedback in the last 7 days
+        
+        query = """
+            SELECT COUNT(*) as total FROM bot_user_feedback 
+            WHERE user_id = :user_id AND created_at >= :created_at
+        """
+        
+        seven_days_ago = datetime.now(pytz.utc) - timedelta(days=7)
+        result=execute_query(query, 'select', params={"user_id":user_id,"created_at":seven_days_ago})
+
+        if result and len(result) > 0:
+                count = result[0]['total']
+                return jsonify({'has_recent_feedback': count > 0})
+        else:
+            return jsonify({'has_recent_feedback': False})
+            
+    except Exception as e:
+        print(f"Error checking recent feedback: {e}")
+        return jsonify({'error': 'Internal server error'}), 500
+
+
+@csrf.exempt
+@app.route('/submit-bot-feedback', methods=['POST'])
+def submit_bot_feedback():
+    data = request.get_json()
+    user_id = data.get('user_id')
+    experience_rating = data.get('experience_rating')
+    response_quality = data.get('response_quality')
+    response_time = data.get('response_time')
+    suggestion = data.get('suggestion')
+    
+    # Insert feedback into database
+   
+    
+    query = """
+        INSERT INTO bot_user_feedback 
+        (user_id, experience_rating, response_quality, response_time, suggestion) 
+        VALUES (:user_id, :experience_rating, :response_quality, :response_time, :suggestion)
+    """
+    
+    execute_query(query,'insert',params={"user_id":user_id, "experience_rating":experience_rating, "response_quality":response_quality, "response_time":response_time, "suggestion":suggestion})
+   
+    
+    return jsonify({'status': 'success', 'message': 'Feedback submitted successfully'})
 
 
 

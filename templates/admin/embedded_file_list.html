@@ -202,7 +202,11 @@ $(".browse-btn").bind("click", function () {
 							setTimeout(function(){
 								window.location.href = "{{ url_for('intent.display_llm_files') }}";
 							 }, 2000);
-						}
+						},
+    error: function(xhr, status, error) {
+        alert("Error: " + xhr.responseText);
+        console.error(xhr.responseText);
+    }
 					});
 				},
 				cancel: function () {

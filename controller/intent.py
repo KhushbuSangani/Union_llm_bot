@@ -17,7 +17,7 @@ from datetime import datetime, timedelta
 from utils import fallback_handler
 from controller.sso_login import get_latest_token
 from utils import db_handler
-from utils import create_dataset,ingest
+from utils import ingest
 from io import BytesIO
 import pandas as pd
 import yaml
@@ -25,8 +25,6 @@ import io
 from utils.logger import logger
 from utils import config
 import json
-from collections import OrderedDict
-from flask_wtf import CSRFProtect
 import mimetypes
 import re
 import ast
@@ -116,6 +114,7 @@ def bulk_intent_page():
             "admin/bulk_intent.html", data=[], train_data=[]
         )
     except Exception as e:
+        print(e)
         event_logger.error(e)
         return render_template("admin/500.html")
 
@@ -171,9 +170,7 @@ def fetch_files_with_limit_offset(
     WHERE rnum > :start_row AND rnum <= :end_row
     """
 
-    print("Generated Query:", paginated_query)
     # Pagination parameters
-    print(limit,offset)
     params["end_row"] = offset + limit
     params["start_row"] = offset 
     
@@ -182,9 +179,7 @@ def fetch_files_with_limit_offset(
         results = execute_query(paginated_query, "select", params=params)
         return results
 
-    except Exception as e:
-        
-        print(e,888888888888888888888888)
+    except Exception as e:        
         event_logger.error(e)
     
 @intent_details.route("/display_llm_files")
@@ -276,20 +271,13 @@ def display_llm_files():
                 file_length=total_files_count,
 
             )
-           
-
-
-   
-            # If the request is AJAX, return JSON with the necessary fragments
             return jsonify(
                 {
                     "files":file_details,
                     "pagination":pagination_data
                 }
             )
-        else:
-            # If the request is a regular page load, render the full template
-           
+        else:           
             return render_template(
                 "admin/llm_file_list.html",
                 data=file_details,
@@ -386,28 +374,19 @@ def embedded_file_list():
                 file_length=total_files_count,
 
             )
-           
-
-
-   
-            # If the request is AJAX, return JSON with the necessary fragments
             return jsonify(
                 {
                     "files":file_details,
                     "pagination":pagination_data
                 }
             )
-        else:
-            # If the request is a regular page load, render the full template
-           
+        else:           
             return render_template(
                 "admin/embedded_file_list.html",
                 data=file_details,
                 pagination=pagination_data,
                 file_length=total_files_count
             )
-
-
     except Exception as e:
         print(e,44444444444444444444444444444444444444444444444444444444444)
         event_logger.error(e)
@@ -548,6 +527,43 @@ def download_chats():
     except Exception as e:
         event_logger.error(e)
         return render_template("admin/500.html")
+@intent_details.route("/download_caches_questions")
+def download_caches_questions():
+    """
+    Download All Intent In csv Format
+    :return: Return CSV(All Intent List)
+    """
+    try:
+        if session.get("islogin") != 1:
+            return redirect(
+                url_for("auth.login", _external=True, _scheme=config.SSL_SECURITY)
+            )
+    except Exception as e:
+        event_logger.error(e)
+        return render_template("admin/401.html")
+
+    try:
+        all_records = execute_query(
+            "SELECT * FROM conversation where admin_action='like'", opration="select", fetch_one=False
+        )
+        df = pd.json_normalize(all_records)
+        timestamp = str(datetime.now().replace(microsecond=0).isoformat("_"))
+        csv_file = df.to_csv(
+            encoding="utf-8",
+            index=False,
+        )
+        resp = Response(
+            csv_file,
+            mimetype="text/csv",
+            headers={
+                "Content-disposition": f"attachment; filename=HRbot_Cache_Questions_{timestamp}.csv"
+            },
+        )
+        return resp
+
+    except Exception as e:
+        event_logger.error(e)
+        return render_template("admin/500.html")
 
 
 @intent_details.route("/chat_list")
@@ -674,7 +690,7 @@ def delete_chat():
         db_handler.delete_chat(id)
         return redirect(
             url_for(
-                "intent.display_intents", _external=True, _scheme=config.SSL_SECURITY
+                "intent.display_llm_files", _external=True, _scheme=config.SSL_SECURITY
             )
         )
     except Exception as e:
@@ -691,7 +707,7 @@ def delete_all_chats():
         db_handler.delete_all_chats()
         return redirect(
             url_for(
-                "intent.display_intents", _external=True, _scheme=config.SSL_SECURITY
+                "intent.display_llm_files", _external=True, _scheme=config.SSL_SECURITY
             )
         )
     except Exception as e:
@@ -879,7 +895,97 @@ def embedding_llm_files():
     except Exception as e:
         event_logger.error(f"Error in embedding_llm_files: {e}")
         return redirect(url_for("intent.display_llm_files"))
-    
+
+@intent_details.route("/cache_questions")    
+def cache_questions():
+    try:
+        if session.get("islogin") != 1:
+            return redirect(
+                url_for("auth.login", _external=True, _scheme=config.SSL_SECURITY)
+            )
+    except Exception as e:
+        event_logger.error(e)
+        return render_template("admin/400.html")
+    try:
+        session["status"] = "cache_questions"
+        rows_per_page = request.args.get("limit", default=10, type=int)
+        page = request.args.get("page", default=1, type=int)
+        offset = (page - 1) * rows_per_page
+
+        # Filters
+        search_query = request.args.get("search_query", "").lower()
+        search_response = request.args.get("search_response", "").lower()
+        search_file_name = request.args.get("search_file_name", "").lower()
+        search_created_by = request.args.get("search_created_by", "").lower()
+        print(search_query,search_response,search_file_name,search_created_by)
+        # Fetch all cached questions
+        all_data = fallback_handler.fetch_cache_questions(
+            limit=rows_per_page,
+            offset=offset,
+            collection_name=search_file_name, 
+            created_by=search_created_by, 
+            query_text=search_query,
+            response_text=search_response
+        )
+
+        data = []
+        for idx, x in enumerate(all_data):
+            try:
+                user = db_handler.emp_name(x.get("user_id"))
+            except:
+                user = "Unknown user"
+            metadata_raw = x.get("metadata", {})
+            try:
+                collection_name = metadata_raw.get("collection_name", "N/A")
+            except Exception:
+                collection_name = "Invalid JSON"
+
+            data.append({
+                "id":  idx + 1+ offset,
+                "cache_id": x.get("id"),
+                "query": x.get("query"),
+                "response": x.get("response_text"),
+                "file_name": collection_name,
+                "created_by": user,
+                "send_date": x.get("timestamp"),
+                "comment": x.get("feedback_msg"),
+            })
+        print(data)
+        total_count = execute_query(
+            "SELECT COUNT(*) AS total_ques FROM conversation where admin_action='like'" , opration="select", fetch_one=True
+        )[0]["total_ques"]
+        paginated_data = data[offset:offset + rows_per_page]
+
+        total_pages = (total_count + rows_per_page - 1) // rows_per_page
+        pagination_data = {
+            "current_page": page,
+            "total_pages": total_pages,
+            "has_prev": page > 1,
+            "has_next": page < total_pages,
+            "prev_page": page - 1 if page > 1 else None,
+            "next_page": page + 1 if page < total_pages else None,
+            "page_numbers": list(range(1, total_pages + 1))
+        }
+
+        # Return JSON if it's an AJAX request
+        if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+            return jsonify({
+                "data": data,
+                "pagination": pagination_data
+            })
+
+        # Else return full HTML page
+        return render_template(
+            "admin/cache_questions.html",
+            data=data,
+            pagination=pagination_data,
+            file_length=total_count
+        )
+
+    except Exception as e:
+        print(e, 555555555555555555555555555)
+        event_logger.error(e)
+        return render_template("admin/500.html")
 @intent_details.route("/download_embedded_files")
 def download_embedded_files():
     """
@@ -1066,513 +1172,6 @@ def deshboard_test():
 
 
 
-
-#--------------------------------------------------RASA CODE-----------------------------------#
-
-
-def combine_response(intent):
-    response_type = intent.get("response_type")
-    response_text = intent.get("response_text")
-    response_payload = intent.get("response_payload")
-
-    if response_type == "text":
-        return response_text
-    elif response_type == "buttons":
-        # Assuming response_payload is a JSON array
-        return f"['{response_type}','{response_text}',{response_payload}]"
-    else:
-        return "Unknown Response Type"
-
-
-def fetch_intents_with_limit_offset(
-    limit,
-    offset,
-    intent=None,
-    status=None,
-    created_by=None,
-    query=None,
-    sort_by="timestamp",
-    sort_order="DESC",
-):
-
-    base_query = """
-        SELECT nlu_data.*, admin_login.username FROM nlu_data 
-        LEFT JOIN admin_login ON nlu_data.user_id = admin_login.user_id 
-        WHERE 1=1
-    """
-    params = {}
-
-    if intent:
-        base_query += (
-            " AND (nlu_data.intent LIKE :intent OR nlu_data.title LIKE :intent)"
-        )
-        params["intent"] = f"%{intent}%"
-
-    if status:
-        base_query += " AND nlu_data.status = :status"
-        params["status"] = status
-
-    if created_by:
-
-        if is_date(created_by, "%Y-%m-%d"):
-            base_query += " AND TRUNC(nlu_data.timestamp) = TRUNC(TO_DATE(:created_date, 'YYYY-MM-DD'))"
-            params["created_date"] = created_by
-        else:
-            base_query += "AND LOWER(admin_login.username) LIKE LOWER(:created_by)"
-            params["created_by"] = f"%{created_by}%"
-
-    if query:
-        base_query += " AND nlu_data.query LIKE :query"
-        params["query"] = f"%{query}%"
-    base_query += " ORDER BY nlu_data.timestamp DESC"
-    paginated_query = f"""
-    SELECT * FROM (
-        SELECT a.*, ROWNUM rnum
-        FROM ({base_query}) a
-        WHERE ROWNUM <= :end_row
-    )
-    WHERE rnum > :start_row ORDER BY timestamp DESC
-    """
-    params["end_row"] = offset + limit
-    params["start_row"] = offset
-    results = execute_query(paginated_query, "select", params)
-    return results
-
-
-@intent_details.route("/display_intents")
-def display_intents():
-    """
-    List of all Intents
-    :return: Edit Intent View with
-        data: Intent List(list)
-        train: Count of Untrained Intents(string)
-    """
-    try:
-        if session.get("islogin") != 1:
-            return redirect(
-                url_for("auth.login", _external=True, _scheme=config.SSL_SECURITY)
-            )
-    except Exception as e:
-        event_logger.error(e)
-        return render_template("admin/400.html")
-
-    try:
-        if session.get("token") != get_latest_token(session.get("user_id")):
-            return redirect(
-                url_for("auth.login", _external=True, _scheme=config.SSL_SECURITY)
-            )
-    except Exception as e:
-        event_logger.error(e)
-        return render_template("admin/400.html")
-    try:
-        rows_per_page = 10
-        page = request.args.get("page", type=int, default=1)
-        intent = request.args.get("search_intent", default=None)
-        status = request.args.get("status", default=None)
-        created_by = request.args.get("search_created_by", default=None)
-        query = request.args.get("search_query", default=None)
-        sort_order = request.args.get("sort_order", default="asc")
-        offset = (page - 1) * rows_per_page
-        session["status"] = "intent"
-
-        offset = (page - 1) * rows_per_page
-
-        session["status"] = "intent"
-        # all_intents = db_handler.fetch_intents_with_limit_offset(limit=rows_per_page, offset=offset)
-        all_intents = fetch_intents_with_limit_offset(
-            limit=rows_per_page,
-            offset=offset,
-            intent=intent,
-            status=status,
-            created_by=created_by,
-            query=query,
-            sort_by="timestamp",
-            sort_order="asc",
-        )
-        # all_intents = db_handler.fetch_all_intents()
-        _all_intents = []
-        for idx, x in enumerate(all_intents):
-            response = combine_response(x)
-            try:
-                user = db_handler.admin_user(x.get("user_id"))
-            except:
-                user = ""
-
-            _all_intents.append(
-                [
-                    offset + idx + 1,
-                    x.get("intent"),
-                    response,
-                    x.get("query"),
-                    x.get("entities"),
-                    x.get("timestamp"),
-                    user,
-                    x.get("status"),
-                    x.get("nlu_id"),
-                ]
-            )
-
-        status_data = execute_query(
-            "SELECT COUNT(*) AS status_data FROM nlu_data WHERE status = '2'",
-            opration="select",
-            fetch_one=True,
-        )[0]["status_data"]
-        intent_status = execute_query(
-            "SELECT COUNT(*) AS intent_status FROM maintain_status WHERE name = 'intent_status' AND status = '1'",
-            opration="select",
-            fetch_one=True,
-        )[0]["intent_status"]
-        staging_data_count = execute_query(
-            "SELECT COUNT(*) AS staging_data_count FROM train_data",
-            opration="select",
-            fetch_one=True,
-        )[0]["staging_data_count"]
-
-    except Exception as e:
-        event_logger.error(e)
-        return render_template("admin/404.html")
-
-    try:
-        if staging_data_count == 0:
-            can_open = 1
-        else:
-            staging_data = execute_query(
-                "SELECT * FROM train_data ORDER BY model_id DESC FETCH FIRST 1 ROW ONLY",
-                opration="select",
-            )
-            all_intents = []
-            for x in staging_data:
-                all_intents.append(x["approve_status"])
-                all_intents.append(x["deploy"])
-            if all_intents[1] == "1" or all_intents[1] == "3":
-                can_open = 1
-            else:
-                if (
-                    all_intents[0] == "1"
-                    or all_intents[0] == "4"
-                    or all_intents[0] == "5"
-                ):
-                    can_open = 1
-                else:
-                    can_open = 0
-        page = request.args.get(
-            flask_paginate.get_page_parameter(), type=int, default=1
-        )
-        offset = (page - 1) * rows_per_page
-        x = (int(page) - 1) * rows_per_page
-        y = int(page) * rows_per_page
-        intents = _all_intents
-        total_intents_count = db_handler.count_all_intents()
-        pagination = flask_paginate.Pagination(
-            page=page,
-            per_page=rows_per_page,
-            offset=offset,
-            total=total_intents_count,
-            record_name="_all_intents",
-            css_framework="bootstrap5",
-        )
-        if request.headers.get("X-Requested-With") == "XMLHttpRequest":
-            rows_html = render_template(
-                "admin/rows.html",
-                data=intents,
-                train=status_data,
-                can_open=can_open,
-                intent_status=intent_status,
-                pagination=pagination,
-            )
-            # If the request is AJAX, return JSON with the necessary fragments
-            return jsonify(
-                {
-                    "rows_html": rows_html,
-                }
-            )
-        else:
-            # If the request is a regular page load, render the full template
-            return render_template(
-                "admin/intent_list.html",
-                data=intents,
-                train=status_data,
-                can_open=can_open,
-                intent_status=intent_status,
-                pagination=pagination,
-            )
-    except Exception as e:
-        event_logger.error(e)
-        return render_template("admin/500.html")
-
-
-@intent_details.route("/add_single_intent", methods=["POST"])
-def add_single_intent():
-    """
-    Add Single Intent and redirect to Add Form
-    :return: Redirect to Add Form View
-    """
-    try:
-        x = db_handler.insert_single_intent(request)
-        return redirect(
-            url_for(
-                "intent.bulk_intent_page", _external=True, _scheme=config.SSL_SECURITY
-            )
-        )
-    except Exception as e:
-        event_logger.error(e)
-        return render_template("admin/500.html")
-
-
-@intent_details.route("/add_multiple_intents", methods=["POST"])
-def add_multiple_intents():
-    """
-    :Input: XLSX File
-    Add Bulk Intent and redirect to Add Form
-    :return: Redirect to Add Form View
-    """
-    try:
-        intent_file = request.files["intent_file"]
-
-        form_data = request.form.to_dict(flat=False)
-        now = datetime.now()
-        schedule_time = now + timedelta(minutes=1)
-        if form_data.get("schedule_training") == "schedule":
-            schedule_time = form_data.get("train_schedule_date")
-        intent_file = request.files
-        data = db_handler.insert_multiple_intent(intent_file, schedule_time)
-        if "current_intent" in session:
-            error_intent = "present"
-        else:
-            error_intent = "absent"
-        if error_intent == "present":
-            response_data = {"status": "error_occured", "message": "Error occurred"}
-        else:
-            response_data = {
-                "status": "success",
-                "message": "Intent added successfully",
-            }
-
-        return jsonify(response_data)
-
-    except Exception as e:
-        event_logger.error(e)
-        return jsonify({"status": "error", "message": "Internal server error"})
-
-
-
-
-@intent_details.route("/download_error_file")
-def download_error_file():
-    if "current_intent" in session:
-        error_intent = session["current_intent"]
-        error = session["error"]
-        df = pd.DataFrame({"session_data": error_intent, "session_error": error})
-        # Save the DataFrame to an Excel file
-        excel_filename = io.BytesIO()
-        df.to_excel(excel_filename, index=False)
-        timestamp = str(datetime.now().replace(microsecond=0).isoformat("_"))
-        excel_filename.seek(0)
-        # Clear the session data
-        session.pop("current_intent", None)
-        session.pop("error", None)
-        # Provide the error file for download
-        # return send_file(excel_filename, as_attachment=True)
-        resp = Response(
-            excel_filename,
-            mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            headers={
-                "Content-disposition": f"attachment; filename=BulkIntent_error_{timestamp}.xlsx"
-            },
-        )
-        return redirect(
-            url_for(
-                "intent.display_intents", _external=True, _scheme=config.SSL_SECURITY
-            )
-        )
-
-    return redirect(
-        url_for("intent.display_intents", _external=True, _scheme=config.SSL_SECURITY)
-    )
-
-
-
-
-
-
-
-@intent_details.route("/replace_intent")
-def edit_intent():
-    """
-    Edit Intent details
-    :id: Intent Object Id
-    :return: Edit Intent View with
-        data: Intent Details
-        x_data: Intent Example List
-    """
-    try:
-        if session.get("islogin") != 1:
-            return redirect(
-                url_for("auth.login", _external=True, _scheme=config.SSL_SECURITY)
-            )
-    except Exception as e:
-        event_logger.error(e)
-        return render_template("admin/400.html")
-    try:
-        if session.get("token") != get_latest_token(session.get("user_id")):
-            return redirect(
-                url_for("auth.login", _external=True, _scheme=config.SSL_SECURITY)
-            )
-    except Exception as e:
-        event_logger.error(e)
-        return render_template("admin/401.html")
-
-    try:
-        session["status"] = "intent"
-        id_ = request.args.get("id")
-        all_db_intents = execute_query(
-            "SELECT * FROM NLU_DATA WHERE NLU_id = :id",
-            opration="select",
-            params={"id": id_},
-            fetch_one=False,
-        )
-        all_intents = []
-        res_data = execute_query(
-            "SELECT response_type,response_text,response_payload FROM NLU_DATA WHERE NLU_id = :id",
-            opration="select",
-            params={"id": id_},
-            fetch_one=False,
-        )
-        r_data = []
-
-        if res_data:
-            if res_data[0]["response_type"] == "text":
-                data = res_data[0]["response_text"]
-                # r_data=res_data[0]['response_text']
-                if not isinstance(data, list):
-                    r_data.append(res_data[0]["response_text"])
-                    len_res_data = str(len(r_data) - 1)
-                else:
-                    r_data = res_data[0]["response_text"]
-                    len_res_data = str(len(res_data[0]["response_text"]) - 1)
-            else:
-                r_data.append(res_data[0]["response_type"])
-                r_data.append(res_data[0]["response_text"])
-                r_data.append(res_data[0]["response_payload"])
-                len_res_data = str(len(r_data[2]) - 1)
-
-        for x in all_db_intents:
-            all_intents.append(x["intent"])
-            all_intents.append(x["response_type"])
-            query_data = x["query"]
-
-            all_intents.append(query_data[0])
-            all_intents.append(x.get("description", False))
-
-            all_intents.append(x["nlu_id"])
-
-            if not all_intents.append(x["title"]):
-                x["title"] = ""
-            else:
-                all_intents.append(x["title"])
-        x_data = query_data
-
-        len_query_data = str(len(x_data) - 1)
-        return render_template(
-            "admin/edit_intent_new.html",
-            data=all_intents,
-            x_data=x_data,
-            r_data=r_data,
-            len_query_data=len_query_data,
-            len_res_data=len_res_data,
-        )
-    except Exception as e:
-        event_logger.error(e)
-        return render_template("admin/500.html")
-
-
-@intent_details.route("/update_intent", methods=["POST"])
-def update_intent():
-    """
-    Update Intent Data and Redirect to Intent List
-    :return: Redirect to Intent List View
-    """
-    try:
-        projectpath = request.form
-        db_handler.update_single_intent(projectpath)
-        return redirect(
-            url_for(
-                "intent.display_intents", _external=True, _scheme=config.SSL_SECURITY
-            )
-        )
-    except Exception as e:
-        event_logger.error(e)
-        return render_template("admin/500.html")
-
-
-@intent_details.route("/check_intent", methods=["POST"])
-def check_intent():
-    """
-    Validation function Check Intent is present or not(Unique)
-    :return: Intent Count String
-    """
-    try:
-        projectpath = request.form
-        query_data = projectpath.to_dict(flat=False)
-        intent = query_data.pop("answer1")[0]
-        title = query_data.pop("answer4")[0]
-        query_intent_count = "SELECT COUNT(*) FROM nlu_data WHERE intent = :intent"
-        query_title_count = "SELECT COUNT(*) FROM nlu_data WHERE title = :title"
-
-        intent_count = execute_query(
-            query_intent_count,
-            opration="select",
-            params={"intent": intent},
-            fetch_one=True,
-        )[0]
-        title_count = execute_query(
-            query_title_count,
-            opration="select",
-            params={"title": title},
-            fetch_one=True,
-        )[0]
-
-        data = {"answer1": intent_count["count(*)"], "answer4": title_count["count(*)"]}
-        return data
-    except Exception as e:
-        event_logger.error(e)
-        return render_template("admin/500.html")
-
-
-@intent_details.route("/check_intent_duplicat", methods=["POST"])
-def check_intent_duplicat():
-    """
-    Validation function Check Intent is present or not(Unique)
-    :return: Intent Count String
-    """
-    try:
-        projectpath = request.form
-        query_data = projectpath.to_dict(flat=False)
-        intent = query_data.pop("answer1")[0]
-        title = query_data.pop("answer4")[0]
-        query_intent_count = "SELECT COUNT(*) FROM nlu_data WHERE intent = :intent"
-        query_title_count = "SELECT COUNT(*) FROM nlu_data WHERE title = :title"
-
-        intent_count = execute_query(
-            query_intent_count,
-            opration="select",
-            params={"intent": intent},
-            fetch_one=True,
-        )[0]
-        title_count = execute_query(
-            query_title_count,
-            opration="select",
-            params={"title": title},
-            fetch_one=True,
-        )[0]
-
-        data = {"answer1": intent_count["count(*)"], "answer4": title_count["count(*)"]}
-        return data
-    except Exception as e:
-        event_logger.error(e)
-        return render_template("admin/404.html")
-
-
 @intent_details.route("/download_intents")
 def download_intents():
     """
@@ -1666,246 +1265,753 @@ def download_tickets():
         return render_template("admin/500.html")
 
 
+#--------------------------------------------------RASA CODE-----------------------------------#
 
-@intent_details.route("/intent")
-def intents():
+
+# def combine_response(intent):
+#     response_type = intent.get("response_type")
+#     response_text = intent.get("response_text")
+#     response_payload = intent.get("response_payload")
+
+#     if response_type == "text":
+#         return response_text
+#     elif response_type == "buttons":
+#         # Assuming response_payload is a JSON array
+#         return f"['{response_type}','{response_text}',{response_payload}]"
+#     else:
+#         return "Unknown Response Type"
+
+
+# def fetch_intents_with_limit_offset(
+#     limit,
+#     offset,
+#     intent=None,
+#     status=None,
+#     created_by=None,
+#     query=None,
+#     sort_by="timestamp",
+#     sort_order="DESC",
+# ):
+
+#     base_query = """
+#         SELECT nlu_data.*, admin_login.username FROM nlu_data 
+#         LEFT JOIN admin_login ON nlu_data.user_id = admin_login.user_id 
+#         WHERE 1=1
+#     """
+#     params = {}
+
+#     if intent:
+#         base_query += (
+#             " AND (nlu_data.intent LIKE :intent OR nlu_data.title LIKE :intent)"
+#         )
+#         params["intent"] = f"%{intent}%"
+
+#     if status:
+#         base_query += " AND nlu_data.status = :status"
+#         params["status"] = status
+
+#     if created_by:
+
+#         if is_date(created_by, "%Y-%m-%d"):
+#             base_query += " AND TRUNC(nlu_data.timestamp) = TRUNC(TO_DATE(:created_date, 'YYYY-MM-DD'))"
+#             params["created_date"] = created_by
+#         else:
+#             base_query += "AND LOWER(admin_login.username) LIKE LOWER(:created_by)"
+#             params["created_by"] = f"%{created_by}%"
+
+#     if query:
+#         base_query += " AND nlu_data.query LIKE :query"
+#         params["query"] = f"%{query}%"
+#     base_query += " ORDER BY nlu_data.timestamp DESC"
+#     paginated_query = f"""
+#     SELECT * FROM (
+#         SELECT a.*, ROWNUM rnum
+#         FROM ({base_query}) a
+#         WHERE ROWNUM <= :end_row
+#     )
+#     WHERE rnum > :start_row ORDER BY timestamp DESC
+#     """
+#     params["end_row"] = offset + limit
+#     params["start_row"] = offset
+#     results = execute_query(paginated_query, "select", params)
+#     return results
+
+
+# @intent_details.route("/display_intents")
+# def display_intents():
+#     """
+#     List of all Intents
+#     :return: Edit Intent View with
+#         data: Intent List(list)
+#         train: Count of Untrained Intents(string)
+#     """
+#     try:
+#         if session.get("islogin") != 1:
+#             return redirect(
+#                 url_for("auth.login", _external=True, _scheme=config.SSL_SECURITY)
+#             )
+#     except Exception as e:
+#         event_logger.error(e)
+#         return render_template("admin/400.html")
+
+#     try:
+#         if session.get("token") != get_latest_token(session.get("user_id")):
+#             return redirect(
+#                 url_for("auth.login", _external=True, _scheme=config.SSL_SECURITY)
+#             )
+#     except Exception as e:
+#         event_logger.error(e)
+#         return render_template("admin/400.html")
+#     try:
+#         rows_per_page = 10
+#         page = request.args.get("page", type=int, default=1)
+#         intent = request.args.get("search_intent", default=None)
+#         status = request.args.get("status", default=None)
+#         created_by = request.args.get("search_created_by", default=None)
+#         query = request.args.get("search_query", default=None)
+#         sort_order = request.args.get("sort_order", default="asc")
+#         offset = (page - 1) * rows_per_page
+#         session["status"] = "intent"
+
+#         offset = (page - 1) * rows_per_page
+
+#         session["status"] = "intent"
+#         # all_intents = db_handler.fetch_intents_with_limit_offset(limit=rows_per_page, offset=offset)
+#         all_intents = fetch_intents_with_limit_offset(
+#             limit=rows_per_page,
+#             offset=offset,
+#             intent=intent,
+#             status=status,
+#             created_by=created_by,
+#             query=query,
+#             sort_by="timestamp",
+#             sort_order="asc",
+#         )
+#         # all_intents = db_handler.fetch_all_intents()
+#         _all_intents = []
+#         for idx, x in enumerate(all_intents):
+#             response = combine_response(x)
+#             try:
+#                 user = db_handler.admin_user(x.get("user_id"))
+#             except:
+#                 user = ""
+
+#             _all_intents.append(
+#                 [
+#                     offset + idx + 1,
+#                     x.get("intent"),
+#                     response,
+#                     x.get("query"),
+#                     x.get("entities"),
+#                     x.get("timestamp"),
+#                     user,
+#                     x.get("status"),
+#                     x.get("nlu_id"),
+#                 ]
+#             )
+
+#         status_data = execute_query(
+#             "SELECT COUNT(*) AS status_data FROM nlu_data WHERE status = '2'",
+#             opration="select",
+#             fetch_one=True,
+#         )[0]["status_data"]
+#         intent_status = execute_query(
+#             "SELECT COUNT(*) AS intent_status FROM maintain_status WHERE name = 'intent_status' AND status = '1'",
+#             opration="select",
+#             fetch_one=True,
+#         )[0]["intent_status"]
+#         staging_data_count = execute_query(
+#             "SELECT COUNT(*) AS staging_data_count FROM train_data",
+#             opration="select",
+#             fetch_one=True,
+#         )[0]["staging_data_count"]
+
+#     except Exception as e:
+#         event_logger.error(e)
+#         return render_template("admin/404.html")
+
+#     try:
+#         if staging_data_count == 0:
+#             can_open = 1
+#         else:
+#             staging_data = execute_query(
+#                 "SELECT * FROM train_data ORDER BY model_id DESC FETCH FIRST 1 ROW ONLY",
+#                 opration="select",
+#             )
+#             all_intents = []
+#             for x in staging_data:
+#                 all_intents.append(x["approve_status"])
+#                 all_intents.append(x["deploy"])
+#             if all_intents[1] == "1" or all_intents[1] == "3":
+#                 can_open = 1
+#             else:
+#                 if (
+#                     all_intents[0] == "1"
+#                     or all_intents[0] == "4"
+#                     or all_intents[0] == "5"
+#                 ):
+#                     can_open = 1
+#                 else:
+#                     can_open = 0
+#         page = request.args.get(
+#             flask_paginate.get_page_parameter(), type=int, default=1
+#         )
+#         offset = (page - 1) * rows_per_page
+#         x = (int(page) - 1) * rows_per_page
+#         y = int(page) * rows_per_page
+#         intents = _all_intents
+#         total_intents_count = db_handler.count_all_intents()
+#         pagination = flask_paginate.Pagination(
+#             page=page,
+#             per_page=rows_per_page,
+#             offset=offset,
+#             total=total_intents_count,
+#             record_name="_all_intents",
+#             css_framework="bootstrap5",
+#         )
+#         if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+#             rows_html = render_template(
+#                 "admin/rows.html",
+#                 data=intents,
+#                 train=status_data,
+#                 can_open=can_open,
+#                 intent_status=intent_status,
+#                 pagination=pagination,
+#             )
+#             # If the request is AJAX, return JSON with the necessary fragments
+#             return jsonify(
+#                 {
+#                     "rows_html": rows_html,
+#                 }
+#             )
+#         else:
+#             # If the request is a regular page load, render the full template
+#             return render_template(
+#                 "admin/intent_list.html",
+#                 data=intents,
+#                 train=status_data,
+#                 can_open=can_open,
+#                 intent_status=intent_status,
+#                 pagination=pagination,
+#             )
+#     except Exception as e:
+#         event_logger.error(e)
+#         return render_template("admin/500.html")
+
+
+@intent_details.route("/add_single_intent", methods=["POST"])
+def add_single_intent():
     """
-    List of all Intents
-    :return: Edit Intent View with
-        data: Intent List(list)
-        train: Count of Untrained Intents(string)
+    Add Single Intent and redirect to Add Form
+    :return: Redirect to Add Form View
     """
     try:
-        if session.get("islogin") != 1:
-            return redirect(
-                url_for("auth.login", _external=True, _scheme=config.SSL_SECURITY)
-            )
-    except Exception as e:
-        return render_template("admin/401.html")
-
-    try:
-        session["status"] = "intent"
-        all_intents = db_handler.fetch_all_intents()
-        _all_intents = []
-        for idx, x in enumerate(all_intents):
-            _all_intents.append(
-                [
-                    idx + 1,
-                    x.get("intent"),
-                    x.get("response"),
-                    x.get("query"),
-                    x.get("entities"),
-                    x.get("timestamp"),
-                    db_handler.admin_user(x.get("user")),
-                    x.get("status"),
-                    x.get("_id"),
-                    x.get("nlu_id"),
-                ]
-            )
-        query = """
-        SELECT count(*)
-        FROM nlu_data 
-        WHERE status = 2 
-        ORDER BY nlu_id DESC """
-        status_data = execute_query(query=query, opration="select")[0]["count(*)"]
-        return render_template(
-            "admin/intent.html", data=_all_intents, train=status_data
-        )
-    except Exception as e:
-        event_logger.error(e)
-        return render_template("admin/500.html")
-
-
-
-
-
-
-@intent_details.route("/all_chats")
-def all_chats():
-    # try:
-    #     if session.get("islogin") != 1:
-    #         return redirect(
-    #             url_for("auth.login", _external=True, _scheme=config.SSL_SECURITY)
-    #         )
-    # except Exception as e:
-    #     event_logger.error(e)
-    #     return render_template("admin/400.html")
-    # try:
-    #     if "5" not in session.get("access"):
-    #         return redirect(
-    #             url_for("auth.login", _external=True, _scheme=config.SSL_SECURITY)
-    #         )
-    # except Exception as e:
-    #     event_logger.error(e)
-    #     return render_template("admin/401.html")
-
-    try:
-        session["status"] = "intent_mapping"
-        all_intents = db_handler.fetch_mismatch_intent()
-        intents_list = db_handler.fetch_all_intents()
-        _all_intents = []
-        for idx, x in enumerate(all_intents):
-            _all_intents.append([idx + 1, x.get("query"), x.get("q_id")])
-        intents_data = []
-        for idx, y in enumerate(intents_list):
-            intents_data.append(
-                [
-                    str(y.get("intent")),
-                    str(y.get("nlu_id")),
-                ]
-            )
-        return render_template(
-            "admin/intent_mapping.html", data=_all_intents, x_data=intents_data
-        )
-    except Exception as e:
-        event_logger.error(e)
-        return render_template("admin/500.html")
-
-
-@intent_details.route("/intent_map_list")
-def intent_map_list():
-    try:
-        fallback_handler.fetch_mismatch_chats()
+        x = db_handler.insert_single_intent(request)
         return redirect(
             url_for(
-                "intent.intent_mapping", _external=True, _scheme=config.SSL_SECURITY
+                "intent.bulk_intent_page", _external=True, _scheme=config.SSL_SECURITY
             )
-        )
-    except Exception as e:
-        event_logger.error(e)
-        return render_template("admin/404.html")
-
-
-
-
-@intent_details.route("/model_intent_list", methods=["POST"])
-def model_intent_list():
-    try:
-        projectpath = request.form
-        query_data = projectpath.to_dict(flat=False)
-        model_id = query_data.get("model_id")[0]
-        model_name = query_data.get("name")[0]
-
-        all_db_intents = execute_query(
-            """SELECT newly_train_intents FROM train_data WHERE model_id = :model_id""",
-            "select",
-            params={"model_id": model_id},
-        )[0]["newly_train_intents"]
-        all_intents = []
-        if not all_db_intents:
-            newly_train_intents = []
-        else:
-            for x in all_db_intents:
-                all_intents.append(x["newly_train_intents"])
-            newly_train_intents = all_intents[0]
-
-        newly_train_intents = ",".join(
-            ["'" + str(nlu_id) + "'" for nlu_id in newly_train_intents]
-        )
-        nlu_details = execute_query(
-            f"SELECT * FROM nlu_data WHERE  nlu_id IN ({newly_train_intents})", "select"
-        )
-        _nlu_intents = []
-        for idx, x in enumerate(nlu_details):
-            _nlu_intents.append(
-                [
-                    idx + 1,
-                    x.get("intent"),
-                    x.get("nlu_id"),
-                ]
-            )
-        return render_template(
-            "admin/intent_rejection.html",
-            data=_nlu_intents,
-            model_name=model_name,
-            model_id=model_id,
         )
     except Exception as e:
         event_logger.error(e)
         return render_template("admin/500.html")
 
-#@csrf.exempt
-@intent_details.route("/delete_intent", methods=["POST"])
-def delete_intent():
-    """
-    Delete Intent Data and Redirect to Intent List
-    :return: Redirect to Intent List View
-    """
-    try:
-        projectpath = request.form
 
-        response = db_handler.delete_single_intent(projectpath)
+# @intent_details.route("/add_multiple_intents", methods=["POST"])
+# def add_multiple_intents():
+#     """
+#     :Input: XLSX File
+#     Add Bulk Intent and redirect to Add Form
+#     :return: Redirect to Add Form View
+#     """
+#     try:
+#         intent_file = request.files["intent_file"]
 
-        return response
+#         form_data = request.form.to_dict(flat=False)
+#         now = datetime.now()
+#         schedule_time = now + timedelta(minutes=1)
+#         if form_data.get("schedule_training") == "schedule":
+#             schedule_time = form_data.get("train_schedule_date")
+#         intent_file = request.files
+#         data = db_handler.insert_multiple_intent(intent_file, schedule_time)
+#         if "current_intent" in session:
+#             error_intent = "present"
+#         else:
+#             error_intent = "absent"
+#         if error_intent == "present":
+#             response_data = {"status": "error_occured", "message": "Error occurred"}
+#         else:
+#             response_data = {
+#                 "status": "success",
+#                 "message": "Intent added successfully",
+#             }
 
-    except Exception as e:
-        event_logger.error(e)
-        return render_template("admin/500.html")
+#         return jsonify(response_data)
+
+#     except Exception as e:
+#         event_logger.error(e)
+#         return jsonify({"status": "error", "message": "Internal server error"})
 
 
-@intent_details.route("/delete_all_intent", methods=["POST"])
-def delete_all_intent():
-    """
-    Delete All Intent Data and Redirect to Intent List
-    :return: Redirect to Intent List View-
-    """
-    try:
-        db_handler.delete_all_intent()
+
+
+@intent_details.route("/download_error_file")
+def download_error_file():
+    if "current_intent" in session:
+        error_intent = session["current_intent"]
+        error = session["error"]
+        df = pd.DataFrame({"session_data": error_intent, "session_error": error})
+        # Save the DataFrame to an Excel file
+        excel_filename = io.BytesIO()
+        df.to_excel(excel_filename, index=False)
+        timestamp = str(datetime.now().replace(microsecond=0).isoformat("_"))
+        excel_filename.seek(0)
+        # Clear the session data
+        session.pop("current_intent", None)
+        session.pop("error", None)
+        # Provide the error file for download
+        # return send_file(excel_filename, as_attachment=True)
+        resp = Response(
+            excel_filename,
+            mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            headers={
+                "Content-disposition": f"attachment; filename=BulkIntent_error_{timestamp}.xlsx"
+            },
+        )
         return redirect(
             url_for(
-                "intent.display_intents", _external=True, _scheme=config.SSL_SECURITY
+                "intent.display_llm_files", _external=True, _scheme=config.SSL_SECURITY
             )
         )
-    except Exception as e:
-        event_logger.error(e)
-        return render_template("admin/500.html")
+
+    return redirect(
+        url_for("intent.display_llm_files", _external=True, _scheme=config.SSL_SECURITY)
+    )
+
+
+
+
+
+
+
+# @intent_details.route("/replace_intent")
+# def edit_intent():
+#     """
+#     Edit Intent details
+#     :id: Intent Object Id
+#     :return: Edit Intent View with
+#         data: Intent Details
+#         x_data: Intent Example List
+#     """
+#     try:
+#         if session.get("islogin") != 1:
+#             return redirect(
+#                 url_for("auth.login", _external=True, _scheme=config.SSL_SECURITY)
+#             )
+#     except Exception as e:
+#         event_logger.error(e)
+#         return render_template("admin/400.html")
+#     try:
+#         if session.get("token") != get_latest_token(session.get("user_id")):
+#             return redirect(
+#                 url_for("auth.login", _external=True, _scheme=config.SSL_SECURITY)
+#             )
+#     except Exception as e:
+#         event_logger.error(e)
+#         return render_template("admin/401.html")
+
+#     try:
+#         session["status"] = "intent"
+#         id_ = request.args.get("id")
+#         all_db_intents = execute_query(
+#             "SELECT * FROM NLU_DATA WHERE NLU_id = :id",
+#             opration="select",
+#             params={"id": id_},
+#             fetch_one=False,
+#         )
+#         all_intents = []
+#         res_data = execute_query(
+#             "SELECT response_type,response_text,response_payload FROM NLU_DATA WHERE NLU_id = :id",
+#             opration="select",
+#             params={"id": id_},
+#             fetch_one=False,
+#         )
+#         r_data = []
+
+#         if res_data:
+#             if res_data[0]["response_type"] == "text":
+#                 data = res_data[0]["response_text"]
+#                 # r_data=res_data[0]['response_text']
+#                 if not isinstance(data, list):
+#                     r_data.append(res_data[0]["response_text"])
+#                     len_res_data = str(len(r_data) - 1)
+#                 else:
+#                     r_data = res_data[0]["response_text"]
+#                     len_res_data = str(len(res_data[0]["response_text"]) - 1)
+#             else:
+#                 r_data.append(res_data[0]["response_type"])
+#                 r_data.append(res_data[0]["response_text"])
+#                 r_data.append(res_data[0]["response_payload"])
+#                 len_res_data = str(len(r_data[2]) - 1)
+
+#         for x in all_db_intents:
+#             all_intents.append(x["intent"])
+#             all_intents.append(x["response_type"])
+#             query_data = x["query"]
+
+#             all_intents.append(query_data[0])
+#             all_intents.append(x.get("description", False))
+
+#             all_intents.append(x["nlu_id"])
+
+#             if not all_intents.append(x["title"]):
+#                 x["title"] = ""
+#             else:
+#                 all_intents.append(x["title"])
+#         x_data = query_data
+
+#         len_query_data = str(len(x_data) - 1)
+#         return render_template(
+#             "admin/edit_intent_new.html",
+#             data=all_intents,
+#             x_data=x_data,
+#             r_data=r_data,
+#             len_query_data=len_query_data,
+#             len_res_data=len_res_data,
+#         )
+#     except Exception as e:
+#         event_logger.error(e)
+#         return render_template("admin/500.html")
+
+
+# @intent_details.route("/update_intent", methods=["POST"])
+# def update_intent():
+#     """
+#     Update Intent Data and Redirect to Intent List
+#     :return: Redirect to Intent List View
+#     """
+#     try:
+#         projectpath = request.form
+#         db_handler.update_single_intent(projectpath)
+#         return redirect(
+#             url_for(
+#                 "intent.display_intents", _external=True, _scheme=config.SSL_SECURITY
+#             )
+#         )
+#     except Exception as e:
+#         event_logger.error(e)
+#         return render_template("admin/500.html")
+
+
+# @intent_details.route("/check_intent", methods=["POST"])
+# def check_intent():
+#     """
+#     Validation function Check Intent is present or not(Unique)
+#     :return: Intent Count String
+#     """
+#     try:
+#         projectpath = request.form
+#         query_data = projectpath.to_dict(flat=False)
+#         intent = query_data.pop("answer1")[0]
+#         title = query_data.pop("answer4")[0]
+#         query_intent_count = "SELECT COUNT(*) FROM nlu_data WHERE intent = :intent"
+#         query_title_count = "SELECT COUNT(*) FROM nlu_data WHERE title = :title"
+
+#         intent_count = execute_query(
+#             query_intent_count,
+#             opration="select",
+#             params={"intent": intent},
+#             fetch_one=True,
+#         )[0]
+#         title_count = execute_query(
+#             query_title_count,
+#             opration="select",
+#             params={"title": title},
+#             fetch_one=True,
+#         )[0]
+
+#         data = {"answer1": intent_count["count(*)"], "answer4": title_count["count(*)"]}
+#         return data
+#     except Exception as e:
+#         event_logger.error(e)
+#         return render_template("admin/500.html")
+
+
+# @intent_details.route("/check_intent_duplicat", methods=["POST"])
+# def check_intent_duplicat():
+#     """
+#     Validation function Check Intent is present or not(Unique)
+#     :return: Intent Count String
+#     """
+#     try:
+#         projectpath = request.form
+#         query_data = projectpath.to_dict(flat=False)
+#         intent = query_data.pop("answer1")[0]
+#         title = query_data.pop("answer4")[0]
+#         query_intent_count = "SELECT COUNT(*) FROM nlu_data WHERE intent = :intent"
+#         query_title_count = "SELECT COUNT(*) FROM nlu_data WHERE title = :title"
+
+#         intent_count = execute_query(
+#             query_intent_count,
+#             opration="select",
+#             params={"intent": intent},
+#             fetch_one=True,
+#         )[0]
+#         title_count = execute_query(
+#             query_title_count,
+#             opration="select",
+#             params={"title": title},
+#             fetch_one=True,
+#         )[0]
+
+#         data = {"answer1": intent_count["count(*)"], "answer4": title_count["count(*)"]}
+#         return data
+#     except Exception as e:
+#         event_logger.error(e)
+#         return render_template("admin/404.html")
+
+
+
+
+# @intent_details.route("/intent")
+# def intents():
+#     """
+#     List of all Intents
+#     :return: Edit Intent View with
+#         data: Intent List(list)
+#         train: Count of Untrained Intents(string)
+#     """
+#     try:
+#         if session.get("islogin") != 1:
+#             return redirect(
+#                 url_for("auth.login", _external=True, _scheme=config.SSL_SECURITY)
+#             )
+#     except Exception as e:
+#         return render_template("admin/401.html")
+
+#     try:
+#         session["status"] = "intent"
+#         all_intents = db_handler.fetch_all_intents()
+#         _all_intents = []
+#         for idx, x in enumerate(all_intents):
+#             _all_intents.append(
+#                 [
+#                     idx + 1,
+#                     x.get("intent"),
+#                     x.get("response"),
+#                     x.get("query"),
+#                     x.get("entities"),
+#                     x.get("timestamp"),
+#                     db_handler.admin_user(x.get("user")),
+#                     x.get("status"),
+#                     x.get("_id"),
+#                     x.get("nlu_id"),
+#                 ]
+#             )
+#         query = """
+#         SELECT count(*)
+#         FROM nlu_data 
+#         WHERE status = 2 
+#         ORDER BY nlu_id DESC """
+#         status_data = execute_query(query=query, opration="select")[0]["count(*)"]
+#         return render_template(
+#             "admin/intent.html", data=_all_intents, train=status_data
+#         )
+#     except Exception as e:
+#         event_logger.error(e)
+#         return render_template("admin/500.html")
+
+
+
+
+
+
+# @intent_details.route("/all_chats")
+# def all_chats():
+#     # try:
+#     #     if session.get("islogin") != 1:
+#     #         return redirect(
+#     #             url_for("auth.login", _external=True, _scheme=config.SSL_SECURITY)
+#     #         )
+#     # except Exception as e:
+#     #     event_logger.error(e)
+#     #     return render_template("admin/400.html")
+#     # try:
+#     #     if "5" not in session.get("access"):
+#     #         return redirect(
+#     #             url_for("auth.login", _external=True, _scheme=config.SSL_SECURITY)
+#     #         )
+#     # except Exception as e:
+#     #     event_logger.error(e)
+#     #     return render_template("admin/401.html")
+
+#     try:
+#         session["status"] = "intent_mapping"
+#         all_intents = db_handler.fetch_mismatch_intent()
+#         intents_list = db_handler.fetch_all_intents()
+#         _all_intents = []
+#         for idx, x in enumerate(all_intents):
+#             _all_intents.append([idx + 1, x.get("query"), x.get("q_id")])
+#         intents_data = []
+#         for idx, y in enumerate(intents_list):
+#             intents_data.append(
+#                 [
+#                     str(y.get("intent")),
+#                     str(y.get("nlu_id")),
+#                 ]
+#             )
+#         return render_template(
+#             "admin/intent_mapping.html", data=_all_intents, x_data=intents_data
+#         )
+#     except Exception as e:
+#         event_logger.error(e)
+#         return render_template("admin/500.html")
+
+
+# @intent_details.route("/intent_map_list")
+# def intent_map_list():
+#     try:
+#         fallback_handler.fetch_mismatch_chats()
+#         return redirect(
+#             url_for(
+#                 "intent.intent_mapping", _external=True, _scheme=config.SSL_SECURITY
+#             )
+#         )
+#     except Exception as e:
+#         event_logger.error(e)
+#         return render_template("admin/404.html")
+
+
+
+
+# @intent_details.route("/model_intent_list", methods=["POST"])
+# def model_intent_list():
+#     try:
+#         projectpath = request.form
+#         query_data = projectpath.to_dict(flat=False)
+#         model_id = query_data.get("model_id")[0]
+#         model_name = query_data.get("name")[0]
+
+#         all_db_intents = execute_query(
+#             """SELECT newly_train_intents FROM train_data WHERE model_id = :model_id""",
+#             "select",
+#             params={"model_id": model_id},
+#         )[0]["newly_train_intents"]
+#         all_intents = []
+#         if not all_db_intents:
+#             newly_train_intents = []
+#         else:
+#             for x in all_db_intents:
+#                 all_intents.append(x["newly_train_intents"])
+#             newly_train_intents = all_intents[0]
+
+#         newly_train_intents = ",".join(
+#             ["'" + str(nlu_id) + "'" for nlu_id in newly_train_intents]
+#         )
+#         nlu_details = execute_query(
+#             f"SELECT * FROM nlu_data WHERE  nlu_id IN ({newly_train_intents})", "select"
+#         )
+#         _nlu_intents = []
+#         for idx, x in enumerate(nlu_details):
+#             _nlu_intents.append(
+#                 [
+#                     idx + 1,
+#                     x.get("intent"),
+#                     x.get("nlu_id"),
+#                 ]
+#             )
+#         return render_template(
+#             "admin/intent_rejection.html",
+#             data=_nlu_intents,
+#             model_name=model_name,
+#             model_id=model_id,
+#         )
+#     except Exception as e:
+#         event_logger.error(e)
+#         return render_template("admin/500.html")
+
+# #@csrf.exempt
+# @intent_details.route("/delete_intent", methods=["POST"])
+# def delete_intent():
+#     """
+#     Delete Intent Data and Redirect to Intent List
+#     :return: Redirect to Intent List View
+#     """
+#     try:
+#         projectpath = request.form
+
+#         response = db_handler.delete_single_intent(projectpath)
+
+#         return response
+
+#     except Exception as e:
+#         event_logger.error(e)
+#         return render_template("admin/500.html")
+
+
+# @intent_details.route("/delete_all_intent", methods=["POST"])
+# def delete_all_intent():
+#     """
+#     Delete All Intent Data and Redirect to Intent List
+#     :return: Redirect to Intent List View-
+#     """
+#     try:
+#         db_handler.delete_all_intent()
+#         return redirect(
+#             url_for(
+#                 "intent.display_intents", _external=True, _scheme=config.SSL_SECURITY
+#             )
+#         )
+#     except Exception as e:
+#         event_logger.error(e)
+#         return render_template("admin/500.html")
     
 
 
-@intent_details.route("/update_res", methods=["POST"])
-def update_res():
-    projectpath = request.form
-    query_data = projectpath.to_dict(flat=False)
-    res_type = query_data.pop("res_type")[0]
-    res_data = query_data.pop("res_data")[0]
-    res_data = ast.literal_eval(res_data)
-    _all_intents = []
-    if res_type == "2":
-        all_intents = db_handler.fetch_all_intents()
-        for idx, x in enumerate(all_intents):
-            _all_intents.append(
-                [
-                    idx + 1,
-                    x.get("intent"),
-                ]
-            )
-        res_data = res_data[2]
-    return render_template(
-        "user_input/update_res.html",
-        data=res_type,
-        data_button=_all_intents,
-        res_data=res_data,
-    )
+# @intent_details.route("/update_res", methods=["POST"])
+# def update_res():
+#     projectpath = request.form
+#     query_data = projectpath.to_dict(flat=False)
+#     res_type = query_data.pop("res_type")[0]
+#     res_data = query_data.pop("res_data")[0]
+#     res_data = ast.literal_eval(res_data)
+#     _all_intents = []
+#     if res_type == "2":
+#         all_intents = db_handler.fetch_all_intents()
+#         for idx, x in enumerate(all_intents):
+#             _all_intents.append(
+#                 [
+#                     idx + 1,
+#                     x.get("intent"),
+#                 ]
+#             )
+#         res_data = res_data[2]
+#     return render_template(
+#         "user_input/update_res.html",
+#         data=res_type,
+#         data_button=_all_intents,
+#         res_data=res_data,
+#     )
 
-#@csrf.exempt
-@intent_details.route("/intent_res", methods=["POST"])
-def intent_res():
-    projectpath = request.form
-    query_data = projectpath.to_dict(flat=False)
-    res_type = query_data.pop("res_type")[0]
-    _all_intents = []
-    if res_type == "2":
-        all_intents = db_handler.fetch_all_intents()
-        for idx, x in enumerate(all_intents):
-            _all_intents.append(
-                [
-                    idx + 1,
-                    x.get("intent"),
-                ]
-            )
-    return render_template(
-        "user_input/text_res.html", data=res_type, data_button=_all_intents
-    )
+# #@csrf.exempt
+# @intent_details.route("/intent_res", methods=["POST"])
+# def intent_res():
+#     projectpath = request.form
+#     query_data = projectpath.to_dict(flat=False)
+#     res_type = query_data.pop("res_type")[0]
+#     _all_intents = []
+#     if res_type == "2":
+#         all_intents = db_handler.fetch_all_intents()
+#         for idx, x in enumerate(all_intents):
+#             _all_intents.append(
+#                 [
+#                     idx + 1,
+#                     x.get("intent"),
+#                 ]
+#             )
+#     return render_template(
+#         "user_input/text_res.html", data=res_type, data_button=_all_intents
+#     )
 
 
 

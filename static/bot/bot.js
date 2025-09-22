@@ -30,14 +30,88 @@ var html1 =
     '                   <button class="badges" value="ben_Beng">Bengali</button>' +
     '                </div> ' +
     '                </div>' +
+    '                <div id="feedback-popup" class="feedback-popup hidden">' +
+    '                   <div class="feedback-container">' +
+    '                       <div class="feedback-header">' +
+    '                           <h3>We\'d Love Your Feedback!</h3>' +
+    '                           <span class="close-feedback" onclick="closeFeedbackForm()">&times;</span>' +
+    '                       </div>' +
+    '                       <form id="bot-feedback-form">' +
+    '                           <div class="form-group">' +
+    '                               <label>How would you rate your overall experience? *</label>' +
+    '                               <div class="rating-stars">' +
+    '                                   <input type="radio" id="exp-star5" name="experience_rating" value="5">' +
+    '                                   <label for="exp-star5" title="Excellent">&#9733;</label>' +
+    '                                   <input type="radio" id="exp-star4" name="experience_rating" value="4">' +
+    '                                   <label for="exp-star4" title="Very Good">&#9733;</label>' +
+    '                                   <input type="radio" id="exp-star3" name="experience_rating" value="3">' +
+    '                                   <label for="exp-star3" title="Good">&#9733;</label>' +
+    '                                   <input type="radio" id="exp-star2" name="experience_rating" value="2">' +
+    '                                   <label for="exp-star2" title="Fair">&#9733;</label>' +
+    '                                   <input type="radio" id="exp-star1" name="experience_rating" value="1">' +
+    '                                   <label for="exp-star1" title="Poor">&#9733;</label>' +
+    '                               </div>' +
+    '                           </div>' +
+    '                           ' +
+    '                           <div class="form-group">' +
+    '                               <label>How would you rate the response quality? *</label>' +
+    '                               <div class="rating-stars">' +
+    '                                   <input type="radio" id="qual-star5" name="response_quality" value="5">' +
+    '                                   <label for="qual-star5" title="Excellent">&#9733;</label>' +
+    '                                   <input type="radio" id="qual-star4" name="response_quality" value="4">' +
+    '                                   <label for="qual-star4" title="Very Good">&#9733;</label>' +
+    '                                   <input type="radio" id="qual-star3" name="response_quality" value="3">' +
+    '                                   <label for="qual-star3" title="Good">&#9733;</label>' +
+    '                                   <input type="radio" id="qual-star2" name="response_quality" value="2">' +
+    '                                   <label for="qual-star2" title="Fair">&#9733;</label>' +
+    '                                   <input type="radio" id="qual-star1" name="response_quality" value="1">' +
+    '                                   <label for="qual-star1" title="Poor">&#9733;</label>' +
+    '                               </div>' +
+    '                           </div>' +
+    '                           ' +
+    '                           <div class="form-group">' +
+    '                               <label>How was the response time? *</label>' +
+    '                               <select name="response_time" required>' +
+    '                                   <option value="">Select response time</option>' +
+    '                                   <option value="Excellent">Excellent</option>' +
+    '                                   <option value="Good">Good</option>' +
+    '                                   <option value="Average">Average</option>' +
+    '                                   <option value="Slow">Slow</option>' +
+    '                                   <option value="Very Slow">Very Slow</option>' +
+    '                               </select>' +
+    '                           </div>' +
+    '                           ' +
+    '                           <div class="form-group">' +
+    '                               <label>Suggestions for improvement:</label>' +
+    '                               <textarea name="suggestion" placeholder="Please share your suggestions..." rows="4"></textarea>' +
+    '                           </div>' +
+    '                           ' +
+    '                           <div class="form-actions">' +
+    '                               <button type="button" onclick="closeFeedbackForm()" class="cancel-btn">Cancel</button>' +
+    '                               <button type="submit" class="submit-btn">Submit Feedback</button>' +
+    '                           </div>' +
+    '                       </form>' +
+    '                   </div>' +
+    '               </div>' +
+    '               <div id="thank-you-popup" class="thank-you-popup hidden">' +
+    '                   <div class="thank-you-content">' +
+    '                       <span class="thank-you-icon">✓</span>' +
+    '                       <h3>Thank You!</h3>' +
+    '                       <p>We appreciate your feedback.</p>' +
+    '                   </div>' +
+    '               </div>' +
     '            <div class="chat-board__bottom">' +
     '                <div class="chat-input">' +
     '                    <div class="input-sec">' +
+    '                            <div class="upload-sec">' +
+    '                               <label for="docUpload" class="upload-label">' +
+    '                                    <span class="material-symbols-outlined" style="cursor: pointer; color: rgb(6, 56, 105);">upload</span>' +
+    '                               </label>' +
+    '                               <input type="file" id="docUpload" style="display:none" accept=".pdf,.doc,.docx,.txt" onchange="validateFile(this)"  />' +
+    '                           </div>' +
     '                            <div class="input_img" onclick="initMicRecorder()">' +
     '                                   <span id="micIcon" class="material-symbols-outlined" style="color: rgb(6, 56, 105);">mic</span>    ' +
-
     '                            </div>' +
-
     '                        <input type="text" id="txtInput" placeholder="Type a message..." autofocus />' +
     '                        <button type="button" onclick="send_msg()" name="submit" id="press_enter_stag" hidden="">SUBMIT</button>' +
     '                    </div>' +
@@ -62,6 +136,15 @@ var html1 =
     '                   <img src="static/assets/img/avatar.svg" alt="user image">' +
     '          </span>' +
     '        </div>' +
+    '        <div id="clear-confirm-popup" class="confirm-popup hidden">' +
+    '           <div class="popup-box">' +
+    '               <p>Are you sure you want to delete chat history?</p>' +
+    '               <div class="popup-actions">' +
+    '                   <button class="confirm-btn" onclick="confirmClearChat()">Yes</button>' +
+    '                   <button class="cancel-btn" onclick="closeConfirmPopup()">Cancel</button>' +
+    '               </div>' +
+    '           </div>' +
+    '       </div>' +
     '    </div>' +
     '    <div class="error-environment" style="display: none;" id="error-environment">' +
     '        <div class="chat-board">' +
@@ -107,7 +190,20 @@ function createAudioBars(containerId, numBars = 33, delayStep = 0.1) {
     }
 }
 
-// Call the function to create the animation
+function validateFile(input) {
+    const file = input.files[0];
+    if (!file) return;
+
+    if (file.size > 1000 * 1024) {
+        alert("File must be 1 MB or less.");
+        input.value = '';
+        return;
+    }
+
+    document.getElementById('txtInput').value = `Uploaded: ${file.name}`;
+}
+
+
 
 function escapeHTML(str) {
     return str.replace(/[&<>"'/]/g, (char) => {
@@ -124,18 +220,18 @@ function escapeHTML(str) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Get all the language buttons
-    const languageButtons = document.querySelectorAll('.badges');
+            // Get all the language buttons
+            const languageButtons = document.querySelectorAll('.badges');
 
-    // Add event listener to each button
-    languageButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            // Get the value of the clicked button (the selected language)
-            const selectedLanguage = this.value;
-            var msg = $(this).text().trim()
-                // Store the selected language in sessionStorage
-            sessionStorage.setItem('preferredLanguage', selectedLanguage);
-            $("#staging").append(`
+            // Add event listener to each button
+            languageButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Get the value of the clicked button (the selected language)
+                    const selectedLanguage = this.value;
+                    var msg = $(this).text().trim()
+                        // Store the selected language in sessionStorage
+                    sessionStorage.setItem('preferredLanguage', selectedLanguage);
+                    $("#staging").append(`
                     <div class='d-flex class particular-chat-wrapper'>
                         <h4 class='chat user2'>${msg}</h4>
                         <div class='user2-name-letter name-letter'>
@@ -144,48 +240,98 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                 `);
 
-            $('#txtInput').val("");
+                    $('#txtInput').val("");
 
-            // Add typing indicator bubble
+                    // Add typing indicator bubble
 
-            // Remove any previous error or processing states
-            $('#rm_lang').addClass('hidden');
-            var typingBubble = $("<div class='chat-bubble bot-bubble typing-indicator'>.</div>");
-            $('#staging').append(typingBubble);
-            scrollToBottom();
-            // Scroll to the bottom to display new messages
-            $('#staging').scrollTop($('#staging')[0].scrollHeight);
-            $.ajax({
-                type: "POST",
-                contentType: "application/x-www-form-urlencoded; charset=UTF-8",
-                url: "http://" + ip + "/bot_msg_llmbot",
-                data: { msg: 'hi', type: 'prod', emp_no: emp_no, preferredLanguage: sessionStorage.getItem('preferredLanguage') || 'eng_Latn' },
-                success: function(result) {
-                    $("#txtInput").removeAttr('disabled');
-                    var txtInputStag = document.getElementById('txtInput');
-                    txtInputStag.disabled = false;
-                    txtInputStag.placeholder = "Type a message...";
-                    txtInputStag.focus()
-                    typingBubble.remove();
-                    // Animate the result word by word
-                    animateTextInH4(result);
-                    scrollToBottom()
-
+                    // Remove any previous error or processing states
+                    $('#rm_lang').addClass('hidden');
+                    var typingBubble = $("<div class='chat-bubble bot-bubble typing-indicator'>.</div>");
+                    $('#staging').append(typingBubble);
+                    scrollToBottom();
+                    // Scroll to the bottom to display new messages
                     $('#staging').scrollTop($('#staging')[0].scrollHeight);
+                    $.ajax({
+                        type: "POST",
+                        contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+                        url: "http://" + ip + "/bot_msg_llmbot",
+                        data: { msg: 'hi', type: 'prod', emp_no: emp_no, preferredLanguage: sessionStorage.getItem('preferredLanguage') || 'eng_Latn' },
+                        success: function(result) {
+                            $("#txtInput").removeAttr('disabled');
+                            var txtInputStag = document.getElementById('txtInput');
+                            txtInputStag.disabled = false;
+                            txtInputStag.placeholder = "Type a message...";
+                            txtInputStag.focus()
+                            typingBubble.remove();
+                            // Animate the result word by word
+                            animateTextInH4(result);
+                            scrollToBottom()
 
+                            $('#staging').scrollTop($('#staging')[0].scrollHeight);
+
+                        }
+                    });
+
+                    // Optionally, show an alert or change something on the page
+
+                });
+
+                // Check if there is a stored language on page load and apply it
+                const storedLanguage = sessionStorage.getItem('preferredLanguage');
+                if (storedLanguage) {
+                    console.log('Preferred Language:', storedLanguage);
+                } else {
+                    console.log('No preferred language set.');
                 }
             });
+            $.ajax({
+                        url: "http://" + ip + "/get-history",
+                        type: "GET",
+                        data: { user_id: emp_no },
+                        success: function(history) {
+                                console.log(history)
+                                history.forEach(chat => {
+                                            if (!chat.msg || !chat.response || typeof chat.response !== 'object') return;
 
-            // Optionally, show an alert or change something on the page
-
-        });
-
-        // Check if there is a stored language on page load and apply it
-        const storedLanguage = sessionStorage.getItem('preferredLanguage');
-        if (storedLanguage) {
-            console.log('Preferred Language:', storedLanguage);
-        } else {
-            console.log('No preferred language set.');
+                                            const question = escapeHTML(chat.msg);
+                                            const answerText = escapeHTML(chat.response.text || '');
+                                            const conversationId = chat.response.conversation_id || '';
+                                            const time = chat.time || ''; // Optional: add from backend if available
+                                            $('#rm_lang').addClass('hidden');
+                                            $('#staging').append(`
+                                        <!-- User Question -->
+                                        <div class='d-flex class particular-chat-wrapper'>
+                                            <h4 class='chat user2'>${question}</h4>
+                                            <div class='user2-name-letter name-letter'>
+                                                <img src='${base_url}assets/bot/img/avatar.svg' alt='user'>
+                                            </div>
+                                        </div>
+                                
+                                        <!-- Bot Answer with Feedback -->
+                                        <div class='d-flex class particular-chat-wrapper-user2'>
+                                            <h4 class='chat user1' id="chatMessage-${conversationId}">${answerText}</h4>
+                                
+                                            ${conversationId ? `
+                                                <div id="sendfeedback-${conversationId}" class="sendfeedback">
+                                                    <button class="like-btn" onclick="submitFeedback('like', '${conversationId}')">
+                                                        <span class="material-symbols-outlined like-icon">thumb_up</span>
+                                                    </button>
+                                                    <button class="dislike-btn" onclick="submitFeedback('dislike', '${conversationId}')">
+                                                        <span class="material-symbols-outlined dislike-icon">thumb_down</span>
+                                                    </button>
+                                                    <button class="copy-btn" onclick="copy(this, 'chatMessage-${conversationId}')">
+                                                        <span class="material-symbols-outlined" title="Copy">content_copy</span>
+                                                    </button>
+                                                </div>
+                                            ` : ''}
+                                        </div>
+                                    `);
+                                });
+                                scrollToBottom();
+                                
+        },
+        error: function(err) {
+            console.error("Error restoring session:", err);
         }
     });
 });
@@ -213,40 +359,136 @@ window.onload = function() {
 
 // Call the function to get the greeting
 
+
+// Function to submit the feedback form
+function submitFeedbackForm() {
+    const formData = {
+        user_id: emp_no,
+        experience_rating: $('input[name="experience_rating"]:checked').val(),
+        response_quality: $('input[name="response_quality"]:checked').val(),
+        response_time: $('select[name="response_time"]').val(),
+        suggestion: $('textarea[name="suggestion"]').val()
+    };
+    
+    // Validate required fields
+    if (!formData.experience_rating || !formData.response_quality || !formData.response_time) {
+        alert('Please complete all required fields');
+        return;
+    }
+    
+    $.ajax({
+        url: "http://" + ip + "/submit-bot-feedback",
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(formData),
+        success: function(response) {
+
+            showThankYouPopup();
+            
+            // Close feedback form and chat after 5 seconds
+            setTimeout(function() {
+                closeThankYouPopup();
+                closeFeedbackForm();
+            }, 5000);
+        },
+        error: function() {
+            alert('There was an error submitting your feedback. Please try again.');
+        }
+    });
+}
+function showThankYouPopup() {
+    $('#thank-you-popup').removeClass('hidden');
+}
+
+// Function to close thank you popup
+function closeThankYouPopup() {
+    $('#thank-you-popup').addClass('hidden');
+}
+
+// Function to close the feedback form
+
+
+// Function to close the feedback form
+function closeFeedbackForm() {
+    $('#feedback-popup').addClass('hidden');
+    closeChat()
+}
+
+// Function to close the chat (actual closing logic)
+function closeChat() {
+    $(".chatting-environment .chat-board").toggle();
+    $(".staging-close-btn").show();
+    $(".staging-close-btn span").css('transform', 'rotate(0deg)');
+    $(".staging-close-btn span").html('<img src="' + base_url + 'assets/bot/img/avatar.svg" alt="avatar">');
+    $(".staging-close-btn").css('background', 'transparent');
+}
+
+// Combined document ready function
 $(document).ready(function() {
+    // Handle the main close button (chat icon)
     $(".staging-close-btn").click(function() {
         $(".chatting-environment .chat-board").toggle();
+        
         if ($(".staging-close-btn span").text() == "closeclose") {
             $(".staging-close-btn span").css('transform', 'rotate(0deg)');
             $(".staging-close-btn span").html('<img src="' + base_url + 'assets/bot/img/avatar.svg" alt="avatar">');
             $(".staging-close-btn").css('background', 'transparent');
-
-
         } else {
-            $(".staging-close-btn-chat").css('dispay', 'block');
+            $(".staging-close-btn-chat").css('display', 'block');
             $(".staging-close-btn").hide();
+            
             var txtInputStag = document.getElementById('txtInput');
             txtInputStag.placeholder = "Type a message...";
-            txtInputStag.focus()
-
+            txtInputStag.focus();
         }
     });
 
-
-});
-
-$(document).ready(function() {
-    // Handle the click on the .staging-close-btn-chat
+    // Handle the close button inside the chat (X button)
     $(".staging-close-btn-chat").click(function() {
-
-        $(".chatting-environment .chat-board").toggle();
-        $(".staging-close-btn").show();
-        // Reset the styles and content of the .staging-close-btn span
-        $(".staging-close-btn span").css('transform', 'rotate(0deg)');
-        $(".staging-close-btn span").html('<img src="' + base_url + 'assets/bot/img/avatar.svg" alt="avatar">');
-        $(".staging-close-btn").css('background', 'transparent');
+        // Check if user has given feedback recently before closing
+        hasUserGivenRecentFeedback(emp_no, function(hasRecentFeedback) {
+            if (hasRecentFeedback) {
+                // If they've given feedback recently, just close the chat
+                closeChat();
+            } else {
+                // Otherwise, show the feedback form
+                showFeedbackForm();
+            }
+        });
     });
+    
+    // Fix for the display property typo
+    $(".staging-close-btn-chat").css('display', 'none');
 });
+
+// Function to check if user has given feedback in the last 7 days
+function hasUserGivenRecentFeedback(userId, callback) {
+    $.ajax({
+        url: "http://" + ip + "/check-recent-feedback",
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ user_id: userId }),
+        success: function(response) {
+            callback(response.has_recent_feedback || false);
+        },
+        error: function() {
+            // If there's an error, assume no recent feedback to be safe
+            callback(false);
+        }
+    });
+}
+
+// Function to show the feedback form
+function showFeedbackForm() {
+    $('#feedback-popup').removeClass('hidden');
+    
+    // Handle form submission
+    $('#bot-feedback-form').off('submit').on('submit', function(e) {
+        e.preventDefault();
+        submitFeedbackForm();
+    });
+}
+
 
 
 function animateTextInH4(result) {
@@ -255,10 +497,11 @@ function animateTextInH4(result) {
     var $chatOpButtons = $resultDiv.find('.chat_op_buttons');
     var $feedbackdiv = $resultDiv.find('div')
     var text = $h4.text();
+    var h4Id = $h4.attr('id');
     var words = text.split(' ');
     var i = 0;
     var newDiv = $("<div class='class particular-chat-wrapper-user2'></div>");
-    var newH4 = $("<h4 class='chat user1'></h4>");
+    var newH4 = $(`<h4 class='chat user1' id='${h4Id}'></h4>`);
     newDiv.append(newH4);
     $('#staging').append(newDiv);
     var interval = setInterval(function() {
@@ -294,52 +537,46 @@ function decodeHTML(str) {
 }
 
 function send_msg() {
-    var msg = document.getElementById('txtInput').value;
-    var msg = msg;
-    len_count = $("#txtInput").val().length
+    const msg = document.getElementById('txtInput').value.trim();
+    const fileInput = document.getElementById('docUpload');
+    const file = fileInput.files[0]; 
+    const len_count = msg.length;
     if (typeof emp_no === 'undefined') {
         // Assign a default value if empNumber is undefined
         emp_no = 172345689;
     }
-    if (len_count < 200 && (Boolean(msg.match(/[a-zA-Z0-9]+/)))) {
-        if (len_count < 200) {
-            $("#txtInput_stag").attr('disabled', 'disabled');
-        } else {
-            if (len_count > 200) {
-                $("#staging").append("<div class='d-flex class particular-chat-wrapper'><h4 class='chat user1'>Chat message is too large </h4></div>")
-            } else if (len_count == 0) {}
-            $('#staging').scrollTop($('#staging')[0].scrollHeight);
-        }
-    }
-    if (msg != '' && len_count < 200 && (Boolean(msg.match(/[^\s]/)))) {
+    const preferredLanguage = sessionStorage.getItem('preferredLanguage') || 'eng_Latn';
+    $('#rm_stag').remove();
+    // Escape helper
+    const escapeHTML = (str) => $('<div>').text(str).html();
+    // Show file message if file exists
+    if (file) {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("emp_no", emp_no);
+        formData.append("preferredLanguage", preferredLanguage);
+                $('#txtInput').val("");
+
+        // Show uploaded file name
         $("#staging").append(`
-        <div class='d-flex class particular-chat-wrapper'>
-            <h4 class='chat user2'>${escapeHTML(msg)}</h4>
-            <div class='user2-name-letter name-letter'>
-                <img src='${base_url}assets/bot/img/avatar.svg' alt='user'>
+            <div class='d-flex class particular-chat-wrapper'>
+                <h4 class='chat user2'>📎 ${escapeHTML(file.name)}</h4>
+                <div class='user2-name-letter name-letter'>
+                    <img src='${base_url}assets/bot/img/avatar.svg' alt='user'>
+                </div>
             </div>
-        </div>
-    `);
-
-        // Clear input field
+        `);
         $('#txtInput').val("");
-
-        // Add typing indicator bubble
-
-        // Remove any previous error or processing states
-        $('#rm_lang').addClass('hidden');
-        var typingBubble = $("<div class='chat-bubble bot-bubble typing-indicator'>.</div>");
+        const typingBubble = $("<div class='chat-bubble bot-bubble typing-indicator'>.</div>");
         $('#staging').append(typingBubble);
         scrollToBottom();
-        // Scroll to the bottom to display new messages
-        $('#staging').scrollTop($('#staging')[0].scrollHeight);
-        let preferredLanguage = sessionStorage.getItem('preferredLanguage') || 'eng_Latn';
 
         $.ajax({
+            url: "http://" + ip + "/upload_doc",
             type: "POST",
-            contentType: "application/x-www-form-urlencoded; charset=UTF-8",
-            url: "http://" + ip + "/bot_msg_llmbot",
-            data: { msg: msg, type: 'prod', emp_no: emp_no, preferredLanguage: preferredLanguage },
+            data: formData,
+            processData: false,
+            contentType: false,
             success: function(result) {
                 $("#txtInput").removeAttr('disabled');
                 var txtInputStag = document.getElementById('txtInput');
@@ -352,11 +589,70 @@ function send_msg() {
                 scrollToBottom()
 
                 $('#staging').scrollTop($('#staging')[0].scrollHeight);
-
+            },
+            error: function() {
+                alert("File upload failed.");
+                typingBubble.remove();
             }
         });
+
+        return; // Exit early if file is sent
     }
-    scrollToBottom()
+    
+    // Text message processing
+    if (msg && len_count < 200 && /[^\s]/.test(msg)) {
+        $("#txtInput_stag").attr('disabled', 'disabled');
+
+        $("#staging").append(`
+            <div class='d-flex class particular-chat-wrapper'>
+                <h4 class='chat user2'>${escapeHTML(msg)}</h4>
+                <div class='user2-name-letter name-letter'>
+                    <img src='${base_url}assets/bot/img/avatar.svg' alt='user'>
+                </div>
+            </div>
+        `);
+
+        const typingBubble = $("<div class='chat-bubble bot-bubble typing-indicator'>.</div>");
+        $('#staging').append(typingBubble);
+        scrollToBottom();
+        $('#txtInput').val("");
+
+        $.ajax({
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+            url: "http://" + ip + "/bot_msg_llmbot",
+            data: {
+                msg: msg,
+                type: 'prod',
+                emp_no: emp_no,
+                preferredLanguage: preferredLanguage
+            },
+            success: function(result) {
+                $("#txtInput").removeAttr('disabled');
+                var txtInputStag = document.getElementById('txtInput');
+                txtInputStag.disabled = false;
+                txtInputStag.placeholder = "Type a message...";
+                txtInputStag.focus()
+                typingBubble.remove();
+                // Animate the result word by word
+                animateTextInH4(result);
+                scrollToBottom()
+
+                $('#staging').scrollTop($('#staging')[0].scrollHeight);
+            },
+            error: function() {
+                typingBubble.remove();
+                alert("Message send failed.");
+            }
+        });
+    } else if (len_count >= 200) {
+        $("#staging").append(`
+            <div class='d-flex class particular-chat-wrapper'>
+                <h4 class='chat user1'>Chat message is too large</h4>
+            </div>
+        `);
+        scrollToBottom();
+    }
 }
 
 function button_intent(msg) {
@@ -424,7 +720,6 @@ function check_data_stag() {
     $('.stop').removeClass('hidden').addClass('visible');
 
     // Trigger the click event on the #press_enter_stag
-    $('#press_enter_stag').click();
 }
 
 function stopSending() {
@@ -466,18 +761,43 @@ $(document).ready(function() {
 });
 
 function clearChat() {
+    // Show popup inside bot container
+    document.getElementById('clear-confirm-popup').classList.remove('hidden');
+}
+
+function closeConfirmPopup() {
+    document.getElementById('clear-confirm-popup').classList.add('hidden');
+}
+
+function confirmClearChat() {
     var chatContainer = document.getElementById('staging');
-
-    if (chatContainer) {
-        // Select all child elements except the heading
-        var childrenToRemove = chatContainer.querySelectorAll(':scope > :not(.chat-board__chatting-area__heading):not(#rm_lang)');
-
-        // Loop through the selected elements and remove them
-        childrenToRemove.forEach(child => {
-            child.remove();
-        });
-    }
     $('#rm_lang').removeClass('hidden');
+    if (emp_no) {
+
+        if (chatContainer) {
+            // Select all child elements except the heading
+            var childrenToRemove = chatContainer.querySelectorAll(':scope > :not(.chat-board__chatting-area__heading):not(#rm_lang)');
+    
+            // Loop through the selected elements and remove them
+            childrenToRemove.forEach(child => {
+                child.remove();
+            });
+        }
+        $.ajax({
+            url: "http://" + ip + "/delete_session",
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ user_id:emp_no}),
+            success: function (res) {
+                console.log("Session cleared successfully");
+            },
+            error: function (xhr, status, error) {
+                console.error("Failed to clear session:", xhr.responseText);
+            }
+        });
+        closeConfirmPopup();
+
+    }
 }
 
 
@@ -795,4 +1115,48 @@ function initMicRecorder() {
             isRecording = false;
         }
     }
+}
+
+function copy(button, elementId) {
+    console.log(elementId)
+    const target = document.getElementById(elementId);
+
+    const icon = button.querySelector('.material-symbols-outlined');
+    console.log(icon, target)
+    if (!target || !icon) {
+        console.error("Copy target or icon not found.");
+        return;
+    }
+
+    const textToCopy = target.innerText || target.textContent;
+
+    const textarea = document.createElement("textarea");
+    textarea.value = textToCopy;
+    textarea.style.position = "fixed"; // Prevent scroll jump
+    textarea.style.opacity = 0;
+    document.body.appendChild(textarea);
+    textarea.select();
+
+    try {
+        const successful = document.execCommand("copy");
+        if (successful) {
+            icon.innerText = 'check';
+            icon.title = 'Copied';
+        } else {
+            icon.innerText = 'error';
+            icon.title = 'Copy failed';
+        }
+    } catch (err) {
+        console.error("Fallback copy failed:", err);
+        icon.innerText = 'error';
+        icon.title = 'Copy failed';
+    }
+
+    document.body.removeChild(textarea);
+
+    // Reset icon after 2 seconds
+    setTimeout(() => {
+        icon.innerText = 'content_copy';
+        icon.title = 'Copy';
+    }, 2000);
 }

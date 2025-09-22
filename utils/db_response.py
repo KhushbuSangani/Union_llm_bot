@@ -46,7 +46,6 @@ def save_conversation(msg, response,user_id,model_name,metadata,feedback_action=
     if msg.strip().lower() in excluded_msgs:
         print(f"Ignoring message: {msg}")
         return '1'
-
     # Check for duplicate messages
     duplicate_check_query = """
         SELECT COUNT(*) AS total
@@ -55,11 +54,7 @@ def save_conversation(msg, response,user_id,model_name,metadata,feedback_action=
     """
     duplicate_count = execute_query(duplicate_check_query, "select", params={"msg": msg, "user_id": user_id})[0]["total"]
     if duplicate_count> 0:
-        fetch_query = """
-        SELECT ID 
-        FROM CONVERSATION
-        WHERE QUERY = :msg AND USER_ID = :user_id
-        """
+        fetch_query = """SELECT ID FROM CONVERSATION WHERE QUERY = :msg AND USER_ID = :user_id """
         inserted_id = execute_query(fetch_query, "select", params={"msg": msg, "user_id": user_id})
 
         # Directly return the inserted ID without conditionals
@@ -84,13 +79,8 @@ def save_conversation(msg, response,user_id,model_name,metadata,feedback_action=
         "metadata":json.dumps(metadata)
     }
     result=execute_query(sql_query, "insert", params=data)
-    fetch_query = """
-        SELECT ID 
-        FROM CONVERSATION
-        WHERE ID = :id
-    """
+    fetch_query = """SELECT ID FROM CONVERSATION WHERE ID = :id """
     inserted_id = execute_query(fetch_query, "select", params={"id": id})
-
     # Directly return the inserted ID without conditionals
     inserted_id_value = inserted_id[0]["id"]
     rows = execute_query("SELECT * FROM conversation", "select")

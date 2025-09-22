@@ -40,17 +40,11 @@ RUN python3.9 -m pip install --no-cache-dir  --default-timeout=5000 -r requireme
 RUN python3.9 -m pip install --no-cache-dir  --upgrade pip torch --index-url https://download.pytorch.org/whl/cpu 
 RUN python3.9 -m pip install --no-cache-dir  sentence-transformers protobuf==3.20.2
 # Additional installations for IndicTrans2
-RUN python3.9 -m pip install --no-cache-dir nltk sacremoses pandas regex mock transformers>=4.33.2 mosestokenizer bitsandbytes scipy accelerate datasets sentencepiece
-RUN python3.9 -c "import nltk; nltk.download('punkt')"
+
 # Clone IndicTransToolkit into the specified directory
-RUN git clone https://github.com/VarunGumma/IndicTransToolkit.git /hrbot/IndicTrans2/huggingface_interface/IndicTransToolkit
 RUN python3.9 -m pip install -U openai-whisper
 
-# Install IndicTransToolkit
-RUN python3.9 -m pip install --no-cache-dir --editable /hrbot/IndicTrans2/huggingface_interface/IndicTransToolkit
-
-
-COPY models--sentence-transformers--all-MiniLM-L6-v2 /root/.cache/huggingface/hub/models--sentence-transformers--all-MiniLM-L6-v2
+COPY ai4bharat/models--sentence-transformers--all-MiniLM-L6-v2 /root/.cache/huggingface/hub/models--sentence-transformers--all-MiniLM-L6-v2
 
 RUN chmod -R 777 ./runner.sh && chmod +x /hrbot/runner.sh
 

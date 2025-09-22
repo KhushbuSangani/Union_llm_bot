@@ -2,7 +2,7 @@
 {% block content %}
 <div class="intent-info w-100">
     <div class="intents d-flex gap-4 flex-wrap flex-xl-nowrap">
-        <a href="{{ url_for('intent.display_intents', _external=True, _scheme= config['SSL_SECURITY']) }}" style="text-decoration: initial; !important">
+        <a href="{{ url_for('intent.display_llm_files', _external=True, _scheme= config['SSL_SECURITY']) }}" style="text-decoration: initial; !important">
         <div class="intents__total intents__com cards">
             <div class="intent_dashboard">
                 <h3 class="text-captalize"> <span>{{nlu_data_total}}</span> Total intents</h3>

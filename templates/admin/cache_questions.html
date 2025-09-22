@@ -1,0 +1,70 @@
+{% extends "layout/base.html" %}
+{% block content %}
+
+<div class="intent-info w-100">
+    <div class="cards intent-info__model">
+        <div class="d-flex justify-content-between">
+            <h4 class="table-title">Cached Questions</h4>
+            <div class="table-btn-wrapper">  
+               	<button  class="text-uppercase btn-train new_model" onclick="window.location.href='{{ url_for( 'intent.download_caches_questions') }}';"> download all <i class="fa fa-arrow-right"></i></button>            
+                <!--<button onclick="delete_all_chats()" style="margin-left:15px;" class="text-uppercase btn-download"> delete all <i class="fa fa-arrow-right"></i></button>-->
+            </div> 
+        </div>
+      
+        <div id="file-container"></div>
+		<div id="selected-count" style="margin-bottom:10px; font-weight:bold; font-size:12px; margin-left:12px;"></div>
+        <div class="w-100 table-wrapper">
+            
+		  <div class="pagination-wrapper ">
+			<div class="pagination-wrapper__left">	
+			</div>
+			</div>
+        </div>    
+    </div>
+</div>
+<div id="selected-files" style="margin-top: 10px; font-weight: bold;"></div>
+<div class="loader" id="loader"></div>
+
+</script>
+<link rel="stylesheet" href="static/assets/ajax/libs/jquery/jquery-confirm.min.css">
+<script src="static/assets/ajax/libs/jquery/jquery.min.js"></script>
+<script href="static/assets/bootstrap-toastr/toastr.min.css" rel="stylesheet" type="text/css" />
+<script src="static/assets/bootstrap-toastr/toastr.min.js" type="text/javascript"></script>
+<script src="static/assets/bootstrap-toastr/ui-toastr.min.js" type="text/javascript"></script>
+<script src="static/assets/ajax/libs/jquery/jquery-confirm.min.js"></script>
+<script src="static/assets/js/cached_questions.js"></script>
+
+<script type="text/javascript">
+
+    const data = {{ data | tojson | safe }};
+    const file_length = {{ file_length | tojson | safe }};
+	const pagination = {{ pagination | tojson | safe }};
+	var displayLLMFilesUrl = "{{ url_for('intent.cache_questions') }}"
+    new FileSelectionUI(data, file_length,displayLLMFilesUrl,pagination);
+	
+	document.addEventListener('DOMContentLoaded', function() {
+		localStorage.removeItem("selectedFiles");
+		localStorage.removeItem("selectAllChecked");
+		
+		const data = {{ data | tojson | safe }};
+		const file_length = {{ file_length | tojson | safe }};
+		const fileUI = new FileSelectionUI(data, file_length);
+	
+		// Attach event listeners for search
+		document.querySelectorAll('#search_file_name, #search_created_by, #search_query,#search_response').forEach(input => {
+			input.addEventListener('keyup', () => {
+				let searchParams = {
+					search_file_name: document.querySelector('#search_file_name').value.trim(),
+					search_created_by: document.querySelector('#search_created_by').value.trim(),
+					search_query: document.querySelector('#search_query').value.trim(),
+                    search_response: document.querySelector('#search_response').value.trim()
+
+				};
+				fileUI.currentSearchParams = searchParams;
+				fileUI.fetchData();
+			});
+		});
+	});
+   
+</script>
+{% endblock content %}
